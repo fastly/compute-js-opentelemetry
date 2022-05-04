@@ -1,0 +1,12 @@
+# This file describes a Fastly Compute@Edge package. To learn more visit:
+# https://developer.fastly.com/reference/fastly-toml/
+
+description = "Simple OpenTelemetry Example"
+language = "javascript"
+manifest_version = 2
+name = "simple-otel"
+
+[local_server]
+[local_server.backends]
+[local_server.backends.test_backend]
+url = "http://localhost:4318/"
