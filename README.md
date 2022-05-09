@@ -21,6 +21,10 @@ we provide our components as a single package with multiple exports.
 | `@fastly/compute-js-opentelemetry/opentelemetry-sdk-trace-fastly` (Internal Use) | A utility library that provides a [Tracer Provider](https://open-telemetry.github.io/opentelemetry-js-api/interfaces/tracerprovider.html) and [Context Manager](https://open-telemetry.github.io/opentelemetry-js-api/interfaces/contextmanager.html) implementations for use with a Compute@Edge JavaScript application. Currently not different than `@opentelemetry/sdk-trace-web`, but in progress to improve experience with asynchronous contexts. |
 | `@fastly/compute-js-opentelemetry/otlp-exporter-fastly-base` (Internal Use)      | A base class for exporters, containing common code used by `@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend` and `@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-logger`.                                                                                                                                                                                                                                               |
 
+## API
+
+For a description of each module and the APIs that they expose, see the [`src`](./src) directory.
+
 ## Webpack
 
 Compute@Edge JavaScript applications are
