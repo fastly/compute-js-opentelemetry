@@ -47,6 +47,10 @@ These instrumentations create spans for the following lifecycle events.
   from the time it is called to the time it returns. Note that this can return before the
   full `Response` is generated, if the application passes in a promise.
 
+* `Backend Fetch` - traces a call to `fetch()` made to a backend, from the time it is called
+  to the time it returns. This span is a CLIENT span and propagates the current trace and span
+  information, so that the backend will be given the ability to add further child spans.
+
 These events occur in nested contexts, setting the active context at each event. Therefore,
 the spans that occur in the body of the listener function created in the application code
 happens as a child span of the `listener fn` span.

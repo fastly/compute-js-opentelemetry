@@ -6,6 +6,13 @@
 import { FastlyJsInstrumentation } from "./instrumentation";
 
 export function patchRuntime(target: FastlyJsInstrumentation) {
+  const origFetch = globalThis.fetch;
+  globalThis.fetch = async (resource, init) => {
+    return await target.onBackendFetch(resource, init, async (resource: RequestInfo, init: RequestInit | undefined) => {
+      return await origFetch(resource, init);
+    });
+  };
+
   const origAddEventListener = globalThis.addEventListener;
   globalThis.addEventListener = ( type, listener ) => {
 

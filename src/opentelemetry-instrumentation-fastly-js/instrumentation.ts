@@ -3,7 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { diag, trace, context, Context, Span, SpanKind, SpanStatusCode, } from "@opentelemetry/api";
+import { diag, trace, context, propagation, Context, Span, SpanKind, SpanStatusCode, } from "@opentelemetry/api";
 
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
 import {
@@ -61,6 +61,27 @@ export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
 
   deleteEventContext(event: FetchEvent) {
     this._eventsContextMap.delete(event);
+  }
+
+  async onBackendFetch(resource: RequestInfo, init: RequestInit | undefined, fn: (resource: RequestInfo, init: RequestInit | undefined) => Promise<Response>): Promise<Response> {
+    if(!this._eventsEnabled) {
+      return await fn(resource, init);
+    }
+    const backendFetchSpan = this.tracer.startSpan('Backend Fetch', {
+      kind: SpanKind.CLIENT,
+    });
+    const backendFetchContext = trace.setSpan(context.active(), backendFetchSpan);
+    const carrier = {};
+    propagation.inject(backendFetchContext, carrier);
+    return context.with(backendFetchContext, async () => {
+      const options = { ...(init ?? {}) };
+      options.headers = Object.assign({}, init?.headers, carrier);
+      try {
+        return await fn(resource, options);
+      } finally {
+        backendFetchSpan.end();
+      }
+    });
   }
 
   // Start of the lifetime of a single FetchEvent.
