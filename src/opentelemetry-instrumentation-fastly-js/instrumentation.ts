@@ -3,7 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { diag, trace, context, propagation, Span, SpanKind, SpanStatusCode, } from "@opentelemetry/api";
+import { diag, trace, context, propagation, SpanKind, SpanStatusCode, } from "@opentelemetry/api";
 
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
 import {
@@ -13,10 +13,6 @@ import {
 import { AttributeNames } from './enums/AttributeNames';
 import { patchRuntime } from "./util";
 import { _resetEventContext, _setEventContext } from "../opentelemetry-sdk-trace-fastly";
-
-interface EventContext {
-  fetchEventSpan: Span;
-}
 
 export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
 
@@ -28,12 +24,8 @@ export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
   _eventsInstalled?: boolean;
   _eventsEnabled?: boolean;
 
-  _eventsContextMap: WeakMap<FetchEvent, Partial<EventContext>>;
-  
   constructor(config: InstrumentationConfig = {}) {
     super('@fastly/compute-js-opentelemetry/instrumentation-fastly-js', '0.1.0', config);
-
-    this._eventsContextMap = new WeakMap<FetchEvent, EventContext>();
   }
 
   init() {}
@@ -48,19 +40,6 @@ export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
   
   override disable() {
     this._eventsEnabled = false;
-  }
-
-  getEventContext(event: FetchEvent): Partial<EventContext> {
-    let eventContext = this._eventsContextMap.get(event);
-    if(eventContext == null) {
-      eventContext = {};
-      this._eventsContextMap.set(event, eventContext);
-    }
-    return eventContext;
-  }
-
-  deleteEventContext(event: FetchEvent) {
-    this._eventsContextMap.delete(event);
   }
 
   async onBackendFetch(resource: RequestInfo, init: RequestInit | undefined, fn: (resource: RequestInfo, init: RequestInit | undefined) => Promise<Response>): Promise<Response> {
@@ -84,17 +63,18 @@ export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
     });
   }
 
-  // Start of the lifetime of a single FetchEvent.
-  // This is the first opportunity we have of doing anything in the
-  // c@e request lifecycle.
-  onEventStart(event: FetchEvent) {
+  // This event wraps the lifetime of a single FetchEvent, corresponding to the time between
+  // the start of handling an incoming event and when the Response to be sent back is
+  // determined.
+  // This is the first and last opportunity we have of doing anything in the c@e request
+  // lifecycle.
+  async onEvent(event: FetchEvent, fn: () => Promise<Response>): Promise<void> {
     if(!this._eventsEnabled) {
+      await fn();
       return;
     }
     try {
-      diag.debug('onEventStart start');
-
-      const eventContext = this.getEventContext(event);
+      diag.debug('onEvent start');
 
       const carrier: Record<string, string> = {};
 
@@ -131,77 +111,46 @@ export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
         // don't bother with this
       }
 
-      eventContext.fetchEventSpan = fetchEventSpan;
-
       // Set the root context on the context manager to this event.
-      _setEventContext(trace.setSpan(context.active(), fetchEventSpan));
+      const fetchEventContext = trace.setSpan(context.active(), fetchEventSpan);
+      _setEventContext(fetchEventContext);
 
-    } finally {
-      diag.debug('onEventStart end');
-    }
-  }
+      try {
 
-  // Event result determined. Receives the response, or the error if event threw.
-  // This is the final opportunity we have of doing anything meaningful.
-  onEventResult(event: FetchEvent, result: Response | Error) {
-    if(!this._eventsEnabled) {
-      return;
-    }
-    try {
-      diag.debug('onEventResult start');
+        await context.with(fetchEventContext, async () => {
+          try {
 
-      const eventContext = this.getEventContext(event);
+            const result = await fn();
 
-      const { fetchEventSpan } = eventContext;
-      if (fetchEventSpan != null) {
+            fetchEventSpan.setAttribute(SemanticAttributes.HTTP_STATUS_CODE, result.status);
+            fetchEventSpan.setStatus({
+              code: SpanStatusCode.OK,
+            });
 
-        if(result instanceof Error) {
+          } catch(ex) {
 
-          fetchEventSpan.recordException(result);
-          fetchEventSpan.setStatus({
-            code: SpanStatusCode.ERROR,
-          });
+            fetchEventSpan.recordException(ex);
+            fetchEventSpan.setStatus({
+              code: SpanStatusCode.ERROR,
+            });
 
-        } else {
-
-          fetchEventSpan.setAttribute(SemanticAttributes.HTTP_STATUS_CODE, result.status);
-          fetchEventSpan.setStatus({
-            code: SpanStatusCode.OK,
-          });
-
-        }
-
-        fetchEventSpan.end();
-        delete eventContext.fetchEventSpan;
+          } finally {
+            fetchEventSpan.end();
+          }
+        });
+      } finally {
 
         // Reset the root event on the context manager.
         _resetEventContext();
       }
 
-      this.deleteEventContext(event);
-
     } finally {
-      diag.debug('onEventResult end');
+      diag.debug('onEvent end');
     }
   }
 
-  // Event has ended.
-  // This is the FINAL opportunity we have of doing anything
-  // in the c@e request lifecycle. Usually not too useful since
-  // the event is probably no longer active.
-  onEventEnd(event: FetchEvent) {
-    if(!this._eventsEnabled) {
-      return;
-    }
-    try {
-      diag.debug('onEventEnd start');
-
-    } finally {
-      diag.debug('onEventEnd end');
-    }
-  }
-
-  // Wraps the execution of the listener callback that is registered with the `fetch` event.
+  // This event wraps the call to the app-provided listener function that is registered
+  // with the 'fetch' event.
   onListener(event: FetchEvent, fn: () => void) {
     if(!this._eventsEnabled) {
       fn();
@@ -230,7 +179,8 @@ export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
     }
   }
 
-  // Wraps the calling of event.respondWith. Receives the response or promise that resolves to the response.
+  // This event wraps the call to event.respondWith from the app-provided listener function.
+  // Receives the Response, or promise that resolves to the Response, built by the app.
   onRespondWith(event: FetchEvent, response: Response | Promise<Response>, fn: (response: Response | Promise<Response>) => void) {
     if(!this._eventsEnabled) {
       fn(response);
