@@ -7,25 +7,39 @@ import { FastlySDK } from "./FastlySDK";
 
 let _target: FastlySDK | null = null;
 
-export function patchRuntime() {
-  const origAddEventListener = globalThis.addEventListener;
-  globalThis.addEventListener = ( type, listener ) => {
+// Patch event.respondWith to ensure that if the SDK has been started,
+// then the SDK's shutdown method will be called automatically before
+// the end of the event's lifetime.
 
-    const patchedListener = (event: FetchEvent) => {
+addEventListener('fetch', (event) => {
 
-      const origRespondWith = event.respondWith;
-      event.respondWith = (response) => {
-        Promise.resolve(response)
-          .finally(() => _target != null ? event.waitUntil(_target.shutdown()) : (void 0));
-        origRespondWith.call(event, response);
-      };
+  if(_target == null) {
+    return;
+  }
 
-      listener(event);
-    };
+  const origRespondWith = event.respondWith;
+  event.respondWith = (response) => {
 
-    origAddEventListener.call( null, type, _target != null ? patchedListener : listener);
+    // Create a promise to extend the life of this event.
+    // Calling resolveExtension later will settle this promise
+    // and allow the event's lifetime to end.
+    let resolveExtension: () => void;
+    let extension = new Promise<void>(resolve => {
+      resolveExtension = resolve;
+    });
+    event.waitUntil(extension);
+
+    origRespondWith.call(event, response);
+
+    Promise.resolve(response)
+      .finally(() => {
+        // This ensures that target's shutdown is enqueued
+        event.waitUntil(_target!.shutdown());
+        resolveExtension!();
+      });
   };
-}
+
+});
 
 export function setPatchTarget(target: FastlySDK) {
   _target = target;

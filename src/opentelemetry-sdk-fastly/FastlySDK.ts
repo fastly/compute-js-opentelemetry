@@ -11,9 +11,7 @@ import { SimpleSpanProcessor, SpanProcessor } from "@opentelemetry/sdk-trace-bas
 
 import { FastlySDKConfiguration } from "./types";
 import { FastlyTracerConfig, FastlyTracerProvider } from "../opentelemetry-sdk-trace-fastly";
-import { patchRuntime, setPatchTarget } from "./util";
-
-patchRuntime();
+import { setPatchTarget } from "./util";
 
 export class FastlySDK {
   private _resource: Resource;
