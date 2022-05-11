@@ -44,4 +44,3 @@ The options sent to the constructor is an object that receives the following val
 | `backend` (required) | The name of the Fastly backend to send traces to. You may use any backend defined on your service.                                                                                                  |
 | `url`                | The URL to send traces to. The URL must correspond to the specified backend. If not specified, defaults to `http://localhost/v1/traces`.                                                            |
 | `compression`        | Describes the compression algorithm used to send traces. Valid values are `none` or `gzip`.                                                                                                         | 
-| `cacheOverride`      | (Advanced) A [CacheOverride](https://js-compute-reference-docs.edgecompute.app/interfaces/cacheoverride.html) value that can be used to specify cache behavior when sending traces to this backend. |

@@ -47,14 +47,11 @@ export async function sendWithFetch<ExportItem, ServiceRequest>(
     headers: headers,
     body: body,
     backend: collector.backend,
+    cacheOverride: new CacheOverride("pass"),
   };
 
   // To exempt this fetch itself from telemetry
   setIsNotBackendFetch(fetchOptions);
-
-  if(collector.cacheOverride != null) {
-    fetchOptions.cacheOverride = collector.cacheOverride;
-  }
 
   const res = await fetch(collector.url, fetchOptions);
   const responseData = await res.text();

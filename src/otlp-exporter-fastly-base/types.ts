@@ -10,7 +10,6 @@ import { OTLPExporterConfigBase } from '@opentelemetry/otlp-exporter-base';
  */
 export interface OTLPExporterFastlyBackendConfigBase extends OTLPExporterConfigBase {
     backend: string;
-    cacheOverride?: CacheOverride;
     compression?: CompressionAlgorithm;
 }
 

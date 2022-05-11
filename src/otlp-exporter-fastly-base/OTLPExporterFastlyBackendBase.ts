@@ -25,7 +25,6 @@ export abstract class OTLPExporterFastlyBackendBase<
   headers: Record<string, string>;
 
   backend: string;
-  cacheOverride?: CacheOverride;
   compression: CompressionAlgorithm;
 
   protected constructor(config: OTLPExporterFastlyBackendConfigBase) {
@@ -38,9 +37,6 @@ export abstract class OTLPExporterFastlyBackendBase<
     );
 
     this.backend = config.backend;
-    if (config.cacheOverride != null) {
-      this.cacheOverride = config.cacheOverride;
-    }
 
     this.compression = configureCompression(config.compression);
   }
