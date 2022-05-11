@@ -27,7 +27,6 @@
     "outDir": "build"
   },
   "include": [
-    "types/**/*.d.ts",
     "src/**/*.ts",
     "test/**/*.ts"
   ],
