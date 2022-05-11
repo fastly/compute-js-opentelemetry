@@ -10,6 +10,7 @@ import { OTLPExporterFastlyBackendBase } from "./OTLPExporterFastlyBackendBase";
 import { OTLPExporterFastlyLoggerBase } from "./OTLPExporterFastlyLoggerBase";
 import { getEnv } from "@opentelemetry/core";
 import { CompressionAlgorithm } from "./types";
+import { setIsNotBackendFetch } from "../opentelemetry-instrumentation-fastly-js/util";
 
 /**
  * Sends data using fetch
@@ -47,6 +48,9 @@ export async function sendWithFetch<ExportItem, ServiceRequest>(
     body: body,
     backend: collector.backend,
   };
+
+  // To exempt this fetch itself from telemetry
+  setIsNotBackendFetch(fetchOptions);
 
   if(collector.cacheOverride != null) {
     fetchOptions.cacheOverride = collector.cacheOverride;
