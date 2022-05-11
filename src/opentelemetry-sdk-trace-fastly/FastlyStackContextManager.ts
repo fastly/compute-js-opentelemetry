@@ -5,11 +5,25 @@
 
 import { Context, ContextManager, ROOT_CONTEXT } from '@opentelemetry/api';
 
+let _eventContext: Context | null = null;
+
+// Set the event context.
+export function _setEventContext(context: Context) {
+  _eventContext = context;
+}
+
+// Reset the event context.
+export function _resetEventContext() {
+  _eventContext = null;
+}
+
 /**
- * Stack Context Manager for managing the state in web
- * it doesn't fully support the async calls though
+ * Stack Context Manager for managing the state in Fastly Compute@Edge apps.
+ * It doesn't fully support async calls.
+ * It (ab)uses the fact that there is only one FetchEvent in Compute@Edge apps,
+ * to fall back to the FetchEvent context if it exists instead of ROOT_CONTEXT.
  */
-export class StackContextManager implements ContextManager {
+export class FastlyStackContextManager implements ContextManager {
   /**
    * whether the context manager is enabled or not
    */
@@ -47,13 +61,14 @@ export class StackContextManager implements ContextManager {
    * Returns the active context
    */
   active(): Context {
-    return this._currentContext;
+    return this._currentContext === ROOT_CONTEXT && _eventContext != null ?
+      _eventContext : this._currentContext;
   }
 
   /**
-   * Binds a the certain context or the active one to the target function and then returns the target
+   * Binds a certain context or the active one to the target function and then returns the target
    * @param context A context (span) to be bind to target
-   * @param target a function or event emitter. When target or one of its callbacks is called,
+   * @param target a function. When target is called,
    *  the provided context will be used as the active context for the duration of the call.
    */
   bind<T>(context: Context, target: T): T {

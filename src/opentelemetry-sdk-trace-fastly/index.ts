@@ -4,4 +4,4 @@
  */
 
 export * from './FastlyTracerProvider';
-export * from './StackContextManager';
+export * from './FastlyStackContextManager';

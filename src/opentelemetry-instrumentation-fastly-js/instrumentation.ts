@@ -3,7 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { diag, trace, context, propagation, Context, Span, SpanKind, SpanStatusCode, } from "@opentelemetry/api";
+import { diag, trace, context, propagation, Span, SpanKind, SpanStatusCode, } from "@opentelemetry/api";
 
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
 import {
@@ -12,10 +12,10 @@ import {
 } from '@opentelemetry/instrumentation';
 import { AttributeNames } from './enums/AttributeNames';
 import { patchRuntime } from "./util";
+import { _resetEventContext, _setEventContext } from "../opentelemetry-sdk-trace-fastly";
 
 interface EventContext {
   fetchEventSpan: Span;
-  fetchEventSpanContext: Context;
 }
 
 export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
@@ -132,7 +132,9 @@ export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
       }
 
       eventContext.fetchEventSpan = fetchEventSpan;
-      eventContext.fetchEventSpanContext = trace.setSpan(context.active(), fetchEventSpan);
+
+      // Set the root context on the context manager to this event.
+      _setEventContext(trace.setSpan(context.active(), fetchEventSpan));
 
     } finally {
       diag.debug('onEventStart end');
@@ -171,6 +173,9 @@ export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
 
         fetchEventSpan.end();
         delete eventContext.fetchEventSpan;
+
+        // Reset the root event on the context manager.
+        _resetEventContext();
       }
 
       this.deleteEventContext(event);
@@ -205,13 +210,10 @@ export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
     try {
       diag.debug('onListener start');
 
-      const eventContext = this.getEventContext(event);
-
       const theSpan = this.tracer.startSpan(
         'listener fn', {
           kind: SpanKind.INTERNAL,
-        },
-        eventContext.fetchEventSpanContext
+        }
       );
 
       try {

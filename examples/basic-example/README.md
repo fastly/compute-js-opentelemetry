@@ -62,7 +62,7 @@ This simple example instantiates the following objects:
 
 The following objects are implicitly instantiated:
 
-* **StackContextManager** (implicitly instantiated)
+* **FastlyStackContextManager** (implicitly instantiated)
     a rudimentary Context Manager that provides context but does not currently
     support asynchronous context stacks.
 

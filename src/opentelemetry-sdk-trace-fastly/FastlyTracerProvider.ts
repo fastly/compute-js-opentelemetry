@@ -9,8 +9,8 @@ import {
   TracerConfig,
 } from '@opentelemetry/sdk-trace-base';
 import {
-  StackContextManager
-} from './StackContextManager';
+  FastlyStackContextManager
+} from './FastlyStackContextManager';
 
 /**
  * FastlyTracerConfig provides an interface for configuring a Fastly Tracer.
@@ -18,7 +18,7 @@ import {
 export type FastlyTracerConfig = TracerConfig;
 
 /**
- * This class represents a tracer with {@link StackContextManager}
+ * This class represents a tracer with {@link FastlyStackContextManager}
  */
 export class FastlyTracerProvider extends BasicTracerProvider {
   /**
@@ -48,7 +48,7 @@ export class FastlyTracerProvider extends BasicTracerProvider {
    */
   override register(config: SDKRegistrationConfig = {}): void {
     if (config.contextManager === undefined) {
-      config.contextManager = new StackContextManager();
+      config.contextManager = new FastlyStackContextManager();
     }
     if (config.contextManager) {
       config.contextManager.enable();
