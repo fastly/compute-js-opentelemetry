@@ -8,7 +8,7 @@
     "node": "^16"
   },
   "devDependencies": {
-    "@fastly/compute-js-opentelemetry": "file:../../",
+    "@fastly/compute-js-opentelemetry": "link:../../",
     "@fastly/js-compute": "^0.2.4",
     "@opentelemetry/api": "^1.1.0",
     "@opentelemetry/resources": "^1.2.0",

@@ -7,22 +7,9 @@
   resolved "https://registry.yarnpkg.com/@discoveryjs/json-ext/-/json-ext-0.5.7.tgz#1d572bfbbe14b7704e0ba0f39b74815b84870d70"
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
-"@fastly/compute-js-opentelemetry@file:../..":
-  version "0.1.0"
-  dependencies:
-    "@opentelemetry/api" "^1.1.0"
-    "@opentelemetry/core" "1.2.0"
-    "@opentelemetry/exporter-trace-otlp-http" "^0.28.0"
-    "@opentelemetry/instrumentation" "^0.28.0"
-    "@opentelemetry/otlp-exporter-base" "^0.28.0"
-    "@opentelemetry/sdk-trace-base" "^1.2.0"
-    assert "^2.0.0"
-    browserify-zlib "^0.2.0"
-    buffer "^6.0.3"
-    stream-browserify "^3.0.0"
-    timers-browserify "^2.0.12"
-    util "^0.12.4"
-    webpack "^5.72.0"
+"@fastly/compute-js-opentelemetry@link:../..":
+  version "0.0.0"
+  uid ""
 
 "@fastly/js-compute@^0.2.4":
   version "0.2.4"
