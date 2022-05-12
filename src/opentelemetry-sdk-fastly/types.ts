@@ -3,8 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-// import { TextMapPropagator } from '@opentelemetry/api';
-import { Sampler } from "@opentelemetry/api";
+import { TextMapPropagator, Sampler } from "@opentelemetry/api";
 import type { ContextManager } from '@opentelemetry/api';
 import { InstrumentationOption } from '@opentelemetry/instrumentation';
 // import { MetricReader } from '@opentelemetry/sdk-metrics-base';
@@ -22,6 +21,7 @@ export interface FastlySDKConfiguration {
   spanProcessor: SpanProcessor;
   traceExporter: SpanExporter;
   contextManager: ContextManager;
+  textMapPropagator: TextMapPropagator;
 
   sampler: Sampler;
   spanLimits: SpanLimits;
@@ -31,7 +31,6 @@ export interface FastlySDKConfiguration {
   /*
   autoDetectResources: boolean;
 
-  textMapPropagator: TextMapPropagator;
   metricReader: MetricReader;
   */
 }

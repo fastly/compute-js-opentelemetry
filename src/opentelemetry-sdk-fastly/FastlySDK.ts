@@ -3,7 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { ContextManager } from "@opentelemetry/api";
+import { ContextManager, TextMapPropagator } from "@opentelemetry/api";
 
 import { InstrumentationOption, registerInstrumentations } from "@opentelemetry/instrumentation";
 import { Resource } from "@opentelemetry/resources";
@@ -20,6 +20,7 @@ export class FastlySDK {
     tracerConfig: FastlyTracerConfig;
     spanProcessor: SpanProcessor;
     contextManager?: ContextManager;
+    textMapPropagator?: TextMapPropagator;
   };
   private _tracerProvider?: FastlyTracerProvider;
 
@@ -46,6 +47,7 @@ export class FastlySDK {
         tracerProviderConfig,
         spanProcessor,
         configuration.contextManager,
+        configuration.textMapPropagator,
       );
     }
 
@@ -61,11 +63,13 @@ export class FastlySDK {
     tracerConfig: FastlyTracerConfig,
     spanProcessor: SpanProcessor,
     contextManager?: ContextManager,
+    textMapPropagator?: TextMapPropagator,
   ): void {
     this._tracerProviderConfig = {
       tracerConfig,
       spanProcessor,
       contextManager,
+      textMapPropagator,
     };
   }
 
@@ -86,6 +90,7 @@ export class FastlySDK {
       tracerProvider.addSpanProcessor(this._tracerProviderConfig.spanProcessor);
       tracerProvider.register({
         contextManager: this._tracerProviderConfig.contextManager,
+        propagator: this._tracerProviderConfig.textMapPropagator,
       });
     }
 
