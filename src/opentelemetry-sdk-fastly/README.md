@@ -79,3 +79,18 @@ and registers it with the API. Then, starts instrumentations.
 
 Call this function asynchronously _before_ calling `addEventListener()` to define your
 entry point.
+
+#### Transform Mode
+
+`start()` may be called with an optional transformation function as the first argument,
+used to transform the configuration object immediately after the Fetch Event is received,
+but before your listener function is called.
+
+This is useful for example if you need to refer to use features that are not available during
+application initialization, such as to obtain values from
+[Edge Dictionaries](https://developer.fastly.com/learning/compute/javascript/#using-edge-dictionaries)
+or to [perform logging](https://developer.fastly.com/learning/compute/javascript/#logging).
+
+If you provide this function, then it is called with the configuration object that was originally
+passed to the constructor. The return value from this function is used as the final configuration
+object used to start the SDK.

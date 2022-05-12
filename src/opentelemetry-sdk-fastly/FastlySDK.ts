@@ -13,6 +13,8 @@ import { FastlySDKConfiguration } from "./types";
 import { FastlyTracerConfig, FastlyTracerProvider } from "../opentelemetry-sdk-trace-fastly";
 import { setPatchTarget } from "./util";
 
+type TransformConfigurationFunction = (configuration: Partial<FastlySDKConfiguration>, event: FetchEvent) => Partial<FastlySDKConfiguration>;
+
 export class FastlySDK {
   private _resource: Resource;
 
@@ -24,9 +26,34 @@ export class FastlySDK {
   };
   private _tracerProvider?: FastlyTracerProvider;
 
-  private readonly _instrumentations: InstrumentationOption[];
+  private _instrumentations: InstrumentationOption[];
+
+  /** a copy of the configuration object passed to the constructor. */
+  private _configuration: Partial<FastlySDKConfiguration>;
+
+  /**
+   * @private
+   * An optional function that can be set, by passing it into the start() function.
+   * If this is set, then when a FetchEvent starts, this transform configuration will
+   * run against the saved configuration object, giving the application an opportunity
+   * to modify the configuration and start the SDK with the modified configuration.
+  */
+  private _transformConfiguration?: TransformConfigurationFunction;
 
   public constructor(configuration: Partial<FastlySDKConfiguration> = {}) {
+    this._configuration = configuration;
+    this._resource = new Resource({});
+    this._instrumentations = [];
+    this._initConfiguration(this._configuration);
+  }
+
+  /**
+   * @private
+   * Apply the initial configuration that is set during the constructor, or,
+   * if a transform configuration is passed to the start() function, after it is
+   * called in response to the start of a FetchEvent.
+   */
+  private _initConfiguration(configuration: Partial<FastlySDKConfiguration>) {
     this._resource = configuration.resource ?? new Resource({});
 
     if (configuration.spanProcessor || configuration.traceExporter) {
@@ -78,7 +105,12 @@ export class FastlySDK {
     this._resource = this._resource.merge(resource);
   }
 
-  async start() {
+  /**
+   * @private
+   * Apply the various configurations that have been set up by _initConfiguration(),
+   * which has been called either by the constructor or in response to the FetchEvent.
+   */
+  private _applyConfiguration() {
     if (this._tracerProviderConfig) {
       const tracerProvider = new FastlyTracerProvider({
         ...this._tracerProviderConfig.tracerConfig,
@@ -97,10 +129,31 @@ export class FastlySDK {
     registerInstrumentations({
       instrumentations: this._instrumentations,
     });
-
-    setPatchTarget(this);
   }
 
+  /**
+   * Start the SDK by applying the configuration.
+   * This function can be called with an optional transform configuration function.
+   * If it is, then the remaining steps of applying the configuration are deferred until
+   * event start.
+   * @param transform
+   */
+  async start(transform?: TransformConfigurationFunction) {
+
+    setPatchTarget(this);
+
+    if(transform != null) {
+      this._transformConfiguration = transform;
+    } else {
+      this._applyConfiguration();
+    }
+
+  }
+
+  /**
+   * Shut down the SDK.  Returns a promise that settles when the components have
+   * finished shutting down.
+   */
   public shutdown(): Promise<void> {
     const promises: Promise<unknown>[] = [];
     if (this._tracerProvider) {
@@ -116,5 +169,20 @@ export class FastlySDK {
         .then(() => {
         })
     );
+  }
+
+  /**
+   * When the FetchEvent happens, check if start() had been called with a transform
+   * function. If so, then perform the transform and apply all of the configuration
+   * at this point.
+   * @param event
+   */
+  public onEventStart(event: FetchEvent) {
+    if(this._transformConfiguration != null) {
+      this._configuration = this._transformConfiguration(this._configuration, event);
+      this._tracerProviderConfig = undefined;
+      this._initConfiguration(this._configuration);
+      this._applyConfiguration();
+    }
   }
 }

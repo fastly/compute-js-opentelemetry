@@ -17,6 +17,10 @@ addEventListener('fetch', (event) => {
     return;
   }
 
+  // Allow the SDK to respond to the very first opportunity to react
+  // after the listener starts.
+  _target!.onEventStart(event);
+
   const origRespondWith = event.respondWith;
   event.respondWith = (response) => {
 
