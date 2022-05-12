@@ -1,0 +1,22 @@
+# This file describes a Fastly Compute@Edge package. To learn more visit:
+# https://developer.fastly.com/reference/fastly-toml/
+
+authors = [ "oss@fastly.com" ]
+description = "OpenTelemetry demo app"
+language = "javascript"
+manifest_version = 2
+name = "otel-demo"
+service_id = "7aWy2yfK8358SKjTLTunM1"
+
+[local_server]
+  [local_server.backends]
+    [local_server.backends.httpbin]
+      url = "https://httpbin.org/"
+    [local_server.backends.appengine]
+      url = "http://localhost:3000/"
+    [local_server.backends.otel-collector]
+      url = "http://localhost:4318/"
+  [local_server.dictionaries]
+    [local_server.dictionaries.config]
+      file = "config.json"
+      format = "json"

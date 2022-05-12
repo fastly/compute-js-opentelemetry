@@ -56,10 +56,11 @@ details.
 
 See the examples in the [`/examples`](./examples) directory.
 
-| **Example Directory**                     | Description   |
-|-------------------------------------------|---------------|
-| [basic-example](./examples/basic-example) | Basic Example |
-
+| **Example Directory**                         | Description                                                                                                                                |
+|-----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| [basic-example](./examples/basic-example)     | Basic Example                                                                                                                              |
+| [otel-demo](./examples/otel-demo)             | Example that demonstrates OpenTelemetry traces that start at the Edge and nest into an operation at the backend.                           |
+| [otel-http-proxy](./examples/otel-http-proxy) | A sample application designed to collect traces as an HTTPS log endpoint for a Fastly service, sending them to an OpenTelemetry collector. |
 
 ## Issues
 
