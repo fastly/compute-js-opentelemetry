@@ -29,8 +29,8 @@ For a description of each module and the APIs that they expose, see the [`src`](
 
 Compute@Edge JavaScript applications are
 [compiled as a web worker using Webpack](https://developer.fastly.com/learning/compute/javascript/#module-bundling) as
-part of their build process. The Compute@Edge starter kit contains a Webpack configuration file
-that sets reasonable defaults for a starting point application.
+part of their build process. The [Compute@Edge starter kit for JavaScript](https://github.com/fastly/compute-starter-kit-javascript-default)
+contains a Webpack configuration file that sets reasonable defaults for a starting point application.
 
 In order to use the OpenTelemetry packages that we rely on, additions need to be made to this configuration,
 for example the addition of polyfills and shims. These changes are included in a helper module, `@fastly/compute-js-opentelemetry/webpack-helpers`,
@@ -49,7 +49,7 @@ module.exports = webpackHelpers.apply(module.exports);
 ```
 
 You are not required to use this module, but if you do choose not to use it, you will have to
-make the appropriate modifications yourself. See the [webpack-helpers/index.ts](./src/webpack-helpers/index.ts) file for
+make the appropriate modifications yourself. See [webpack-helpers](./src/webpack-helpers) for
 details.
 
 ## Examples
