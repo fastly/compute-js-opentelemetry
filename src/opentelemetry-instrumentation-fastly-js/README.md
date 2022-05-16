@@ -34,10 +34,11 @@ registerInstrumentations({
 
 These instrumentations create spans for the following lifecycle events.
 
-* `fetchevent` - traces the lifetime of the FetchEvent, from the time it is first passed in
+* `FetchEvent` - traces the lifetime of the FetchEvent, from the time it is first passed in
   to the listener, until the time its result value (`Response` or `Error`) is determined.
   This means that if a promise is passed to `event.respondWith`, then this will include the time
-  it takes until that promise is settled.
+  it takes until that promise is settled. This span is a SERVER span, and if a parent span is
+  detected to be propagated into this request, then this span will be created as a child of that span.
 
 * `listener fn` - traces the lifetime of the application-provided listener function,
   from the time it is called to the time it returns. Note that this can return early if it returns

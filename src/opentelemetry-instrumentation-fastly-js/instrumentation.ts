@@ -96,6 +96,20 @@ export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
 
       const eventContext = this.getEventContext(event);
 
+      const carrier: Record<string, string> = {};
+
+      for (const field of propagation.fields()) {
+        const value = event.request.headers.get(field);
+        if(value != null) {
+          carrier[field] = value;
+          // Delete this so that if the main app tries to extract
+          // propagation it will see nothing
+          event.request.headers.delete(field);
+        }
+      }
+
+      const parentContext = propagation.extract(context.active(), carrier);
+
       const fetchEventSpan = this.tracer.startSpan('FetchEvent', {
         kind: SpanKind.SERVER,
         attributes: {
@@ -103,7 +117,8 @@ export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
           [SemanticAttributes.HTTP_METHOD]: event.request.method,
           [SemanticAttributes.HTTP_URL]: event.request.url,
         },
-      });
+      }, parentContext);
+
       try {
         const url = new URL(event.request.url);
         fetchEventSpan.setAttribute(SemanticAttributes.HTTP_HOST, url.host);
