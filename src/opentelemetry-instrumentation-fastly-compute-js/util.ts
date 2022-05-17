@@ -5,25 +5,7 @@
 
 import { FastlyComputeJsInstrumentation } from "./instrumentation";
 
-export function setIsNotBackendFetch(init: RequestInit, value: boolean = true) {
-  (init as any).isNotBackendFetch = value;
-}
-
-export function isNotBackendFetch(init: RequestInit) {
-  return (init as any).isNotBackendFetch;
-}
-
 export function patchRuntime(target: FastlyComputeJsInstrumentation) {
-  const origFetch = globalThis.fetch;
-  globalThis.fetch = async (resource, init) => {
-    if (init != null && isNotBackendFetch(init)) {
-      return await origFetch(resource, init);
-    }
-    return await target.onBackendFetch(resource, init, async (resource: RequestInfo, init: RequestInit | undefined) => {
-      return await origFetch(resource, init);
-    });
-  };
-
   const origAddEventListener = globalThis.addEventListener;
   globalThis.addEventListener = ( type, listener ) => {
 

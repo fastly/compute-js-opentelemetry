@@ -42,27 +42,6 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
     this._eventsEnabled = false;
   }
 
-  async onBackendFetch(resource: RequestInfo, init: RequestInit | undefined, fn: (resource: RequestInfo, init: RequestInit | undefined) => Promise<Response>): Promise<Response> {
-    if(!this._eventsEnabled) {
-      return await fn(resource, init);
-    }
-    const backendFetchSpan = this.tracer.startSpan('Backend Fetch', {
-      kind: SpanKind.CLIENT,
-    });
-    const backendFetchContext = trace.setSpan(context.active(), backendFetchSpan);
-    const carrier = {};
-    propagation.inject(backendFetchContext, carrier);
-    return context.with(backendFetchContext, async () => {
-      const options = { ...(init ?? {}) };
-      options.headers = Object.assign({}, init?.headers, carrier);
-      try {
-        return await fn(resource, options);
-      } finally {
-        backendFetchSpan.end();
-      }
-    });
-  }
-
   // This event wraps the lifetime of a single FetchEvent, corresponding to the time between
   // the start of handling an incoming event and when the Response to be sent back is
   // determined.
