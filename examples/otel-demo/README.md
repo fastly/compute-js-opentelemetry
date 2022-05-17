@@ -154,7 +154,7 @@ the default value listed below.
 | `APPENGINE_URL`           | URL of your "appengine" instance                                       | `http://localhost:3000/`          | 
 | `OTEL_HTTP_COLLECTOR_URL` | The trace collection URL of the OpenTelemetry collector                | `http://localhost:4318/v1/traces` |
 
-The service's backends are defined as follows. Modify them under the [local_server.backends] section of the `fastly.toml` file
+The service's backends are defined as follows. Modify them under the `[local_server.backends]` section of the `fastly.toml` file
 if you need to make changes.
 
 | Backend name   | Hostname Configuration   |
