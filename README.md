@@ -3,12 +3,59 @@
 An implementation of the [OpenTelemetry JavaScript API](https://opentelemetry.io/docs/instrumentation/js/) for
 [Fastly Compute@Edge](https://developer.fastly.com/learning/compute/).
 
+```javascript
+/// <reference types="@fastly/js-compute" />
+
+import { context, trace } from "@opentelemetry/api";
+import { Resource } from "@opentelemetry/resources";
+import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
+
+import { FastlySDK } from "@fastly/compute-js-opentelemetry/sdk-fastly";
+import { OTLPTraceExporter } from "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-logger";
+import { FastlyJsInstrumentation } from "@fastly/compute-js-opentelemetry/instrumentation-fastly-js";
+
+const sdk = new FastlySDK({
+  traceExporter: new OTLPTraceExporter({ endpoint: 'otlp-logger' }),
+  instrumentations: [ new FastlyJsInstrumentation(), ],
+  resource: new Resource({ [SemanticResourceAttributes.SERVICE_NAME]: 'example-service', }),
+});
+await sdk.start();
+
+addEventListener("fetch", (event) => event.respondWith(handleRequest(event)));
+async function handleRequest(event) {
+  const tracer = trace.getTracerProvider()
+    .getTracer('example-tracer');
+
+  const span = tracer.startSpan('my-span');
+  context.with(trace.setSpan(context.active(), span), () => {
+    try {
+      trace.getSpan(context.active()).addEvent("start");
+      
+      // Do something
+      performMainActivity();
+
+      trace.getSpan(context.active()).addEvent("end");
+    } finally {
+      // End the span
+      span.end();
+    }
+  });
+
+  return new Response('OK', {
+    status: 200,
+    headers: new Headers({"Content-Type": "text/plain"}),
+  });
+}
+```
+
 This implementation extends the standard interfaces and objects provided by the
 OpenTelemetry [JavaScript API](https://github.com/open-telemetry/opentelemetry-js-api) and
 [SDK](https://github.com/open-telemetry/opentelemetry-js), adapting them for use on the Fastly Compute@Edge platform.
 
-Whereas OpenTelemetry would separate each concern into its own `npm` package,
+Whereas `opentelemetry-js` would separate each concern into its own `npm` package,
 we provide our components as a single package with multiple exports.
+
+The table below provides links to the documentation for each module. 
 
 | **Module**                                                                                | **Export Name**                                                            | Description                                                                                                                                                                                                                                                                                                                                                                                                                         |
 |-------------------------------------------------------------------------------------------|----------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -21,9 +68,15 @@ we provide our components as a single package with multiple exports.
 | [Trace SDK for Fastly](./src/opentelemetry-sdk-trace-fastly) (Internal Use)               | `@fastly/compute-js-opentelemetry/opentelemetry-sdk-trace-fastly`          | A utility library that provides a [Tracer Provider](https://open-telemetry.github.io/opentelemetry-js-api/interfaces/tracerprovider.html) and [Context Manager](https://open-telemetry.github.io/opentelemetry-js-api/interfaces/contextmanager.html) implementations for use with a Compute@Edge JavaScript application.                                                                                                           |
 | [Trace Exporter Base](./src/otlp-exporter-fastly-base) (Internal Use)                     | `@fastly/compute-js-opentelemetry/otlp-exporter-fastly-base`               | A base class for exporters, containing common code used by `@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend` and `@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-logger`.                                                                                                                                                                                                                          |
 
-## API
+## Examples
 
-For a description of each module and the APIs that they expose, see the [`src`](./src) directory.
+See the examples in the [`/examples`](./examples) directory.
+
+| **Example Directory**                         | Description                                                                                                                                |
+|-----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| [basic-example](./examples/basic-example)     | Basic Example                                                                                                                              |
+| [otel-demo](./examples/otel-demo)             | Example that demonstrates OpenTelemetry traces that start at the Edge and nest into an operation at the backend.                           |
+| [otel-http-proxy](./examples/otel-http-proxy) | A sample application designed to collect traces as an HTTPS log endpoint for a Fastly service, sending them to an OpenTelemetry collector. |
 
 ## Webpack
 
@@ -52,15 +105,21 @@ You are not required to use this module, but if you do choose not to use it, you
 make the appropriate modifications yourself. See [webpack-helpers](./src/webpack-helpers) for
 details.
 
-## Examples
+## Notes
 
-See the examples in the [`/examples`](./examples) directory.
+### Compatibility
 
-| **Example Directory**                         | Description                                                                                                                                |
-|-----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| [basic-example](./examples/basic-example)     | Basic Example                                                                                                                              |
-| [otel-demo](./examples/otel-demo)             | Example that demonstrates OpenTelemetry traces that start at the Edge and nest into an operation at the backend.                           |
-| [otel-http-proxy](./examples/otel-http-proxy) | A sample application designed to collect traces as an HTTPS log endpoint for a Fastly service, sending them to an OpenTelemetry collector. |
+Some `opentelemetry-js` modules are not currently compatible with Fastly Compute@Edge.
+The table below is a non-comprehensive list of such components.
+
+| **Component**                                                     | Package                                                                                                                             | Reason / Workaround                                                                                                                                                                                                                                        |
+|-------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `BatchSpanProcessor`                                              | `@opentelemetry/sdk-trace-base`                                                                                                     | Relies on `setTimeout`. Use `SimpleSpanProcessor`.                                                                                                                                                                                                         |
+| `NodeSDK`                                                         | `@opentelemetry/sdk-node`                                                                                                           | Relies on `BatchSpanProcessor` as well as platforms detectors that are incompatible with Compute@Edge. Use `FastlySDK`.                                                                                                                                    |
+| `OTLPTraceExporter`                                               | `@opentelemetry/exporter-trace-otlp-http`                                                                                           | Relies on `http` and `https`, which are not available in Compute@Edge. Use `OTLPTraceExporter` from `@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend` or `@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-logger` instead. |
+| `ZoneContextManager`                                              | `@opentelemetry/context-zone`<br />`@opentelemetry/context-zone-peer-dep`                                                           | Relies on `zone.js`, which is incompatible with Compute@Edge. Use `FastlyStackContextManager`.                                                                                                                                                             |
+| `AsyncHooksContextManager`<br />`AsyncLocalStorageContextManager` | `@opentelemetry/context-async-hooks`                                                                                                | Relies on `async_hooks`, which is not available in Compute@Edge. Use `FastlyStackContextManager`.                                                                                                                                                          |
+| Instrumentations included in `opentelemetry-js`                   | `@opentelemetry/instrumentation-*`<br />`@opentelemetry/auto-instrumentations-node`<br />`@opentelemetry/auto-instrumentations-web` | These rely on other frameworks and modules that are not compatible with Compute@Edge. Use `FastlyJsInstrumentation`.                                                                                                                                       |
 
 ## Issues
 
