@@ -16,7 +16,7 @@ import { _resetEventContext, _setEventContext } from "../opentelemetry-sdk-trace
 
 export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown> {
 
-  readonly component: string = 'fastly-js';
+  readonly component: string = '@fastly/compute-js-opentelemetry/instrumentation-fastly-compute-js';
   readonly version: string = '1';
   
   readonly moduleName = this.component;
