@@ -1,6 +1,6 @@
 # OpenTelemetry Fastly Compute@Edge Lifecycle instrumentation
 
-This module provides instrumentations that generate traces for the Compute@Edge JavaScript application lifecycle.
+This module provides an instrumentation that generate traces for the Compute@Edge JavaScript application lifecycle.
 
 ## Installation
 
@@ -32,7 +32,7 @@ registerInstrumentations({
 
 ## Events
 
-These instrumentations create spans for the following lifecycle events.
+This instrumentation creates spans for the following lifecycle events.
 
 * `FetchEvent` - traces the lifetime of the FetchEvent, from the time it is first passed in
   to the listener, until the time its result value (`Response` or `Error`) is determined.
