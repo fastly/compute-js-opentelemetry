@@ -13,6 +13,7 @@ import { FastlySDK } from "@fastly/compute-js-opentelemetry/sdk-fastly";
 import { OTLPTraceExporter as OTLPTraceExporterLogger } from "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-logger";
 import { OTLPTraceExporter as OTLPTraceExporterBackend } from "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend";
 import { FastlyComputeJsInstrumentation } from "@fastly/compute-js-opentelemetry/instrumentation-fastly-compute-js";
+import { FastlyBackendFetchInstrumentation } from "@fastly/compute-js-opentelemetry/instrumentation-fastly-backend-fetch";
 
 const IS_LOCAL = fastly.env.get('FASTLY_HOSTNAME') === 'localhost';
 
@@ -23,6 +24,8 @@ const OTEL_HTTP_PROXY_ENDPOINT = 'otel-http-proxy';
 const instrumentations = [
   // Generates traces for Compute@Edge lifetime events.
   new FastlyComputeJsInstrumentation(),
+  // Generates traces for Fastly backend fetch.
+  new FastlyBackendFetchInstrumentation(),
 ];
 
 // Identify our service
