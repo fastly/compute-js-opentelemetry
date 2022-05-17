@@ -18,7 +18,7 @@ application for using a named log provider to send traces.
   This application can also be invoked at the special `/json` path, in which case it will
   call `https://httpbin.org/json` and return the body from that response.
 
-  This app uses `FastlyJsInstrumentation`, so Compute@Edge lifecycle events and the
+  This app uses `FastlyComputeJsInstrumentation`, so Compute@Edge lifecycle events and the
   backend fetch will generate OpenTelemetry traces.
 
   This application uses the Trace Exporter from `@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend`,

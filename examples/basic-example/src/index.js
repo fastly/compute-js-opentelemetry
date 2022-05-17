@@ -11,7 +11,7 @@ import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions"
 
 import { FastlySDK } from "@fastly/compute-js-opentelemetry/sdk-fastly";
 import { OTLPTraceExporter } from "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend";
-import { FastlyJsInstrumentation } from "@fastly/compute-js-opentelemetry/instrumentation-fastly-js";
+import { FastlyComputeJsInstrumentation } from "@fastly/compute-js-opentelemetry/instrumentation-fastly-compute-js";
 
 // Instantiate a trace exporter.
 // "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend" sends trace data to the named
@@ -24,7 +24,7 @@ const traceExporter = new OTLPTraceExporter({
 // Instantiate instrumentations.
 const instrumentations = [
   // Generates traces for Compute@Edge lifetime events.
-  new FastlyJsInstrumentation(),
+  new FastlyComputeJsInstrumentation(),
 ];
 
 // Identify our service
@@ -62,7 +62,7 @@ async function handleRequest(event) {
   // Create a span.  This span will be created under the active context.
   // Since this function is running within the Compute@Edge lifetime,
   // the parent span will be the 'listener fn' span, provided by
-  // "@fastly/compute-js-opentelemetry/instrumentation-fastly-js"
+  // "@fastly/compute-js-opentelemetry/instrumentation-fastly-compute-js"
   const span1 = tracer.startSpan('my-span');
   context.with(trace.setSpan(context.active(), span1), () => {
     try {

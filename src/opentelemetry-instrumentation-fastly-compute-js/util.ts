@@ -3,7 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { FastlyJsInstrumentation } from "./instrumentation";
+import { FastlyComputeJsInstrumentation } from "./instrumentation";
 
 export function setIsNotBackendFetch(init: RequestInit, value: boolean = true) {
   (init as any).isNotBackendFetch = value;
@@ -13,7 +13,7 @@ export function isNotBackendFetch(init: RequestInit) {
   return (init as any).isNotBackendFetch;
 }
 
-export function patchRuntime(target: FastlyJsInstrumentation) {
+export function patchRuntime(target: FastlyComputeJsInstrumentation) {
   const origFetch = globalThis.fetch;
   globalThis.fetch = async (resource, init) => {
     if (init != null && isNotBackendFetch(init)) {

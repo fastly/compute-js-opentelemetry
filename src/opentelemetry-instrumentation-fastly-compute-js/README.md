@@ -1,4 +1,4 @@
-# OpenTelemetry Fastly Compute@Edge instrumentation
+# OpenTelemetry Fastly Compute@Edge Lifecycle instrumentation
 
 This module provides instrumentations that generate traces for the Compute@Edge JavaScript application lifecycle.
 
@@ -11,13 +11,13 @@ npm install --save @fastly/compute-js-opentelemetry
 ## Usage
 
 ```javascript
-import { FastlyJsInstrumentation } from "@fastly/compute-js-opentelemetry/instrumentation-fastly-js";
+import { FastlyComputeJsInstrumentation } from "@fastly/compute-js-opentelemetry/instrumentation-fastly-compute-js";
 
 // Specify the instrumentations instantiating the SDK
 import { FastlySDK } from "@fastly/compute-js-opentelemetry/sdk-fastly";
 const sdk = new FastlySDK({
   instrumentations: [
-    new FastlyJsInstrumentation(),
+    new FastlyComputeJsInstrumentation(),
   ],
 });
 await sdk.start();
@@ -25,7 +25,7 @@ await sdk.start();
 // or, manually register instrumentations.
 registerInstrumentations({
   instrumentations: [
-    new FastlyJsInstrumentation(),
+    new FastlyComputeJsInstrumentation(),
   ],
 });
 ```

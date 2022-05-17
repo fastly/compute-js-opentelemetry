@@ -10,7 +10,7 @@ import { OTLPExporterFastlyBackendBase } from "./OTLPExporterFastlyBackendBase";
 import { OTLPExporterFastlyLoggerBase } from "./OTLPExporterFastlyLoggerBase";
 import { getEnv } from "@opentelemetry/core";
 import { CompressionAlgorithm } from "./types";
-import { setIsNotBackendFetch } from "../opentelemetry-instrumentation-fastly-js/util";
+import { setIsNotBackendFetch } from "../opentelemetry-instrumentation-fastly-compute-js/util";
 
 /**
  * Sends data using fetch

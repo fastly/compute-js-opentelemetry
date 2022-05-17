@@ -15,7 +15,7 @@ import { FastlySDK } from "@fastly/compute-js-opentelemetry/sdk-fastly";
 
 import { Resource } from "@opentelemetry/resources";
 import { OTLPTraceExporter } from "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend";
-import { FastlyJsInstrumentation } from "@fastly/compute-js-opentelemetry/instrumentation-fastly-js";
+import { FastlyComputeJsInstrumentation } from "@fastly/compute-js-opentelemetry/instrumentation-fastly-compute-js";
 
 // Instantiate a trace exporter.
 const traceExporter = new OTLPTraceExporter({
@@ -25,7 +25,7 @@ const traceExporter = new OTLPTraceExporter({
 // Instantiate instrumentations.
 const instrumentations = [
   // Generates traces for Compute@Edge lifetime events.
-  new FastlyJsInstrumentation(),
+  new FastlyComputeJsInstrumentation(),
 ];
 
 // Identify our service
@@ -84,7 +84,7 @@ const sdk = new FastlySDK({
     backend: 'otel-collector',
     url: 'https://otelcollector.your.app/v1/traces',
   }),
-  instrumentations: [ new FastlyJsInstrumentation(), ],
+  instrumentations: [ new FastlyComputeJsInstrumentation(), ],
   resource: new Resource({ [SemanticResourceAttributes.SERVICE_NAME]: 'example-service', }),
 });
 await sdk.start();
@@ -123,7 +123,7 @@ run on each request.
 
 ```javascript
 const sdk = new FastlySDK({
-  instrumentations: [ new FastlyJsInstrumentation(), ],
+  instrumentations: [ new FastlyComputeJsInstrumentation(), ],
   resource: new Resource({ [SemanticResourceAttributes.SERVICE_NAME]: 'example-service', }),
 });
 

@@ -49,7 +49,7 @@ This simple example instantiates the following objects:
 * **OTLPTraceExporter**
     an OpenTelemetry Trace Exporter adapted for use in a Compute@Edge handler.
 
-* **FastlyJsInstrumentation**
+* **FastlyComputeJsInstrumentation**
     an OpenTelemetry instrumentation that generates traces for the
     Compute@Edge lifecycle. 
 
@@ -81,7 +81,7 @@ with the span active, adds an event at the start of the span, spends a few milli
 and then finally adds an event at the end of the context. After exiting the context, the application
 ends the span, causing the tracer to queue the trace to the backend.
 
-As **FastlyJsInstrumentation** is active, OpenTelemetry will also automatically create spans to
+As **FastlyComputeJsInstrumentation** is active, OpenTelemetry will also automatically create spans to
 trace the following events:
 
 * `fetchevent` - traces the lifetime of the FetchEvent, from the time it is first passed in

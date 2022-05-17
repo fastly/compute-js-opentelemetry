@@ -14,7 +14,7 @@ import { AttributeNames } from './enums/AttributeNames';
 import { patchRuntime } from "./util";
 import { _resetEventContext, _setEventContext } from "../opentelemetry-sdk-trace-fastly";
 
-export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
+export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown> {
 
   readonly component: string = 'fastly-js';
   readonly version: string = '1';
@@ -25,7 +25,7 @@ export class FastlyJsInstrumentation extends InstrumentationBase<unknown> {
   _eventsEnabled?: boolean;
 
   constructor(config: InstrumentationConfig = {}) {
-    super('@fastly/compute-js-opentelemetry/instrumentation-fastly-js', '0.1.0', config);
+    super('@fastly/compute-js-opentelemetry/instrumentation-fastly-compute-js', '0.1.0', config);
   }
 
   init() {}

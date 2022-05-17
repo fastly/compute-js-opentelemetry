@@ -9,7 +9,7 @@
     "./diag-fastly-logger": "./build/src/diag-fastly-logger/index.js",
     "./exporter-trace-otlp-fastly-backend": "./build/src/exporter-trace-otlp-fastly-backend/index.js",
     "./exporter-trace-otlp-fastly-logger": "./build/src/exporter-trace-otlp-fastly-logger/index.js",
-    "./instrumentation-fastly-js": "./build/src/opentelemetry-instrumentation-fastly-js/index.js",
+    "./instrumentation-fastly-compute-js": "./build/src/opentelemetry-instrumentation-fastly-compute-js/index.js",
     "./otlp-expoter-fastly-base": "./build/src/otlp-expoter-fastly-base/index.js",
     "./sdk-fastly": "./build/src/opentelemetry-sdk-fastly/index.js",
     "./sdk-trace-fastly": "./build/src/opentelemetry-sdk-trace-fastly/index.js",
