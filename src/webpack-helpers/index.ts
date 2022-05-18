@@ -26,13 +26,6 @@ export function apply(webpackConfig: Configuration): Configuration {
       },
       resolve: {
         ...(webpackConfig?.resolve ?? {}),
-        // TEMPORARY:
-        // Default is [ "browser", "module", "main" ], but we remove 'module'
-        // because some opentelemetry libs don't ship with the
-        // appropriate module entry points.
-        // A fix for this will be coming in the next release (>=0.29) of the
-        // opentelemetry packages.
-        mainFields: [ 'browser', 'main' ],
         alias: {
           "document": path.resolve(__dirname, "./shims/document"),
           "process": path.resolve(__dirname, "./shims/process"),
