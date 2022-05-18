@@ -108,6 +108,17 @@ details.
 
 ## Notes
 
+### Environment Variables
+
+OpenTelemetry defines a well-documented set of [environment variables](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/sdk-environment-variables.md)
+that are designed to allow you to configure defaults for its libraries. However, JavaScript applications built to run on
+Fastly's Compute@Edge platform perform their upfront initialization at _build time ("build-time initialization")_ rather
+than during each invocation (that's how they start up so fast). This means that the platform cannot provide a way to read
+from the environment during build-time initialization, when most OpenTelemetry libraries are initializing.
+
+Therefore, when using this library, the `getEnv()` function will always return the default values defined by OpenTelemetry.
+Any changes you require to these defaults need to be made programmatically.
+
 ### Compatibility
 
 Some `opentelemetry-js` modules are not currently compatible with Fastly Compute@Edge.
