@@ -19,7 +19,8 @@
   "types": "build/src/index.d.ts",
   "scripts": {
     "compile": "tsc --build tsconfig.json && cp -R types build",
-    "clean": "tsc --build --clean tsconfig.json"
+    "clean": "tsc --build --clean tsconfig.json",
+    "test": "nyc ts-mocha -p tsconfig.json test/**/*.test.ts"
   },
   "dependencies": {
     "@opentelemetry/api": "^1.1.0",
