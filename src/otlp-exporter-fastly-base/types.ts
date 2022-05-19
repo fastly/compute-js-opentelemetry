@@ -4,6 +4,8 @@
  */
 
 import { OTLPExporterConfigBase } from '@opentelemetry/otlp-exporter-base';
+import { CompressionAlgorithm } from '@opentelemetry/otlp-exporter-base/build/src/platform/node';
+export { CompressionAlgorithm };
 
 /**
  * Collector Exporter Fastly Compute@Edge backend base config
@@ -11,11 +13,6 @@ import { OTLPExporterConfigBase } from '@opentelemetry/otlp-exporter-base';
 export interface OTLPExporterFastlyBackendConfigBase extends OTLPExporterConfigBase {
     backend: string;
     compression?: CompressionAlgorithm;
-}
-
-export enum CompressionAlgorithm {
-    NONE = "none",
-    GZIP = "gzip"
 }
 
 /**

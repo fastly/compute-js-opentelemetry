@@ -6,9 +6,9 @@
 import * as zlib from "zlib";
 import { diag } from '@opentelemetry/api';
 import { OTLPExporterError } from "@opentelemetry/otlp-exporter-base";
+export { configureCompression } from '@opentelemetry/otlp-exporter-base/build/src/platform/node';
 import { OTLPExporterFastlyBackendBase } from "./OTLPExporterFastlyBackendBase";
 import { OTLPExporterFastlyLoggerBase } from "./OTLPExporterFastlyLoggerBase";
-import { getEnv } from "@opentelemetry/core";
 import { CompressionAlgorithm } from "./types";
 
 /**
@@ -67,15 +67,6 @@ export async function sendWithFetch<ExportItem, ServiceRequest>(
   }
 
   diag.debug(`status: ${res.status}`, responseData);
-}
-
-export function configureCompression(compression: CompressionAlgorithm | undefined): CompressionAlgorithm {
-  if (compression) {
-    return compression;
-  } else {
-    const definedCompression = getEnv().OTEL_EXPORTER_OTLP_TRACES_COMPRESSION || getEnv().OTEL_EXPORTER_OTLP_COMPRESSION;
-    return definedCompression === CompressionAlgorithm.GZIP ? CompressionAlgorithm.GZIP : CompressionAlgorithm.NONE;
-  }
 }
 
 /**

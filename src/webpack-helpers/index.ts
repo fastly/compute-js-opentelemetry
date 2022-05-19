@@ -34,8 +34,11 @@ export function apply(webpackConfig: Configuration): Configuration {
         fallback: {
           "assert": require.resolve("assert/"),
           "buffer": require.resolve("buffer/"),
+          "http": false,
+          "https": false,
           "stream": require.resolve("stream-browserify"),
           "timers": require.resolve("timers-browserify"),
+          "url": false,
           "util": require.resolve("util/"),
           "zlib": require.resolve("browserify-zlib"),
         },
