@@ -16,7 +16,7 @@ import { FastlyComputeJsInstrumentation } from "@fastly/compute-js-opentelemetry
 // Instantiate a trace exporter.
 // "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend" sends trace data to the named
 // backend, using the OTLP format. Be sure to specify the backend name in addition to the URL.
-// URL defaults to 'http://localhost/v1/traces' if not provided.
+// URL defaults to 'http://localhost:4318/v1/traces' if not provided.
 const traceExporter = new OTLPTraceExporter({
   backend: 'test_backend'
 });
