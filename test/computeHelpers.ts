@@ -36,3 +36,41 @@ export class MockedResponse implements Response {
   arrayBuffer!: () => Promise<ArrayBuffer>;
   json!: () => Promise<any>;
 }
+
+export class LoggerMock implements Logger {
+  public endpoint: string;
+  public called: boolean;
+  public loggedContent?: string;
+  constructor(endpoint: string) {
+    this.called = false;
+    this.endpoint = endpoint;
+  }
+  log(message: any): void {
+    this.called = true;
+    this.loggedContent = String(message);
+  }
+  reset() {
+    this.called = false;
+    this.loggedContent = undefined;
+  }
+}
+
+class FastlyMock implements Fastly {
+  _loggers: {[endpoint: string]: Logger} = {};
+
+  getLogger(endpoint: string): Logger {
+    if(endpoint in this._loggers) {
+      return this._loggers[endpoint];
+    }
+    const logger = new LoggerMock(endpoint);
+    this._loggers[endpoint] = logger;
+    return logger;
+  }
+
+  env!: Env;
+  enableDebugLogging!: (enabled: boolean) => void;
+  getGeolocationForIpAddress!: (address: string) => Geolocation;
+  includeBytes!: (path: String) => Uint8Array;
+}
+
+globalThis.fastly = new FastlyMock();
