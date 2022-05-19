@@ -21,8 +21,14 @@ addEventListener('fetch', (event) => {
   // after the listener starts.
   _target!.onEventStart(event);
 
+  const responsesResolvedMap = new Map<Response | Promise<Response>, boolean>();
+
   const origRespondWith = event.respondWith;
   event.respondWith = (response) => {
+
+    // If event.respondWith is called multiple times, then
+    // keep track of all of them.
+    responsesResolvedMap.set(response, true);
 
     // Create a promise to extend the life of this event.
     // Calling resolveExtension later will settle this promise
@@ -33,14 +39,20 @@ addEventListener('fetch', (event) => {
     });
     event.waitUntil(extension);
 
-    origRespondWith.call(event, response);
-
     Promise.resolve(response)
       .finally(() => {
-        // This ensures that target's shutdown is enqueued
-        event.waitUntil(_target!.shutdown());
+        responsesResolvedMap.delete(response);
+
+        // When the last one has been resolved, we are safe to shut down the target.
+        if(responsesResolvedMap.size === 0) {
+          // This ensures that target's shutdown is enqueued
+          event.waitUntil(_target!.shutdown());
+        }
         resolveExtension!();
       });
+
+    origRespondWith.call(event, response);
+
   };
 
 });
