@@ -4,10 +4,12 @@
  */
 
 import { diag } from "@opentelemetry/api";
+import { addFetchEventAction } from "../core";
 import { FastlyComputeJsInstrumentation } from "./instrumentation";
 
 let _target!: FastlyComputeJsInstrumentation;
-addEventListener('fetch', (event) => {
+
+addFetchEventAction(10, event => {
   if(_target == null) {
     return;
   }

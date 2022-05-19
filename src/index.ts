@@ -6,6 +6,7 @@
 // /// <reference types="@fastly/js-compute" />
 /// <reference path="../types/index.d.ts" />
 
+export * as core from './core';
 export * as diagFastlyLogger from './diag-fastly-logger';
 export * as exporterTraceOtlpFastlyFetch from './exporter-trace-otlp-fastly-backend';
 export * as exporterTraceOtlpFastlyLogger from './exporter-trace-otlp-fastly-logger';

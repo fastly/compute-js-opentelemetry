@@ -4,6 +4,7 @@
  */
 
 import { diag } from "@opentelemetry/api";
+import { addFetchEventAction } from "../core";
 import { FastlySDK } from "./FastlySDK";
 
 let _target!: FastlySDK;
@@ -12,7 +13,7 @@ let _target!: FastlySDK;
 // then the SDK's shutdown method will be called automatically before
 // the end of the event's lifetime.
 
-addEventListener('fetch', (event) => {
+addFetchEventAction(0, event => {
   diag.debug('sdk-fastly: running listener');
 
   if(_target == null) {
@@ -60,7 +61,6 @@ addEventListener('fetch', (event) => {
     origRespondWith.call(event, response);
 
   };
-
 });
 
 export function setPatchTarget(target: FastlySDK) {
