@@ -10,8 +10,7 @@ import express from 'express';
 import fetch from 'node-fetch';
 import { URL } from 'url';
 
-import openTelemetry, { defaultTextMapSetter } from "@opentelemetry/api";
-import { W3CTraceContextPropagator } from "@opentelemetry/core"
+import { trace, context, propagation } from "@opentelemetry/api";
 
 const URLS = {
   'Profile data': String(new URL('/json', process.env.EDGE_APP_URL ?? 'http://localhost:7676/')),
@@ -27,21 +26,20 @@ app.get('/__health', (_req, res) => res.end('OK'));
 
 app.get("*", async (req, res) => {
   console.log('Request: ' + req.url, req.headers);
-  const reqHandlerContext = openTelemetry.context.active();
+  const reqHandlerContext = context.active();
 
   // Example custom spans
-  const tracer = openTelemetry.trace.getTracer("Backend stuff");
+  const tracer = trace.getTracer("Backend stuff");
   await Promise.all(Object.entries(URLS).map(async ([label, url]) => {
     const span = tracer.startSpan(label);
 
     // https://github.com/open-telemetry/opentelemetry-js/issues/1963
-    const fetchContext = openTelemetry.trace.setSpan(reqHandlerContext, span);
-    await openTelemetry.context.with(fetchContext, async () => {
-      const propagator = new W3CTraceContextPropagator();
+    const fetchContext = trace.setSpan(reqHandlerContext, span);
+    await context.with(fetchContext, async () => {
       const carrier = {};
 
       // https://github.com/open-telemetry/opentelemetry-js/issues/2458
-      propagator.inject(fetchContext, carrier, defaultTextMapSetter);
+      propagation.inject(fetchContext, carrier);
       console.log(carrier);
       const options = { headers: carrier };
       await fetch(url, options).then(resp => resp.text());
