@@ -3,7 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { diag, trace, context, propagation, SpanKind, SpanStatusCode, } from "@opentelemetry/api";
+import { diag, trace, context, propagation, Context, Span, SpanKind, SpanStatusCode, } from "@opentelemetry/api";
 
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
 import {
@@ -11,8 +11,10 @@ import {
   InstrumentationConfig,
 } from '@opentelemetry/instrumentation';
 import { AttributeNames } from './enums/AttributeNames';
-import { patchRuntime } from "./util";
+import { patchRuntime, setPatchTarget } from "./util";
 import { _resetEventContext, _setEventContext } from "../opentelemetry-sdk-trace-fastly";
+
+patchRuntime();
 
 export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown> {
 
@@ -24,6 +26,9 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
   _eventsInstalled?: boolean;
   _eventsEnabled?: boolean;
 
+  _fetchEventSpan?: Span;
+  _fetchEventContext?: Context;
+
   constructor(config: InstrumentationConfig = {}) {
     super('@fastly/compute-js-opentelemetry/instrumentation-fastly-compute-js', '0.1.0', config);
   }
@@ -32,7 +37,7 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
 
   override enable() {
     if(!this._eventsInstalled) {
-      patchRuntime(this);
+      setPatchTarget(this);
       this._eventsInstalled = true;
     }
     this._eventsEnabled = true;
@@ -42,18 +47,14 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
     this._eventsEnabled = false;
   }
 
-  // This event wraps the lifetime of a single FetchEvent, corresponding to the time between
-  // the start of handling an incoming event and when the Response to be sent back is
-  // determined.
-  // This is the first and last opportunity we have of doing anything in the c@e request
-  // lifecycle.
-  async onEvent(event: FetchEvent, fn: () => Promise<Response>): Promise<void> {
+  // This event marks the beginning of the lifetime of a single FetchEvent.
+  // This is the absolute earliest that this event can be trapped.
+  onEventStart(event: FetchEvent) {
     if(!this._eventsEnabled) {
-      await fn();
       return;
     }
     try {
-      diag.debug('onEvent start');
+      diag.debug('onEventStart start');
 
       const carrier: Record<string, string> = {};
 
@@ -69,7 +70,7 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
 
       const parentContext = propagation.extract(context.active(), carrier);
 
-      const fetchEventSpan = this.tracer.startSpan('FetchEvent', {
+      this._fetchEventSpan = this.tracer.startSpan('FetchEvent', {
         kind: SpanKind.SERVER,
         attributes: {
           [AttributeNames.COMPONENT]: this.moduleName,
@@ -80,8 +81,8 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
 
       try {
         const url = new URL(event.request.url);
-        fetchEventSpan.setAttribute(SemanticAttributes.HTTP_HOST, url.host);
-        fetchEventSpan.setAttribute(
+        this._fetchEventSpan.setAttribute(SemanticAttributes.HTTP_HOST, url.host);
+        this._fetchEventSpan.setAttribute(
           SemanticAttributes.HTTP_SCHEME,
           url.protocol.replace(':', '')
         );
@@ -91,40 +92,51 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
       }
 
       // Set the root context on the context manager to this event.
-      const fetchEventContext = trace.setSpan(context.active(), fetchEventSpan);
-      _setEventContext(fetchEventContext);
+      this._fetchEventContext = trace.setSpan(context.active(), this._fetchEventSpan);
+      _setEventContext(this._fetchEventContext);
+
+    } finally {
+      diag.debug('onEventStart end');
+    }
+  }
+
+  // This event marks the end of the lifetime of a single FetchEvent, corresponding to the time when
+  // the Response to be sent back is determined. This is the last opportunity we have of doing anything in the
+  // c@e request lifecycle.
+  onEventEnd(err: Error | null, response?: Response) {
+    if(!this._eventsEnabled) {
+      return;
+    }
+    try {
+      diag.debug('onEventEnd start');
 
       try {
-
-        await context.with(fetchEventContext, async () => {
-          try {
-
-            const result = await fn();
-
-            fetchEventSpan.setAttribute(SemanticAttributes.HTTP_STATUS_CODE, result.status);
-            fetchEventSpan.setStatus({
-              code: SpanStatusCode.OK,
-            });
-
-          } catch(ex) {
-
-            fetchEventSpan.recordException(ex);
-            fetchEventSpan.setStatus({
+        if(this._fetchEventSpan == null) {
+          diag.error('onEventEnd: unexpected FetchEvent span is null');
+          return;
+        }
+        try {
+          if(err != null) {
+            this._fetchEventSpan.recordException(err);
+            this._fetchEventSpan.setStatus({
               code: SpanStatusCode.ERROR,
             });
-
-          } finally {
-            fetchEventSpan.end();
+          } else {
+            this._fetchEventSpan.setAttribute(SemanticAttributes.HTTP_STATUS_CODE, response!.status);
+            this._fetchEventSpan.setStatus({
+              code: SpanStatusCode.OK,
+            });
           }
-        });
+        } finally {
+          this._fetchEventSpan.end();
+        }
       } finally {
-
         // Reset the root event on the context manager.
         _resetEventContext();
       }
 
     } finally {
-      diag.debug('onEvent end');
+      diag.debug('onEventEnd end');
     }
   }
 
@@ -141,7 +153,8 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
       const theSpan = this.tracer.startSpan(
         'listener fn', {
           kind: SpanKind.INTERNAL,
-        }
+        },
+        this._fetchEventContext
       );
 
       try {

@@ -3,32 +3,41 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
+import { diag } from "@opentelemetry/api";
 import { FastlySDK } from "./FastlySDK";
 
-let _target: FastlySDK | null = null;
+let _target!: FastlySDK;
 
 // Patch event.respondWith to ensure that if the SDK has been started,
 // then the SDK's shutdown method will be called automatically before
 // the end of the event's lifetime.
 
 addEventListener('fetch', (event) => {
+  diag.debug('sdk-fastly: running listener');
 
   if(_target == null) {
+    console.warn('sdk-fastly: listener called, but sdk-fastly not initialized.  Did you call sdk.start()?');
     return;
   }
 
-  // Allow the SDK to respond to the very first opportunity to react
+  // Allow the SDK to respond at the very first opportunity to react
   // after the listener starts.
-  _target!.onEventStart(event);
+  _target.onEventStart(event);
 
-  const responsesResolvedMap = new Map<Response | Promise<Response>, boolean>();
-
+  diag.debug('sdk-fastly: patching event.respondWith()');
   const origRespondWith = event.respondWith;
   event.respondWith = (response) => {
+    // Only do this patchwork on the first call to event.respondWith().
+    // event.respondWith() can only be called once on a single event.
+    if((event as any).__sdk_respondWith_called) {
+      diag.warn('sdk-fastly: detected multiple calls to respondWith() on a single event');
+      diag.debug('sdk-fastly: calling previous event.respondWith()');
+      origRespondWith.call(event, response);
+      return;
+    }
+    (event as any).__sdk_respondWith_called = true;
 
-    // If event.respondWith is called multiple times, then
-    // keep track of all of them.
-    responsesResolvedMap.set(response, true);
+    diag.debug('sdk-fastly: running patched event.respondWith()');
 
     // Create a promise to extend the life of this event.
     // Calling resolveExtension later will settle this promise
@@ -41,16 +50,13 @@ addEventListener('fetch', (event) => {
 
     Promise.resolve(response)
       .finally(() => {
-        responsesResolvedMap.delete(response);
-
-        // When the last one has been resolved, we are safe to shut down the target.
-        if(responsesResolvedMap.size === 0) {
-          // This ensures that target's shutdown is enqueued
-          event.waitUntil(_target!.shutdown());
-        }
+        diag.debug('sdk-fastly: response settled, shutting down.');
+        // This ensures that target's shutdown is enqueued
+        event.waitUntil(_target.shutdown());
         resolveExtension!();
       });
 
+    diag.debug('sdk-fastly: calling previous event.respondWith()');
     origRespondWith.call(event, response);
 
   };
