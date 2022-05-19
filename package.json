@@ -34,6 +34,7 @@
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
     "file-replace-loader": "^1.4.0",
+    "object-inspect": "^1.12.0",
     "stream-browserify": "^3.0.0",
     "timers-browserify": "^2.0.12",
     "util": "^0.12.4",
@@ -43,6 +44,7 @@
   "devDependencies": {
     "@types/mocha": "8.2.3",
     "@types/node": "14.17.33",
+    "@types/object-inspect": "^1.8.1",
     "@types/sinon": "10.0.6",
     "codecov": "3.8.3",
     "istanbul-instrumenter-loader": "3.0.1",

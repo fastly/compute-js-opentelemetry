@@ -393,6 +393,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.17.33.tgz#011ee28e38dc7aee1be032ceadf6332a0ab15b12"
   integrity sha512-noEeJ06zbn3lOh4gqe2v7NMGS33jrulfNqYFDjjEbhpDEHR5VTxgYNQSBqBlJIsBJW3uEYDgD6kvMnrrhGzq8g==
 
+"@types/object-inspect@^1.8.1":
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/@types/object-inspect/-/object-inspect-1.8.1.tgz#7c08197ad05cc0e513f529b1f3919cc99f720e1f"
+  integrity sha512-0JTdf3CGV0oWzE6Wa40Ayv2e2GhpP3pEJMcrlM74vBSJPuuNkVwfDnl0SZxyFCXETcB4oKA/MpTVfuYSMOelBg==
+
 "@types/sinon@10.0.6":
   version "10.0.6"
   resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-10.0.6.tgz#bc3faff5154e6ecb69b797d311b7cf0c1b523a1d"

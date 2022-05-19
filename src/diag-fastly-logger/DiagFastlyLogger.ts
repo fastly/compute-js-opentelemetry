@@ -5,7 +5,7 @@
 
 import { DiagLogFunction, DiagLogger } from "@opentelemetry/api";
 
-import { toLoggerString } from './util';
+import { toLoggerString } from "../core";
 
 const consoleMap: { n: keyof DiagLogger; l: string }[] = [
   { n: 'error', l: 'ERROR', },
