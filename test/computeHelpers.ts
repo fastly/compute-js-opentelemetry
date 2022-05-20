@@ -74,3 +74,15 @@ class FastlyMock implements Fastly {
 }
 
 globalThis.fastly = new FastlyMock();
+
+type FetchEventListener = (event: FetchEvent) => void;
+
+const _listeners: FetchEventListener[] = [];
+function addEventListenerMock(type: 'fetch', listener: FetchEventListener): void {
+  _listeners.push(listener);
+}
+export function getRegisteredEventListeners() {
+  return _listeners;
+}
+
+globalThis.addEventListener = addEventListenerMock;

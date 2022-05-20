@@ -6,6 +6,7 @@
   "main": "./build/src/index.js",
   "exports": {
     ".": "./build/src/index.js",
+    "./auto-instrumentations-compute-js": "./build/src/auto-instrumentations-compute-js/index.js",
     "./core": "./build/src/core/index.js",
     "./diag-fastly-logger": "./build/src/diag-fastly-logger/index.js",
     "./exporter-trace-otlp-fastly-backend": "./build/src/exporter-trace-otlp-fastly-backend/index.js",
