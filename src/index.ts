@@ -4,6 +4,13 @@
  */
 
 // /// <reference types="@fastly/js-compute" />
+
+// This is a modified version of @fastly/js-compute@0.2.4
+// Needed because that version of the file is missing some return types,
+// which causes build errors (implicit any) used as is when
+// building TypeScript code against it.
+// Once 0.2.5 lands, we can uncomment the reference above
+// and remove the reference below, as well as remove the referenced file.
 /// <reference path="../types/index.d.ts" />
 
 export * as autoInstrumentationsComputeJs from './auto-instrumentations-compute-js';
