@@ -8,8 +8,8 @@ Compute@Edge.
 
 ## Run the example
 
-You will need [Node.js](https://nodejs.org/en/) (>= 14) and [Fastly CLI](https://developer.fastly.com/reference/cli/)
-(>= 2.0.0 recommended, may work with 1.x).
+You will need [Node.js](https://nodejs.org/en/) (>= 16) and [Fastly CLI](https://developer.fastly.com/reference/cli/)
+(>= 2.x recommended, may work with 1.x).
 
 This example will export traces to a local instance of an
 [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/). It has been tested with
