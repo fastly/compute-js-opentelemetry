@@ -1,4 +1,4 @@
-# Basic Example of OpenTelemetry Insturmentation on Compute@Edge
+# Basic Example of OpenTelemetry Instrumentation on Compute@Edge
 
 [![Deploy to Fastly](https://deploy.edgecompute.app/button)](https://deploy.edgecompute.app/deploy)
 
