@@ -60,3 +60,8 @@ export function addAction(name: string, priority: number, fn: Action) {
 export function doAction(name: string, ...args: any[]) {
   actionsManager.doAction(name, ...args);
 }
+
+export function isTest() {
+  // assume test suite is mocha, and check for it and describe
+  return typeof globalThis.it === 'function' && typeof globalThis.describe === 'function';
+}

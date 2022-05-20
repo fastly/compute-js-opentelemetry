@@ -13,6 +13,45 @@ class CacheOverrideMock {
 }
 globalThis.CacheOverride = CacheOverrideMock;
 
+export class MockedClientInfo implements ClientInfo {
+  readonly address: string = "10.0.0.1";
+  readonly geo!: Geolocation;
+}
+
+export class MockedRequest implements Request {
+  backend!: string;
+  readonly body!: ReadableStream<any>;
+  bodyUsed!: boolean;
+  headers!: Headers;
+  method!: string;
+  url!: string;
+
+  arrayBuffer!: () => Promise<ArrayBuffer>;
+  json!: () => Promise<any>;
+  setCacheOverride!: (override: CacheOverride) => void;
+  text!: () => Promise<string>;
+}
+
+export class MockedFetchEvent implements FetchEvent {
+  constructor() {
+    this.client = new MockedClientInfo();
+    this.request = new MockedRequest();
+  }
+
+  readonly client: ClientInfo;
+  readonly request: Request;
+
+  respondWith(response: Response | Promise<Response>): void {
+  }
+
+  waitUntil(promise: Promise<any>): void {
+  }
+}
+
+export function buildFakeFetchEvent() {
+  return new MockedFetchEvent();
+}
+
 export class MockedResponse implements Response {
   constructor(body?: BodyInit, init?: ResponseInit) {
     this.status = init?.status ?? 200;
@@ -77,12 +116,26 @@ globalThis.fastly = new FastlyMock();
 
 type FetchEventListener = (event: FetchEvent) => void;
 
-const _listeners: FetchEventListener[] = [];
-function addEventListenerMock(type: 'fetch', listener: FetchEventListener): void {
+let _listeners: FetchEventListener[] = [];
+function registerFetchEventListener(listener: FetchEventListener): void {
   _listeners.push(listener);
 }
-export function getRegisteredEventListeners() {
+export function getRegisteredFetchEventListeners() {
   return _listeners;
 }
+export function runRegisteredFetchEventListeners(event: FetchEvent) {
+  for(const listener of _listeners) {
+    listener(event);
+    if((event as any)._stopPropagation) {
+      break;
+    }
+  }
+}
+export function resetRegisteredFetchEventListeners() {
+  _listeners = [];
+}
 
+function addEventListenerMock(type: 'fetch', listener: FetchEventListener): void {
+  registerFetchEventListener(listener);
+}
 globalThis.addEventListener = addEventListenerMock;
