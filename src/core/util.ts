@@ -40,7 +40,7 @@ class ActionsManager {
   doAction(name: string, ...args: any[]) {
     this.sort();
 
-    let actions = this._actionsMap.get(name);
+    const actions = this._actionsMap.get(name);
     if(actions == null) {
       return;
     }
@@ -48,6 +48,32 @@ class ActionsManager {
     for (const actionDef of actions) {
       actionDef.fn(...args);
     }
+  }
+
+  removeAction(name: string, priority?: number, fn?: Action): void {
+    if(priority == null && fn == null) {
+      this._actionsMap.delete(name);
+      return;
+    }
+
+    const actions = this._actionsMap.get(name);
+    if(actions == null) {
+      return;
+    }
+
+    const updatedActions =
+      actions.filter(def =>
+        !(
+          (priority === undefined || def.priority === priority) &&
+          (fn === undefined || def.fn === fn)
+        )
+      );
+
+    this._actionsMap.set(name, updatedActions);
+  }
+
+  removeAllActions() {
+    this._actionsMap.clear();
   }
 }
 
@@ -59,6 +85,14 @@ export function addAction(name: string, priority: number, fn: Action) {
 
 export function doAction(name: string, ...args: any[]) {
   actionsManager.doAction(name, ...args);
+}
+
+export function removeAction(name: string, priority?: number, fn?: Action): void {
+  actionsManager.removeAction(name, priority, fn);
+}
+
+export function removeAllActions() {
+  actionsManager.removeAllActions();
 }
 
 export function isTest() {
