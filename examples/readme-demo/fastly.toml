@@ -1,0 +1,15 @@
+# This file describes a Fastly Compute@Edge package. To learn more visit:
+# https://developer.fastly.com/reference/fastly-toml/
+
+authors = []
+description = "OpenTelemetry README Example"
+language = "javascript"
+manifest_version = 2
+name = "readme-demo"
+
+[local_server]
+
+  [local_server.backends]
+
+    [local_server.backends.otlp-collector]
+      url = "http://localhost:4318/"

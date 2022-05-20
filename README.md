@@ -3,49 +3,53 @@
 An implementation of the [OpenTelemetry JavaScript API](https://opentelemetry.io/docs/instrumentation/js/) for
 [Fastly Compute@Edge](https://developer.fastly.com/learning/compute/).
 
+Generate traces like this one to follow activity and time in your Compute@Edge applications:
+
+![Sample Trace](./assets/readme-demo-trace.png "Sample Trace")
+
+**index.js**:
+
 ```javascript
 /// <reference types="@fastly/js-compute" />
 
+import './tracing.js'
 import { context, trace } from "@opentelemetry/api";
-import { Resource } from "@opentelemetry/resources";
-import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
-
-import { FastlySDK } from "@fastly/compute-js-opentelemetry/sdk-fastly";
-import { OTLPTraceExporter } from "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-logger";
-import { FastlyComputeJsInstrumentation } from "@fastly/compute-js-opentelemetry/instrumentation-fastly-compute-js";
-
-const sdk = new FastlySDK({
-  traceExporter: new OTLPTraceExporter({ endpoint: 'otlp-logger' }),
-  instrumentations: [ new FastlyComputeJsInstrumentation(), ],
-  resource: new Resource({ [SemanticResourceAttributes.SERVICE_NAME]: 'example-service', }),
-});
-await sdk.start();
 
 addEventListener("fetch", (event) => event.respondWith(handleRequest(event)));
 async function handleRequest(event) {
   const tracer = trace.getTracerProvider()
-    .getTracer('example-tracer');
+    .getTracer('my-tracer');
 
-  const span = tracer.startSpan('my-span');
-  context.with(trace.setSpan(context.active(), span), () => {
-    try {
-      trace.getSpan(context.active()).addEvent("start");
-      
-      // Do something
-      performMainActivity();
-
-      trace.getSpan(context.active()).addEvent("end");
-    } finally {
-      // End the span
-      span.end();
-    }
+  const mySpan = tracer.startSpan('my-task');
+  context.with(trace.setSpan(context.active(), mySpan), () => {
+    doTask();
   });
+  mySpan.end();
 
   return new Response('OK', {
     status: 200,
     headers: new Headers({"Content-Type": "text/plain"}),
   });
 }
+```
+
+**tracing.js**:
+
+```javascript
+import { context, trace } from "@opentelemetry/api";
+import { Resource } from "@opentelemetry/resources";
+import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
+
+import { FastlySDK } from "@fastly/compute-js-opentelemetry/sdk-fastly";
+import { OTLPTraceExporter } from "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend";
+import { getComputeJsAutoInstrumentations } from "@fastly/compute-js-opentelemetry/auto-instrumentations-compute-js";
+
+const sdk = new FastlySDK({
+  traceExporter: new OTLPTraceExporter({ backend: 'otlp-collector' }),
+  instrumentations: [ getComputeJsAutoInstrumentations(), ],
+  resource: new Resource({ [SemanticResourceAttributes.SERVICE_NAME]: 'readme-demo', }),
+});
+await sdk.start();
 ```
 
 This implementation extends the standard interfaces and objects provided by the
@@ -76,6 +80,7 @@ See the examples in the [`/examples`](./examples) directory.
 
 | **Example Directory**                         | Description                                                                                                                                |
 |-----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| [readme-demo](./examples/readme-demo)         | Example demo from the beginning of this README                                                                                             |
 | [basic-example](./examples/basic-example)     | Basic Example                                                                                                                              |
 | [otel-demo](./examples/otel-demo)             | Example that demonstrates OpenTelemetry traces that start at the Edge and nest into an operation at the backend.                           |
 | [otel-http-proxy](./examples/otel-http-proxy) | A sample application designed to collect traces as an HTTPS log endpoint for a Fastly service, sending them to an OpenTelemetry collector. |
