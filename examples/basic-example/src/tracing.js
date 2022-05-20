@@ -10,7 +10,7 @@ import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions"
 
 import { FastlySDK } from "@fastly/compute-js-opentelemetry/sdk-fastly";
 import { OTLPTraceExporter } from "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend";
-import { FastlyComputeJsInstrumentation } from "@fastly/compute-js-opentelemetry/instrumentation-fastly-compute-js";
+import { getComputeJsAutoInstrumentations } from "@fastly/compute-js-opentelemetry/auto-instrumentations-compute-js";
 
 // For troubleshooting, set the log level to DiagLogLevel.DEBUG
 diag.setLogger(new DiagConsoleLogger(), DiagLogLevel.DEBUG);
@@ -25,8 +25,7 @@ const traceExporter = new OTLPTraceExporter({
 
 // Instantiate instrumentations.
 const instrumentations = [
-  // Generates traces for Compute@Edge lifetime events.
-  new FastlyComputeJsInstrumentation(),
+  getComputeJsAutoInstrumentations(),
 ];
 
 // Identify our service
