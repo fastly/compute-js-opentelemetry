@@ -11,8 +11,8 @@ it can emit them using the OTLP (OpenTelemetry Protocol) format. Emitting them u
 is a performant, ideal method for doing this.
 
 Because Fastly named log providers do not currently have direct integration with the OTLP format,
-this collector proxy can be set up as a log provider that sends data over HTTPS. This proxy will, in turn,
-send those traces to a configured OpenTelemetry collector.
+this collector proxy can be set up as the receiver for a log provider that sends data over HTTPS.
+This proxy will, in turn, send those traces to a configured OpenTelemetry collector.
 
 As an HTTPS log provider, this application simply separates these entries at newlines, and, treating
 each entry as a OTLP JSON-encoded trace, sends them to the OpenTelemetry Collector.
