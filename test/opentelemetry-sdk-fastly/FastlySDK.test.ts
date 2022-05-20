@@ -2,14 +2,19 @@ import * as assert from "assert";
 
 import * as sinon from "sinon";
 
-import { diag, DiagLogLevel, trace, } from "@opentelemetry/api";
-import { ReadableSpan, SpanExporter, SpanProcessor } from "@opentelemetry/sdk-trace-base";
+import { diag, DiagLogger, DiagLogLevel, Sampler, SamplingDecision, trace, } from "@opentelemetry/api";
+import { ReadableSpan, SpanExporter, SpanProcessor, Tracer } from "@opentelemetry/sdk-trace-base";
 import { Resource } from "@opentelemetry/resources";
 import { Instrumentation } from "@opentelemetry/instrumentation";
 
-import { buildFakeFetchEvent, runRegisteredFetchEventListeners } from "../computeHelpers";
+import {
+  buildFakeFetchEvent,
+  runRegisteredFetchEventListeners,
+  resetRegisteredFetchEventListeners,
+  MockedResponse,
+} from "../computeHelpers";
 import { checkLog, newNopDiagLogger } from "../commonHelpers";
-import { removeAction } from "../../src/core";
+import { _lifecycle_init, removeAction } from "../../src/core";
 import { FastlySDK } from "../../src/opentelemetry-sdk-fastly";
 import { _fastly_sdk_init } from "../../src/opentelemetry-sdk-fastly/util";
 
@@ -18,6 +23,14 @@ describe('FastlySDK', function() {
     sinon.restore();
     diag.disable();
     trace.disable();
+
+    // Remove all fetch event handlers, and then restore the ones
+    // that relate to core/lifecycle
+    resetRegisteredFetchEventListeners();
+    _lifecycle_init();
+
+    // Remove all fetchEvent actions, then restore the ones that
+    // relate to FastlySDK
     removeAction('fetchEvent');
     _fastly_sdk_init();
   });
@@ -167,6 +180,55 @@ describe('FastlySDK', function() {
 
     });
 
+    it('accepts sampler', async function() {
+
+      const shouldSample = sinon.stub().returns({ decision:SamplingDecision.RECORD });
+      const sampler: Sampler = {
+        shouldSample,
+        toString(): string {
+          return 'test-sampler';
+        }
+      };
+
+      const traceExporter: SpanExporter = {
+        export(spans, resultCallback) {},
+        async shutdown(): Promise<void> {}
+      };
+      const fastlySdk = new FastlySDK({traceExporter, sampler});
+      await fastlySdk.start();
+
+      const tracer = trace.getTracerProvider()
+        .getTracer('test-tracer');
+      const span = tracer.startSpan('test-span');
+
+      assert.ok(shouldSample.calledOnce);
+      assert.strictEqual(shouldSample.args[0][2], 'test-span');
+
+      span.end();
+
+    });
+
+    it('accepts spanLimits', async function() {
+
+      const spanLimits = {
+        attributeCountLimit: 100,
+      };
+
+      const traceExporter: SpanExporter = {
+        export(spans, resultCallback) {},
+        async shutdown(): Promise<void> {}
+      };
+      const fastlySdk = new FastlySDK({traceExporter, spanLimits});
+      await fastlySdk.start();
+
+      const tracer = trace.getTracerProvider()
+        .getTracer('test-tracer') as Tracer;
+
+      assert.strictEqual(tracer.getSpanLimits().attributeCountLimit, spanLimits.attributeCountLimit);
+
+    });
+
+
     it('can use added resource', async function() {
 
       const resource = new Resource({__test_value: 'foo'});
@@ -258,6 +320,157 @@ describe('FastlySDK', function() {
       assert.ok(
         checkLog(stubLoggerDebug, /@opentelemetry\/api: Registered a global for trace v\d+.\d+.\d+./),
       );
+
+    });
+
+  });
+
+  describe('event lifetime management', function() {
+
+    let diagLogger: DiagLogger;
+    let stubLoggerDebug: sinon.SinonStub;
+    let stubLoggerWarn: sinon.SinonStub;
+
+    let traceExporter: SpanExporter;
+    let fastlySdk: FastlySDK;
+
+    beforeEach(async function() {
+      diagLogger = newNopDiagLogger();
+      stubLoggerDebug = sinon.stub();
+      stubLoggerWarn = sinon.stub();
+      diagLogger.debug = stubLoggerDebug;
+      diagLogger.warn = stubLoggerWarn;
+      diag.setLogger(diagLogger, DiagLogLevel.ALL);
+
+      traceExporter = {
+        export(spans, resultCallback) {},
+        shutdown: sinon.stub<[], Promise<void>>(),
+      };
+      fastlySdk = new FastlySDK({traceExporter});
+      await fastlySdk.start();
+    });
+
+    it('should cause patched event.respondWith to be called.', async function() {
+
+      function handleEvent(event: FetchEvent) {
+        return new MockedResponse('success', { status: 200 });
+      }
+      addEventListener('fetch', (event) => event.respondWith(handleEvent(event)));
+
+      const fetchEvent = buildFakeFetchEvent();
+      runRegisteredFetchEventListeners(fetchEvent);
+
+      assert.ok(
+        checkLog(stubLoggerDebug, 'sdk-fastly: running patched event.respondWith()')
+      );
+      assert.ok(
+        checkLog(stubLoggerWarn, 'sdk-fastly: detected multiple calls to respondWith() on a single event', 0)
+      );
+
+    });
+
+    it('should still call original event.respondWith.', async function() {
+
+      const response = new MockedResponse('success', { status: 200 });
+      function handleEvent(event: FetchEvent) {
+        return response;
+      }
+      addEventListener('fetch', (event) => event.respondWith(handleEvent(event)));
+
+      const fetchEvent = buildFakeFetchEvent();
+      const origRespondWith = fetchEvent.respondWith;
+
+      runRegisteredFetchEventListeners(fetchEvent);
+
+      assert.ok(origRespondWith.calledOnce);
+      assert.strictEqual(origRespondWith.args[0][0], response);
+
+    });
+
+    it('should cause a handler that calls event.respondWith more than once to raise a warning message.', async function() {
+
+      function handleEvent(event: FetchEvent) {
+        return new MockedResponse('success', { status: 200 });
+      }
+      addEventListener('fetch', (event) => {
+        event.respondWith(handleEvent(event));
+        event.respondWith(handleEvent(event));
+      });
+
+      const fetchEvent = buildFakeFetchEvent();
+      const origRespondWith = fetchEvent.respondWith;
+
+      runRegisteredFetchEventListeners(fetchEvent);
+
+      assert.ok(
+        checkLog(stubLoggerWarn, 'sdk-fastly: detected multiple calls to respondWith() on a single event')
+      );
+      assert.ok(origRespondWith.calledTwice);
+
+    });
+
+    it('should cause event.waitUntil to get called', async function() {
+      const response = new MockedResponse('success', { status: 200 })
+      function handleEvent(event: FetchEvent) {
+        return response;
+      }
+      addEventListener('fetch', (event) => event.respondWith(handleEvent(event)));
+
+      const fetchEvent = buildFakeFetchEvent();
+      const origWaitUntil = fetchEvent.waitUntil;
+
+      runRegisteredFetchEventListeners(fetchEvent);
+
+      // At this point it's been called once only.
+      assert.ok(origWaitUntil.calledOnce);
+      const extensionPromise = origWaitUntil.args[0][0];
+
+      // Awaiting this would mean that the response is good to go.
+      await extensionPromise;
+
+      // At this point, waitUntil would have been called an additional time, with
+      // the promise that would be returned from calling shutdown on SDK.
+      assert.ok(origWaitUntil.calledTwice);
+      const shutdownPromise = origWaitUntil.args[1][0];
+
+      // Awaiting this would ensure the SDK has completely shut down.
+      await shutdownPromise;
+
+      // That shutdown would also have caused shutdown on the trace exporter to
+      // have been called
+      assert.ok((traceExporter.shutdown as sinon.SinonStub).calledOnce)
+
+    });
+
+    it('SDK without a tracer should also start and shut down without a problem', async function() {
+
+      fastlySdk = new FastlySDK();
+      await fastlySdk.start();
+
+      function handleEvent(event: FetchEvent) {
+        return new MockedResponse('success', { status: 200 });
+      }
+      addEventListener('fetch', (event) => event.respondWith(handleEvent(event)));
+
+      const fetchEvent = buildFakeFetchEvent();
+      const origWaitUntil = fetchEvent.waitUntil;
+
+      runRegisteredFetchEventListeners(fetchEvent);
+
+      // At this point it's been called once only.
+      assert.ok(origWaitUntil.calledOnce);
+      const extensionPromise = origWaitUntil.args[0][0];
+
+      // Await the response
+      await extensionPromise;
+
+      // At this point, waitUntil would have been called an additional time, with
+      // the promise that would be returned from calling shutdown on SDK.
+      assert.ok(origWaitUntil.calledTwice);
+      const shutdownPromise = origWaitUntil.args[1][0];
+
+      // Await the shutdown of the SDK.
+      await shutdownPromise;
 
     });
 

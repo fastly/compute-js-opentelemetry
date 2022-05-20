@@ -3,6 +3,8 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
+import * as sinon from 'sinon';
+
 class CacheOverrideMock {
   mode: CacheOverrideMode;
   init: CacheOverrideInit | undefined;
@@ -41,11 +43,8 @@ export class MockedFetchEvent implements FetchEvent {
   readonly client: ClientInfo;
   readonly request: Request;
 
-  respondWith(response: Response | Promise<Response>): void {
-  }
-
-  waitUntil(promise: Promise<any>): void {
-  }
+  respondWith = sinon.stub<[Response | Promise<Response>], void>();
+  waitUntil = sinon.stub<[Promise<any>], void>();
 }
 
 export function buildFakeFetchEvent() {
