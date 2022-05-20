@@ -3,15 +3,14 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import {diag, trace, context, propagation, SpanKind, SpanStatusCode,} from "@opentelemetry/api";
+import { diag, trace, context, propagation, SpanKind, SpanStatusCode, } from "@opentelemetry/api";
 
+import { InstrumentationBase, safeExecuteInTheMiddle } from '@opentelemetry/instrumentation';
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
-import {
-  InstrumentationBase,
-  InstrumentationConfig,
-} from '@opentelemetry/instrumentation';
+
 import { patchRuntime } from "./util";
 import { AttributeNames } from "./enums/AttributeNames";
+import { FastlyBackendFetchInstrumentationConfig } from "./types";
 
 export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unknown> {
 
@@ -23,8 +22,12 @@ export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unkno
   _eventsInstalled?: boolean;
   _eventsEnabled?: boolean;
 
-  constructor(config: InstrumentationConfig = {}) {
+  constructor(config: FastlyBackendFetchInstrumentationConfig = {}) {
     super('@fastly/compute-js-opentelemetry/instrumentation-fastly-backend-fetch', '0.1.0', config);
+  }
+
+  private _getConfig(): FastlyBackendFetchInstrumentationConfig {
+    return this._config;
   }
 
   init() {}
@@ -65,9 +68,23 @@ export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unkno
         const options = { ...(init ?? {}) };
         options.headers = Object.assign({}, init?.headers, carrier);
         try {
-          let result;
+          let result: Response;
           try {
             result = await fn(resource, options);
+
+            if (this._getConfig().applyCustomAttributesOnSpan) {
+              safeExecuteInTheMiddle(
+                () =>
+                  this._getConfig().applyCustomAttributesOnSpan!(
+                    backendFetchSpan,
+                    resource,
+                    options,
+                    result
+                  ),
+                () => {},
+                true
+              );
+            }
 
             backendFetchSpan.setAttribute(SemanticAttributes.HTTP_STATUS_CODE, result.status);
             backendFetchSpan.setStatus({
