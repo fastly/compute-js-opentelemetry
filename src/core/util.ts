@@ -99,3 +99,20 @@ export function isTest() {
   // assume test suite is mocha, and check for it and describe
   return typeof globalThis.it === 'function' && typeof globalThis.describe === 'function';
 }
+
+type InitFunction = () => void;
+const _initFunctions: InitFunction[] = [];
+export function onInit(fn: InitFunction) {
+  /* istanbul ignore else */
+  if(isTest()) {
+    _initFunctions.push(fn);
+  } else {
+    fn();
+  }
+}
+
+export function doInit() {
+  for(const fn of _initFunctions) {
+    fn();
+  }
+}

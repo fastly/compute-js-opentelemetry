@@ -10,27 +10,12 @@ import { Instrumentation } from "@opentelemetry/instrumentation";
 import {
   buildFakeFetchEvent,
   runRegisteredFetchEventListeners,
-  resetRegisteredFetchEventListeners,
   MockedResponse,
 } from "../computeHelpers";
 import { checkLog, newNopDiagLogger } from "../commonHelpers";
-import { _lifecycle_init, removeAction } from "../../src/core";
 import { FastlySDK } from "../../src/opentelemetry-sdk-fastly";
-import { _fastly_sdk_init } from "../../src/opentelemetry-sdk-fastly/util";
 
 describe('FastlySDK', function() {
-  beforeEach(function() {
-    // Remove all fetch event handlers, and then restore the ones
-    // that relate to core/lifecycle
-    resetRegisteredFetchEventListeners();
-    _lifecycle_init();
-
-    // Remove all fetchEvent actions, then restore the ones that
-    // relate to FastlySDK
-    removeAction('fetchEvent');
-    _fastly_sdk_init();
-  });
-
   describe('instance', function() {
     it('can be instantiated with empty constructor', function(done) {
       new FastlySDK();

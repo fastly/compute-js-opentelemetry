@@ -8,17 +8,11 @@ import * as sinon from 'sinon';
 
 import {
   buildFakeFetchEvent,
-  resetRegisteredFetchEventListeners,
   runRegisteredFetchEventListeners,
 } from "../computeHelpers";
-import { _lifecycle_init, addFetchEventAction } from "../../src/core";
+import { addFetchEventAction } from "../../src/core";
 
 describe('core/lifecycle', function() {
-
-  beforeEach(function() {
-    resetRegisteredFetchEventListeners();
-    _lifecycle_init();
-  });
 
   describe('addFetchEventAction', function () {
     it('passed-in action gets called', function() {

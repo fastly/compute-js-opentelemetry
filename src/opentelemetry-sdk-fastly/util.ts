@@ -4,12 +4,12 @@
  */
 
 import { diag } from "@opentelemetry/api";
-import { addFetchEventAction, isTest } from "../core";
+import { addFetchEventAction, onInit } from "../core";
 import { FastlySDK } from "./FastlySDK";
 
 let _target!: FastlySDK;
 
-export function _fastly_sdk_init() {
+onInit(() => {
   (_target as any) = null;
   // Patch event.respondWith to ensure that if the SDK has been started,
   // then the SDK's shutdown method will be called automatically before
@@ -63,14 +63,8 @@ export function _fastly_sdk_init() {
 
     };
   });
-}
-
+});
 
 export function setPatchTarget(target: FastlySDK) {
   _target = target;
-}
-
-/* istanbul ignore if */
-if(!isTest()) {
-  _fastly_sdk_init();
 }

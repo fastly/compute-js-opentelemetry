@@ -25,6 +25,10 @@ globalThis.resetConsoleFunc = () => {
 
 // Restores the default sandbox after every test
 exports.mochaHooks = {
+  beforeEach() {
+    resetConsoleFunc();
+    onBeforeEach();
+  },
   afterEach() {
     onAfterEach();
   },
