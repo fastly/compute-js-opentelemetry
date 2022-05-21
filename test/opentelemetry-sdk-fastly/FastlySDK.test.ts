@@ -20,10 +20,6 @@ import { _fastly_sdk_init } from "../../src/opentelemetry-sdk-fastly/util";
 
 describe('FastlySDK', function() {
   beforeEach(function() {
-    sinon.restore();
-    diag.disable();
-    trace.disable();
-
     // Remove all fetch event handlers, and then restore the ones
     // that relate to core/lifecycle
     resetRegisteredFetchEventListeners();

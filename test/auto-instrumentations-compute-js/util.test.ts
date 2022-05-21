@@ -17,11 +17,6 @@ import { newNopDiagLogger } from "../commonHelpers";
 describe('utils', () => {
   describe('getComputeJsAutoInstrumentations', () => {
 
-    beforeEach(function() {
-      sinon.restore();
-      diag.disable();
-    });
-
     it('should load default instrumentations', () => {
       const instrumentations = getComputeJsAutoInstrumentations();
       const expectedInstrumentations = [

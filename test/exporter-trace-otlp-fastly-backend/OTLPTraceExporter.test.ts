@@ -29,11 +29,6 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
   let fakeFetch: FakeFetch;
   let fakeResponse: Response;
 
-  beforeEach(function() {
-    sinon.restore();
-    diag.disable();
-  });
-
   describe('instance', function () {
     it('should warn about metadata when using json', function () {
       const diagLogger = newNopDiagLogger();

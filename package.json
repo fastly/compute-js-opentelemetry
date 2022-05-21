@@ -22,7 +22,7 @@
   "scripts": {
     "compile": "tsc --build tsconfig.json && cp -R types build",
     "clean": "tsc --build --clean tsconfig.json",
-    "test": "nyc ts-mocha -p tsconfig.json --require test/testHelpers.js test/**/*.test.ts"
+    "test": "nyc ts-mocha -p tsconfig.json --require test/mocha_bootstrap.js test/testHelpers.ts test/**/*.test.ts"
   },
   "dependencies": {
     "@opentelemetry/api": "^1.1.0",

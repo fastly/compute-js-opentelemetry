@@ -21,11 +21,6 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly logger', functi
   let collectorExporterConfig: OTLPExporterFastlyLoggerConfigBase;
   let spans: ReadableSpan[];
 
-  beforeEach(function () {
-    sinon.restore();
-    diag.disable();
-  });
-
   describe('instance', function () {
     it('should warn about metadata when using json', function () {
       const diagLogger = newNopDiagLogger();
