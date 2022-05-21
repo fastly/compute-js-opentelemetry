@@ -20,5 +20,6 @@ export * as exporterTraceOtlpFastlyFetch from './exporter-trace-otlp-fastly-back
 export * as exporterTraceOtlpFastlyLogger from './exporter-trace-otlp-fastly-logger';
 export * as opentelemetryInstrumentationFastlyComputeJs from './opentelemetry-instrumentation-fastly-compute-js';
 export * as opentelemetrySdkFastly from './opentelemetry-sdk-fastly';
+export * as opentelemetrySdkMetricsFastly from './opentelemetry-sdk-metrics-fastly';
 export * as opentelemetrySdkTraceFastly from './opentelemetry-sdk-trace-fastly';
 export * as otlpExporterFastlyBase from './otlp-exporter-fastly-base';

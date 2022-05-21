@@ -15,6 +15,7 @@
     "./instrumentation-fastly-compute-js": "./build/src/opentelemetry-instrumentation-fastly-compute-js/index.js",
     "./otlp-expoter-fastly-base": "./build/src/otlp-expoter-fastly-base/index.js",
     "./sdk-fastly": "./build/src/opentelemetry-sdk-fastly/index.js",
+    "./sdk-metrics-fastly": "./build/src/opentelemetry-sdk-metrics-fastly/index.js",
     "./sdk-trace-fastly": "./build/src/opentelemetry-sdk-trace-fastly/index.js",
     "./webpack-helpers": "./build/src/webpack-helpers/index.js"
   },
@@ -30,6 +31,7 @@
     "@opentelemetry/exporter-trace-otlp-http": "^0.28.0",
     "@opentelemetry/instrumentation": "^0.28.0",
     "@opentelemetry/otlp-exporter-base": "^0.28.0",
+    "@opentelemetry/sdk-metrics-base": "^0.28.0",
     "@opentelemetry/sdk-trace-base": "^1.2.0",
     "assert": "^2.0.0",
     "browserify-zlib": "^0.2.0",
