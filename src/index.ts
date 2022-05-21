@@ -22,4 +22,3 @@ export * as opentelemetryInstrumentationFastlyComputeJs from './opentelemetry-in
 export * as opentelemetrySdkFastly from './opentelemetry-sdk-fastly';
 export * as opentelemetrySdkTraceFastly from './opentelemetry-sdk-trace-fastly';
 export * as otlpExporterFastlyBase from './otlp-exporter-fastly-base';
-export * as webpackHelpers from './webpack-helpers';
