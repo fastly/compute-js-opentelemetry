@@ -4,10 +4,12 @@
  */
 
 import { ContextManager, TextMapPropagator } from "@opentelemetry/api";
+import { metrics } from '@opentelemetry/api-metrics';
 
 import { InstrumentationOption, registerInstrumentations } from "@opentelemetry/instrumentation";
 import { Resource } from "@opentelemetry/resources";
 import { SimpleSpanProcessor, SpanProcessor } from "@opentelemetry/sdk-trace-base";
+import { MeterProvider, MetricReader } from "@opentelemetry/sdk-metrics-base";
 
 import { FastlySDKConfiguration } from "./types";
 import { FastlyTracerConfig, FastlyTracerProvider } from "../opentelemetry-sdk-trace-fastly";
@@ -25,6 +27,9 @@ export class FastlySDK {
     textMapPropagator?: TextMapPropagator;
   };
   private _tracerProvider?: FastlyTracerProvider;
+
+  private _metricReader?: MetricReader;
+  private _meterProvider?: MeterProvider;
 
   private _instrumentations: InstrumentationOption[];
 
@@ -78,6 +83,10 @@ export class FastlySDK {
       );
     }
 
+    if (configuration.metricReader) {
+      this.configureMeterProvider(configuration.metricReader);
+    }
+
     let instrumentations: InstrumentationOption[] = [];
     if (configuration.instrumentations) {
       instrumentations = configuration.instrumentations;
@@ -98,6 +107,11 @@ export class FastlySDK {
       contextManager,
       textMapPropagator,
     };
+  }
+
+  /** Set configurations needed to register a MeterProvider */
+  public configureMeterProvider(reader: MetricReader): void {
+    this._metricReader = reader;
   }
 
   /** Manually add a resource */
@@ -124,6 +138,17 @@ export class FastlySDK {
         contextManager: this._tracerProviderConfig.contextManager,
         propagator: this._tracerProviderConfig.textMapPropagator,
       });
+    }
+
+    if (this._metricReader) {
+      const meterProvider = new MeterProvider({
+        resource: this._resource,
+      });
+      meterProvider.addMetricReader(this._metricReader);
+
+      this._meterProvider = meterProvider;
+
+      metrics.setGlobalMeterProvider(meterProvider);
     }
 
     registerInstrumentations({
@@ -159,9 +184,9 @@ export class FastlySDK {
     if (this._tracerProvider) {
       promises.push(this._tracerProvider.shutdown());
     }
-    // if (this._meterProvider) {
-    //   promises.push(this._meterProvider.shutdown());
-    // }
+    if (this._meterProvider) {
+      promises.push(this._meterProvider.shutdown());
+    }
 
     return (
       Promise.all(promises)

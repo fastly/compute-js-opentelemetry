@@ -6,7 +6,7 @@
 import { TextMapPropagator, Sampler } from "@opentelemetry/api";
 import type { ContextManager } from '@opentelemetry/api';
 import { InstrumentationOption } from '@opentelemetry/instrumentation';
-// import { MetricReader } from '@opentelemetry/sdk-metrics-base';
+import { MetricReader } from "@opentelemetry/sdk-metrics-base";
 import { Resource } from '@opentelemetry/resources';
 import {
   SpanExporter,
@@ -23,6 +23,8 @@ export interface FastlySDKConfiguration {
   contextManager: ContextManager;
   textMapPropagator: TextMapPropagator;
 
+  metricReader: MetricReader;
+
   sampler: Sampler;
   spanLimits: SpanLimits;
 
@@ -30,7 +32,5 @@ export interface FastlySDKConfiguration {
 
   /*
   autoDetectResources: boolean;
-
-  metricReader: MetricReader;
   */
 }
