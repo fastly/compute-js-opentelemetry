@@ -6,5 +6,6 @@
 export * from './OTLPExporterFastlyBase';
 export * from './OTLPExporterFastlyBackendBase';
 export * from './OTLPExporterFastlyLoggerBase';
+export * from './OTLPMetricExporterFastlyBase';
 export * from './util';
 export * from './types';
