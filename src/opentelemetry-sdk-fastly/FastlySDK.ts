@@ -12,8 +12,9 @@ import { SimpleSpanProcessor, SpanProcessor } from "@opentelemetry/sdk-trace-bas
 import { MeterProvider, MetricReader } from "@opentelemetry/sdk-metrics-base";
 
 import { FastlySDKConfiguration } from "./types";
-import { FastlyTracerConfig, FastlyTracerProvider } from "../opentelemetry-sdk-trace-fastly";
+import { FastlySpanProcessor, FastlyTracerConfig, FastlyTracerProvider } from "../opentelemetry-sdk-trace-fastly";
 import { setPatchTarget } from "./util";
+import { OTLPExporterFastlyBackendBase } from "../otlp-exporter-fastly-base";
 
 type TransformConfigurationFunction = (configuration: Partial<FastlySDKConfiguration>, event: FetchEvent) => Partial<FastlySDKConfiguration>;
 
@@ -71,9 +72,13 @@ export class FastlySDK {
         tracerProviderConfig.spanLimits = configuration.spanLimits;
       }
 
+      const SpanProcessorClass =
+        configuration.traceExporter instanceof OTLPExporterFastlyBackendBase ?
+          FastlySpanProcessor : SimpleSpanProcessor;
+
       const spanProcessor =
         configuration.spanProcessor ??
-        new SimpleSpanProcessor(configuration.traceExporter!);
+        new SpanProcessorClass(configuration.traceExporter!);
 
       this.configureTracerProvider(
         tracerProviderConfig,
