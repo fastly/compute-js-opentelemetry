@@ -62,6 +62,7 @@
     "build/src/**/*.js.map",
     "build/src/**/*.d.ts",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "SECURITY.md"
   ]
 }
