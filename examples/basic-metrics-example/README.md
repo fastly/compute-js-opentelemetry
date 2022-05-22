@@ -47,17 +47,17 @@ TODO: If you would like to deploy this to Fastly, then you will have to make mod
 
 This simple example shows the instantiation of the following objects:
 
-* **OTLPMetricExporter**
+* **OTLPMetricExporter**  
     an OpenTelemetry Metric Exporter adapted for use in a Compute@Edge handler.
 
-* **FastlyMetricReader**
+* **FastlyMetricReader**  
     an OpenTelemetry Metric Reader adapted for use in a Compute@Edge handler.
 
-* **FastlySDK**
+* **FastlySDK**  
     an optional class that simplifies the initialization and coordination of the
     OpenTelemetry objects.
 
-* **DiagConsoleLogger** (@opentelemetry/api)
+* **DiagConsoleLogger** (@opentelemetry/api)  
     standard logger that outputs debug messages to the console.
 
 Beyond this, this is a basic Compute@Edge JavaScript application. A `fetch` handler

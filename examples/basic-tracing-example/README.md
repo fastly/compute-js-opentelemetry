@@ -46,33 +46,33 @@ TODO: If you would like to deploy this to Fastly, then you will have to make mod
 
 This simple example shows the instantiation of the following objects:
 
-* **OTLPTraceExporter**
+* **OTLPTraceExporter**  
     an OpenTelemetry Trace Exporter adapted for use in a Compute@Edge handler.
 
-* **FastlySDK**
+* **FastlySDK**  
     an optional class that simplifies the initialization and coordination of
     OpenTelemetry objects. 
 
-* **DiagConsoleLogger** (@opentelemetry/api)
+* **DiagConsoleLogger** (@opentelemetry/api)  
     standard logger that outputs debug messages to the console.
 
 The following objects are implicitly instantiated:
 
-* **FastlyStackContextManager** (by `FastlySDK`)
+* **FastlyStackContextManager** (by `FastlySDK`)  
     a rudimentary Context Manager that provides context. Although this does not currently
     support asynchronous context stacks, it is able to associate all traces created to
     the current fetch event.
 
-* **FastlySpanProcessor** (by `FastlySDK`)
+* **FastlySpanProcessor** (by `FastlySDK`)  
     a Span Processor that buffers the spans generated during one invocation of the
     Compute@Edge application and sends them to the exporter at the end of the
     lifecycle.
 
-* **FastlyTraceProvider** (by `FastlySDK`)
+* **FastlyTraceProvider** (by `FastlySDK`)  
     a Trace Provider that associates the trace exporter with a default context
     manager.
 
-* **FastlyComputeJsInstrumentation** (by `getComputeJsAutoInstrumentations`)
+* **FastlyComputeJsInstrumentation** (by `getComputeJsAutoInstrumentations`)  
   an OpenTelemetry instrumentation that generates traces for the
   Compute@Edge lifecycle.
 
