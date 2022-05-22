@@ -1,0 +1,15 @@
+# This file describes a Fastly Compute@Edge package. To learn more visit:
+# https://developer.fastly.com/reference/fastly-toml/
+
+authors = []
+description = "Basic OpenTelemetry Tracing Example"
+language = "javascript"
+manifest_version = 2
+name = "basic-tracing-example"
+
+[local_server]
+
+  [local_server.backends]
+
+    [local_server.backends.test_backend]
+      url = "http://localhost:4318/"

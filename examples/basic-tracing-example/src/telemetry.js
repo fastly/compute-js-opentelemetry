@@ -29,9 +29,9 @@ const instrumentations = [
 ];
 
 // Identify our service
-// It will be named "basic-service" in traces.
+// It will be named "basic-tracing-example" in traces.
 const resource = new Resource({
-  [SemanticResourceAttributes.SERVICE_NAME]: 'basic-example',
+  [SemanticResourceAttributes.SERVICE_NAME]: 'basic-tracing-example',
 });
 
 // FastlySDK simplifies the procedure of wiring up the trace exporter, span processor,

@@ -5,7 +5,7 @@
 
 /// <reference types="@fastly/js-compute" />
 
-import './tracing';
+import './telemetry';
 import { context, trace } from "@opentelemetry/api";
 
 // Standard Compute@Edge JavaScript entry point
@@ -14,9 +14,9 @@ addEventListener("fetch", (event) => event.respondWith(handleRequest(event)));
 async function handleRequest() {
   // Get a tracer.
   // Any spans made with this tracer will have the otel.library.name
-  // value of "fastly-js-basic-example".
+  // value of "fastly-js-basic-tracing-example".
   const tracer = trace.getTracerProvider()
-    .getTracer('fastly-js-basic-example');
+    .getTracer('fastly-js-basic-tracing-example');
 
   // Create a span.  This span will be created under the active context.
   // Since this function is running within the Compute@Edge lifetime,

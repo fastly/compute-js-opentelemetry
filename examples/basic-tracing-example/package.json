@@ -1,5 +1,5 @@
 {
-  "name": "simple-otel",
+  "name": "basic-tracing-example",
   "version": "0.2.0",
   "main": "src/index.js",
   "author": "oss@fastly.com",

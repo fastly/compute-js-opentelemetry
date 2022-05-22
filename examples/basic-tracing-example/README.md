@@ -1,4 +1,4 @@
-# Basic Example of OpenTelemetry Instrumentation on Compute@Edge
+# Basic Example of OpenTelemetry Instrumentation and Tracing on Compute@Edge
 
 [![Deploy to Fastly](https://deploy.edgecompute.app/button)](https://deploy.edgecompute.app/deploy)
 
@@ -29,7 +29,7 @@ yarn compile
 Next, move to this subdirectory, and build this example:
 
 ```shell
-cd examples/basic-example
+cd examples/basic-tracing-example
 yarn
 fastly compute build
 ```
@@ -40,54 +40,49 @@ To run this example locally:
 fastly compute serve
 ```
 
-TODO: If you would like to deploy this to the cloud, then you will have to make modifications.
+TODO: If you would like to deploy this to Fastly, then you will have to make modifications.
 
 ## Description
 
-This simple example instantiates the following objects:
+This simple example shows the instantiation of the following objects:
 
 * **OTLPTraceExporter**
     an OpenTelemetry Trace Exporter adapted for use in a Compute@Edge handler.
 
-* **FastlyComputeJsInstrumentation**
-    an OpenTelemetry instrumentation that generates traces for the
-    Compute@Edge lifecycle. 
-
 * **FastlySDK**
-    an optional class that simplifies the initialization and coordination of the
-    above classes. 
+    an optional class that simplifies the initialization and coordination of
+    OpenTelemetry objects. 
 
 * **DiagConsoleLogger** (@opentelemetry/api)
     standard logger that outputs debug messages to the console.
 
 The following objects are implicitly instantiated:
 
-* **FastlyStackContextManager** (implicitly instantiated)
-    a rudimentary Context Manager that provides context but does not currently
-    support asynchronous context stacks.
+* **FastlyStackContextManager** (by `FastlySDK`)
+    a rudimentary Context Manager that provides context. Although this does not currently
+    support asynchronous context stacks, it is able to associate all traces created to
+    the current fetch event.
 
-* **FastlyTraceProvider** (implicitly instantiated)
+* **FastlySpanProcessor** (by `FastlySDK`)
+    a Span Processor that buffers the spans generated during one invocation of the
+    Compute@Edge application and sends them to the exporter at the end of the
+    lifecycle.
+
+* **FastlyTraceProvider** (by `FastlySDK`)
     a Trace Provider that associates the trace exporter with a default context
     manager.
 
-Beyond this, this is a basic Compute@Edge JavaScript application. A `fetch` handler
-is registered using the `addEventListener()` function, which receives an `event` object.
-The application responds by running `handleRequest`, which takes the event object and
-generates a `Response` object (or Promise that resolves to one).
-
-During this time, this example application obtains a tracer named `fastly-js-opentelemetry-demo`
-from the default tracer provider, then starts a span named `my-span`. It creates a new context
-with the span active, adds an event at the start of the span, spends a few milliseconds in a loop,
-and then finally adds an event at the end of the context. After exiting the context, the application
-ends the span, causing the tracer to queue the trace to the backend.
+* **FastlyComputeJsInstrumentation** (by `getComputeJsAutoInstrumentations`)
+  an OpenTelemetry instrumentation that generates traces for the
+  Compute@Edge lifecycle.
 
 As **FastlyComputeJsInstrumentation** is active, OpenTelemetry will also automatically create spans to
 trace the following events:
 
 * `fetchevent` - traces the lifetime of the FetchEvent, from the time it is first passed in
   to the listener, until the time its result value (`Response` or `Error`) is determined.
-  This means that if a promise is passed to `event.respondWith`, then this will include the time 
-  it takes until that promise is settled. 
+  This means that if a promise is passed to `event.respondWith`, then this will include the time
+  it takes until that promise is settled.
 
 * `listener fn` - traces the lifetime of the application-provided listener function,
   from the time it is called to the time it returns. Note that this can return early if it returns
@@ -100,3 +95,21 @@ trace the following events:
 These events occur in nested contexts, setting the active context at each event. Therefore,
 the `my-span` span created in the application code happens as a child span of the `listener fn`
 span.
+
+Beyond this, this is a basic Compute@Edge JavaScript application. A `fetch` handler
+is registered using the `addEventListener()` function, which receives an `event` object.
+The application responds by running `handleRequest`, which takes the event object and
+generates a `Response` object (or Promise that resolves to one).
+
+During this time, this example application wants to add its own tracing data.
+To do this, it only needs to import the `context` and `trace` objects exported from
+`@opentelemetry/api`. It obtains a tracer named `basic-tracing-example` from the
+default tracer provider, then starts a span named `my-span`. It creates a new context
+with the span active, adds an event at the start of the span, spends a few milliseconds in a loop,
+and then finally adds an event at the end of the context. After exiting the context, the application
+ends the span, causing the tracer to queue the trace to the backend. The trace is finally
+sent when the application lifecycle ends.
+
+Note that all the initialization of OpenTelemetry can be kept completely separate from
+the application logic, by placing it in a separate file (the `./telemetry.js` file in
+this example).
