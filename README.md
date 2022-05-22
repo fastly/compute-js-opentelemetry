@@ -86,6 +86,7 @@ See the examples in the [`/examples`](./examples) directory.
 |-----------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
 | [readme-demo](./examples/readme-demo)                     | Example demo from the beginning of this README                                                                                             |
 | [basic-tracing-example](./examples/basic-tracing-example) | Basic Tracing Example                                                                                                                      |
+| [basic-metrics-example](./examples/basic-metrics-example) | Basic Metrics Example                                                                                                                      |
 | [otel-demo](./examples/otel-demo)                         | Example that demonstrates OpenTelemetry traces that start at the Edge and nest into an operation at the backend.                           |
 | [otel-http-proxy](./examples/otel-http-proxy)             | A sample application designed to collect traces as an HTTPS log endpoint for a Fastly service, sending them to an OpenTelemetry collector. |
 
