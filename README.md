@@ -12,7 +12,7 @@ Generate traces like this one to follow activity and time in your Compute@Edge a
 ```javascript
 /// <reference types="@fastly/js-compute" />
 
-import './tracing.js'
+import './telemetry.js'
 import { context, trace } from "@opentelemetry/api";
 
 addEventListener("fetch", (event) => event.respondWith(handleRequest(event)));
@@ -33,7 +33,7 @@ async function handleRequest(event) {
 }
 ```
 
-**tracing.js**:
+**telemetry.js**:
 
 ```javascript
 import { context, trace } from "@opentelemetry/api";

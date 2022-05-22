@@ -5,7 +5,7 @@
 
 /// <reference types="@fastly/js-compute" />
 
-import './tracing.js'
+import './telemetry.js'
 import { context, trace } from "@opentelemetry/api";
 
 function doTask() {
