@@ -4,69 +4,72 @@
  */
 
 import { diag } from "@opentelemetry/api";
-import { addFetchEventAction } from "../core";
+import { addFetchEventAction, onInit } from "../core";
 import { FastlyComputeJsInstrumentation } from "./instrumentation";
 
 let _target!: FastlyComputeJsInstrumentation;
 
-addFetchEventAction(10, event => {
-  if(_target == null) {
-    return;
-  }
-  diag.debug('instrumentation-fastly-compute-js: running listener');
-
-  diag.debug('instrumentation-fastly-compute-js: calling event.onEventStart()');
-  _target.onEventStart(event);
-  diag.debug('instrumentation-fastly-compute-js: returned from event.onEventStart()');
-
-  diag.debug('instrumentation-fastly-compute-js: patching event.respondWith()');
-  const origRespondWith = event.respondWith;
-  event.respondWith = (response) => {
-    // Only do this patchwork on the first call to event.respondWith().
-    // event.respondWith() can only be called once on a single event.
-    if((event as any).__instrumentation_compute_js_respondWith_called) {
-      diag.warn('instrumentation-fastly-compute-js: detected multiple calls to respondWith() on a single event');
-      diag.debug('instrumentation-fastly-compute-js: calling previous event.respondWith()');
-      origRespondWith.call(event, response);
+onInit(() => {
+  (_target as any) = null;
+  addFetchEventAction(10, event => {
+    if(_target == null) {
       return;
     }
-    (event as any).__instrumentation_compute_js_respondWith_called = true;
+    diag.debug('instrumentation-fastly-compute-js: running listener');
 
-    diag.debug('instrumentation-fastly-compute-js: running patched event.respondWith()');
+    diag.debug('instrumentation-fastly-compute-js: calling event.onEventStart()');
+    _target.onEventStart(event);
+    diag.debug('instrumentation-fastly-compute-js: returned from event.onEventStart()');
 
-    Promise.resolve(response)
-      .then(value => {
-        diag.debug('instrumentation-fastly-compute-js: calling onEventEnd with Response');
-        _target.onEventEnd(null, value);
-        diag.debug('instrumentation-fastly-compute-js: returned from onEventEnd');
-      }, error => {
-        diag.debug('instrumentation-fastly-compute-js: calling onEventEnd with Error');
-        _target.onEventEnd(error instanceof Error ? error : new Error(error));
-        diag.debug('instrumentation-fastly-compute-js: returned from onEventEnd');
-      });
+    diag.debug('instrumentation-fastly-compute-js: patching event.respondWith()');
+    const origRespondWith = event.respondWith;
+    event.respondWith = (response) => {
+      // Only do this patchwork on the first call to event.respondWith().
+      // event.respondWith() can only be called once on a single event.
+      if((event as any).__instrumentation_compute_js_respondWith_called) {
+        diag.warn('instrumentation-fastly-compute-js: detected multiple calls to respondWith() on a single event');
+        diag.debug('instrumentation-fastly-compute-js: calling previous event.respondWith()');
+        origRespondWith.call(event, response);
+        return;
+      }
+      (event as any).__instrumentation_compute_js_respondWith_called = true;
 
-    // We want to pass a proxy Promise to the original event.respondWith(),
-    // which will settle after the eventPromise has been settled.
-    diag.debug('instrumentation-fastly-compute-js: creating proxy response promise');
-    const responseProxy = new Promise<Response>((resolve, reject) => {
+      diag.debug('instrumentation-fastly-compute-js: running patched event.respondWith()');
+
       Promise.resolve(response)
         .then(value => {
-          diag.debug('instrumentation-fastly-compute-js: proxy response promise resolved');
-          resolve(value);
-        }, value => {
-          diag.debug('instrumentation-fastly-compute-js: proxy response promise rejected');
-          reject(value);
+          diag.debug('instrumentation-fastly-compute-js: calling onEventEnd with Response');
+          _target.onEventEnd(null, value);
+          diag.debug('instrumentation-fastly-compute-js: returned from onEventEnd');
+        }, error => {
+          diag.debug('instrumentation-fastly-compute-js: calling onEventEnd with Error');
+          _target.onEventEnd(error instanceof Error ? error : new Error(error));
+          diag.debug('instrumentation-fastly-compute-js: returned from onEventEnd');
         });
-    });
 
-    diag.debug('instrumentation-fastly-compute-js: calling onRespondWith handler with proxy response promise');
-    _target.onRespondWith(event, responseProxy, (response) => {
-      diag.debug('instrumentation-fastly-compute-js: calling previous event.respondWith() with proxy response promise');
-      origRespondWith.call(event, response);
-    });
-    diag.debug('instrumentation-fastly-compute-js: returned from onRespondWith handler');
-  };
+      // We want to pass a proxy Promise to the original event.respondWith(),
+      // which will settle after the eventPromise has been settled.
+      diag.debug('instrumentation-fastly-compute-js: creating proxy response promise');
+      const responseProxy = new Promise<Response>((resolve, reject) => {
+        Promise.resolve(response)
+          .then(value => {
+            diag.debug('instrumentation-fastly-compute-js: proxy response promise resolved');
+            resolve(value);
+          }, value => {
+            diag.debug('instrumentation-fastly-compute-js: proxy response promise rejected');
+            reject(value);
+          });
+      });
 
+      diag.debug('instrumentation-fastly-compute-js: calling onRespondWith handler with proxy response promise');
+      _target.onRespondWith(event, responseProxy, (response) => {
+        diag.debug('instrumentation-fastly-compute-js: calling previous event.respondWith() with proxy response promise');
+        origRespondWith.call(event, response);
+      });
+      diag.debug('instrumentation-fastly-compute-js: returned from onRespondWith handler');
+    };
+
+  });
 });
 
 export function patchRuntime() {
