@@ -1,4 +1,4 @@
-# OpenTelemetry Collector Exporter for Fastly Compute@Edge backends
+# OpenTelemetry Trace Exporter for Fastly Compute@Edge backends
 
 This module provides a collector exporter that exports traces using the
 [OTLP/HTTP JSON](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/otlp.md#otlphttp) format
