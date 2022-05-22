@@ -23,20 +23,10 @@ export type FastlyTracerConfig = TracerConfig;
 export class FastlyTracerProvider extends BasicTracerProvider {
   /**
    * Constructs a new Tracer instance.
-   * @param config Web Tracer config
+   * @param config Fastly Tracer config
    */
   constructor(config: FastlyTracerConfig = {}) {
     super(config);
-
-    if ((config as SDKRegistrationConfig).contextManager) {
-      throw (
-        'contextManager should be defined in register method not in' +
-        ' constructor'
-      );
-    }
-    if ((config as SDKRegistrationConfig).propagator) {
-      throw 'propagator should be defined in register method not in constructor';
-    }
   }
 
   /**
