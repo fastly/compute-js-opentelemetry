@@ -7,7 +7,6 @@
   "exports": {
     ".": "./build/src/index.js",
     "./auto-instrumentations-compute-js": "./build/src/auto-instrumentations-compute-js/index.js",
-    "./core": "./build/src/core/index.js",
     "./diag-fastly-logger": "./build/src/diag-fastly-logger/index.js",
     "./exporter-metrics-otlp-fastly-backend": "./build/src/opentelemetry-exporter-metrics-otlp-fastly-backend/index.js",
     "./exporter-metrics-otlp-fastly-logger": "./build/src/opentelemetry-exporter-metrics-otlp-fastly-logger/index.js",
