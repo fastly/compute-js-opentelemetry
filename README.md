@@ -118,6 +118,17 @@ details.
 
 ## Notes
 
+### Metrics
+
+As of this writing, the underlying OpenTelemetry metrics libraries (`0.28.0`) produce data in an outdated
+format ([opentelemetry-proto](https://github.com/open-telemetry/opentelemetry-proto) < 0.9.0).
+Until those upstream libraries get updated, the data format sent by this library will be outdated
+and not be accepted by [OpenTelemetry Collector](https://github.com/open-telemetry/opentelemetry-collector) >= 0.33.0,
+including the [OpenTelemetry Collector Demo](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/examples/demo).
+
+`opentelemetry-js` [#2929](https://github.com/open-telemetry/opentelemetry-js/pull/2929) fixes this
+issue and has already landed in `main`. It should be included in their next release (0.29.x). 
+
 ### Environment Variables
 
 OpenTelemetry defines a well-documented set of [environment variables](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/sdk-environment-variables.md)
