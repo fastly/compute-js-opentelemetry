@@ -3,6 +3,8 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
+declare function setFetchFunc(fn: (resource: RequestInfo, init?: RequestInit) => Promise<Response>): void;
+
 import * as assert from 'assert';
 import * as sinon from "sinon";
 
@@ -54,7 +56,7 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', func
     beforeEach(function() {
       fakeResponse = {} as Response;
       fakeFetch = sinon.fake.resolves(fakeResponse) as FakeFetch;
-      globalThis.fetch = fakeFetch;
+      setFetchFunc(fakeFetch);
 
       metricExporterConfig = {
         headers: {

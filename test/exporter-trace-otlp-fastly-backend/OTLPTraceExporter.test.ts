@@ -3,6 +3,8 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
+declare function setFetchFunc(fn: (resource: RequestInfo, init?: RequestInit) => Promise<Response>): void;
+
 import * as assert from 'assert';
 import zlib from "zlib";
 
@@ -56,7 +58,7 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
     beforeEach(function () {
       fakeResponse = {} as Response;
       fakeFetch = sinon.fake.resolves(fakeResponse) as FakeFetch;
-      globalThis.fetch = fakeFetch;
+      setFetchFunc(fakeFetch);
       collectorExporterConfig = {
         headers: {
           foo: 'bar',
@@ -167,7 +169,7 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
 
       fakeResponse = new MockedResponse('success', { status: 200 });
       fakeFetch = sinon.fake.resolves(fakeResponse) as FakeFetch;
-      globalThis.fetch = fakeFetch;
+      setFetchFunc(fakeFetch);
 
       const responseSpy = sinon.spy();
       collectorExporter.export(spans, responseSpy);
@@ -185,7 +187,7 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
     it('should log the error message', function (done) {
       fakeResponse = new MockedResponse('failed', { status: 400 });
       fakeFetch = sinon.fake.resolves(fakeResponse) as FakeFetch;
-      globalThis.fetch = fakeFetch;
+      setFetchFunc(fakeFetch);
 
       const responseSpy = sinon.spy();
       collectorExporter.export(spans, responseSpy);
@@ -207,7 +209,7 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
     beforeEach(function () {
       fakeResponse = {} as Response;
       fakeFetch = sinon.fake.resolves(fakeResponse) as FakeFetch;
-      globalThis.fetch = fakeFetch;
+      setFetchFunc(fakeFetch);
       collectorExporterConfig = {
         headers: {
           foo: 'bar',
