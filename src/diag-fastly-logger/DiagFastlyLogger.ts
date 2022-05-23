@@ -32,7 +32,7 @@ export class DiagFastlyLogger implements DiagLogger {
             // This can fail for example if you try to do this outside of
             // processing of requests. In that case we will log an error
             // to console, and give up on the attempted log.
-            console.error( (ex instanceof Error) ? ex.message : String(ex) );
+            console.error(String(ex));
             return;
           }
         }
