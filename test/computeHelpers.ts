@@ -4,6 +4,7 @@
  */
 
 import * as sinon from 'sinon';
+import { addFetchEventAction, onInit } from "../src/core";
 
 class CacheOverrideMock {
   mode: CacheOverrideMode;
@@ -95,23 +96,38 @@ export class LoggerMock implements Logger {
 
 class FastlyMock implements Fastly {
   _loggers: {[endpoint: string]: Logger} = {};
+  _requireFetchEvent: boolean = true;
 
-  getLogger(endpoint: string): Logger {
+  getLogger = sinon.stub().callsFake((endpoint: string) => {
+    if(this._requireFetchEvent) {
+      const fetchEvent = getRequestFetchEvent();
+      if(fetchEvent == null) {
+        throw new Error('no fetch event');
+      }
+    }
     if(endpoint in this._loggers) {
       return this._loggers[endpoint];
     }
     const logger = new LoggerMock(endpoint);
     this._loggers[endpoint] = logger;
     return logger;
-  }
+  });
 
   env!: Env;
   enableDebugLogging!: (enabled: boolean) => void;
   getGeolocationForIpAddress!: (address: string) => Geolocation;
   includeBytes!: (path: String) => Uint8Array;
+
+  clearLoggers() {
+    this._loggers = {};
+  }
+  mockLoggersRequireFetchEvent(require: boolean = true) {
+    this._requireFetchEvent = require;
+  }
 }
 
-globalThis.fastly = new FastlyMock();
+export const fastlyMock = new FastlyMock();
+globalThis.fastly = fastlyMock;
 
 type FetchEventListener = (event: FetchEvent) => void;
 
@@ -138,3 +154,17 @@ function addEventListenerMock(type: 'fetch', listener: FetchEventListener): void
   registerFetchEventListener(listener);
 }
 globalThis.addEventListener = addEventListenerMock;
+
+let _requestFetchEvent: FetchEvent | null = null;
+export function getRequestFetchEvent() {
+  return _requestFetchEvent;
+}
+
+onInit(() => {
+  _requestFetchEvent = null;
+  fastlyMock.clearLoggers();
+  fastlyMock.mockLoggersRequireFetchEvent();
+  addFetchEventAction(-1, (event) => {
+    _requestFetchEvent = event;
+  });
+});
