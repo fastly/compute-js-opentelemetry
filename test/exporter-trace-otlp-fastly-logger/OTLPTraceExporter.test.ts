@@ -14,7 +14,7 @@ import { OTLPTraceExporter } from '../../src/exporter-trace-otlp-fastly-logger';
 import { OTLPExporterFastlyLoggerConfigBase } from "../../src/otlp-exporter-fastly-base";
 import { ensureExportTraceServiceRequestIsSet, ensureSpanIsCorrect, mockedReadableSpan } from "../traceHelpers";
 import { newNopDiagLogger } from "../commonHelpers";
-import { LoggerMock } from "../computeHelpers";
+import { fastlyMock, LoggerMock } from "../computeHelpers";
 
 describe('OTLPTraceExporter - Compute@Edge with json over Fastly logger', function() {
   let collectorExporter: OTLPTraceExporter;
@@ -68,8 +68,8 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly logger', functi
   describe('export', function () {
     let logger: LoggerMock;
     beforeEach(function () {
+      fastlyMock.mockLoggersRequireFetchEvent(false);
       logger = fastly.getLogger('test-logger') as LoggerMock;
-      logger.reset();
       collectorExporterConfig = {
         attributes: {},
         endpoint: 'test-logger',
