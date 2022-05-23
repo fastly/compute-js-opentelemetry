@@ -3,23 +3,23 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { parseHeaders } from "@opentelemetry/otlp-exporter-base";
 import { baggageUtils, getEnv } from "@opentelemetry/core";
+import { parseHeaders, configureCompression, CompressionAlgorithm } from "@opentelemetry/otlp-exporter-base";
 
-import { OTLPExporterFastlyBase } from "./OTLPExporterFastlyBase";
-import { CompressionAlgorithm, OTLPExporterFastlyBackendConfigBase } from "./types";
-import { configureCompression, sendWithFetch } from "./util";
+import { OTLPExporterFastlyBase, ExportItemConverter } from "./OTLPExporterFastlyBase";
+import { OTLPExporterFastlyBackendConfigBase } from "./types";
+import { sendWithFetch } from "./util";
 
 /**
  * Collector Metric Exporter abstract base class for Fastly backend
  */
 export abstract class OTLPExporterFastlyBackendBase<
-  ExportItem,
-  ServiceRequest
+  Converter extends ExportItemConverter<ExportItem, ServiceRequest>,
+  ExportItem = {},
+  ServiceRequest = {},
 > extends OTLPExporterFastlyBase<
   OTLPExporterFastlyBackendConfigBase,
-  ExportItem,
-  ServiceRequest
+  Converter
 > {
   DEFAULT_HEADERS: Record<string, string> = {};
   headers: Record<string, string>;
@@ -27,8 +27,8 @@ export abstract class OTLPExporterFastlyBackendBase<
   backend: string;
   compression: CompressionAlgorithm;
 
-  protected constructor(config: OTLPExporterFastlyBackendConfigBase) {
-    super(config);
+  protected constructor(config: OTLPExporterFastlyBackendConfigBase, converter: Converter) {
+    super(config, converter);
 
     this.headers = Object.assign(
       this.DEFAULT_HEADERS,

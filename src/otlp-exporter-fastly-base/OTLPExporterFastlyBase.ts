@@ -3,30 +3,37 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { OTLPExporterBase, OTLPExporterError } from '@opentelemetry/otlp-exporter-base';
-
 import { diag } from '@opentelemetry/api';
-import { OTLPExporterConfigBase } from "@opentelemetry/otlp-exporter-base/build/src/types";
+import { OTLPExporterBase, OTLPExporterConfigBase, OTLPExporterError } from '@opentelemetry/otlp-exporter-base';
+
+export interface ExportItemConverter<TExportItem, TServiceRequest> {
+  convert(objects: TExportItem[]): TServiceRequest;
+}
 
 /**
  * Collector Tracer/Metric Exporter abstract base class
  */
 export abstract class OTLPExporterFastlyBase<
   T extends OTLPExporterConfigBase,
-  ExportItem,
-  ServiceRequest
+  Converter extends ExportItemConverter<ExportItem, ServiceRequest>,
+  ExportItem = {},
+  ServiceRequest = {},
 > extends OTLPExporterBase<
   T,
   ExportItem,
   ServiceRequest
 > {
-  protected constructor(config: T) {
+  _converter: Converter;
+
+  protected constructor(config: T, converter: Converter) {
     super(config);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if ((config as any).metadata) {
       diag.warn('Metadata cannot be set when using http');
     }
+
+    this._converter = converter;
   }
 
   onInit(_config: T): void {}
@@ -61,4 +68,8 @@ export abstract class OTLPExporterFastlyBase<
   // TODO: end gzip stream from util.ts if not undefined
   // It should perhaps be a class member here instead of a variable in util.ts
   onShutdown(): void {}
+
+  override convert(objects: ExportItem[]): ServiceRequest {
+    return this._converter.convert(objects);
+  }
 }

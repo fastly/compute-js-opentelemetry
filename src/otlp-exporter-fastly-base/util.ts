@@ -5,11 +5,9 @@
 
 import * as zlib from "zlib";
 import { diag } from '@opentelemetry/api';
-import { OTLPExporterError } from "@opentelemetry/otlp-exporter-base";
-export { configureCompression } from '@opentelemetry/otlp-exporter-base/build/src/platform/node';
+import { CompressionAlgorithm, OTLPExporterError } from "@opentelemetry/otlp-exporter-base";
 import { OTLPExporterFastlyBackendBase } from "./OTLPExporterFastlyBackendBase";
 import { OTLPExporterFastlyLoggerBase } from "./OTLPExporterFastlyLoggerBase";
-import { CompressionAlgorithm } from "./types";
 
 /**
  * Sends data using fetch
@@ -18,7 +16,7 @@ import { CompressionAlgorithm } from "./types";
  * @param contentType
  */
 export async function sendWithFetch<ExportItem, ServiceRequest>(
-  collector: OTLPExporterFastlyBackendBase<ExportItem, ServiceRequest>,
+  collector: OTLPExporterFastlyBackendBase<any, ExportItem, ServiceRequest>,
   data: string | Buffer,
   contentType: string,
 ): Promise<void> {
@@ -75,7 +73,7 @@ export async function sendWithFetch<ExportItem, ServiceRequest>(
  * @param data
  */
 export function sendWithFastlyLogger<ExportItem, ServiceRequest>(
-  collector: OTLPExporterFastlyLoggerBase<ExportItem, ServiceRequest>,
+  collector: OTLPExporterFastlyLoggerBase<any, ExportItem, ServiceRequest>,
   data: string | Buffer,
 ): Promise<void> {
   return new Promise(resolve => {

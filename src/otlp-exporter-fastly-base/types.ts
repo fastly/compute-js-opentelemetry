@@ -3,9 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { OTLPExporterConfigBase } from '@opentelemetry/otlp-exporter-base';
-import { CompressionAlgorithm } from '@opentelemetry/otlp-exporter-base/build/src/platform/node';
-export { CompressionAlgorithm };
+import { CompressionAlgorithm, OTLPExporterConfigBase } from '@opentelemetry/otlp-exporter-base';
 
 /**
  * Collector Exporter Fastly Compute@Edge backend base config

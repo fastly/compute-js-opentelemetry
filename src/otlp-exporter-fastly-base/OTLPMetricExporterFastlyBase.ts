@@ -4,16 +4,14 @@
  */
 
 import { ExportResult } from "@opentelemetry/core";
-import { defaultOptions, OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
-import { otlpTypes } from '@opentelemetry/exporter-trace-otlp-http';
 import { AggregationTemporality, PushMetricExporter, ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
+import { defaultOptions, OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
 
 import { OTLPExporterFastlyBase } from "./OTLPExporterFastlyBase";
 
-export class OTLPMetricExporterFastlyBase<T extends OTLPExporterFastlyBase<OTLPMetricExporterOptions,
-  ResourceMetrics,
-  otlpTypes.opentelemetryProto.collector.metrics.v1.ExportMetricsServiceRequest>>
-  implements PushMetricExporter {
+export class OTLPMetricExporterFastlyBase<
+  T extends OTLPExporterFastlyBase<OTLPMetricExporterOptions, any>
+> implements PushMetricExporter {
   public _otlpExporter: T;
   protected _preferredAggregationTemporality: AggregationTemporality;
 

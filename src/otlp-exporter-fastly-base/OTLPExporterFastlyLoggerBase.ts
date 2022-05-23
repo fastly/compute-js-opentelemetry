@@ -5,7 +5,7 @@
 
 import { diag } from '@opentelemetry/api';
 
-import { OTLPExporterFastlyBase } from "./OTLPExporterFastlyBase";
+import { OTLPExporterFastlyBase, ExportItemConverter } from "./OTLPExporterFastlyBase";
 import { OTLPExporterFastlyLoggerConfigBase } from './types';
 import { sendWithFastlyLogger } from "./util";
 
@@ -13,17 +13,17 @@ import { sendWithFastlyLogger } from "./util";
  * Collector Metric Exporter abstract base class for Fastly named log providers
  */
 export abstract class OTLPExporterFastlyLoggerBase<
-  ExportItem,
-  ServiceRequest
+  Converter extends ExportItemConverter<ExportItem, ServiceRequest>,
+  ExportItem = {},
+  ServiceRequest = {},
 > extends OTLPExporterFastlyBase<
   OTLPExporterFastlyLoggerConfigBase,
-  ExportItem,
-  ServiceRequest
+  Converter
 > {
   loggerEndpoint: string;
 
-  protected constructor(config: OTLPExporterFastlyLoggerConfigBase) {
-    super(config);
+  protected constructor(config: OTLPExporterFastlyLoggerConfigBase, converter: Converter) {
+    super(config, converter);
 
     if (config.url) {
       diag.warn('config.url is ignored when using named logger');
