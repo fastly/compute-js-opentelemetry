@@ -317,6 +317,15 @@
     "@opentelemetry/resources" "1.2.0"
     "@opentelemetry/semantic-conventions" "1.2.0"
 
+"@opentelemetry/sdk-trace-web@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@opentelemetry/sdk-trace-web/-/sdk-trace-web-1.2.0.tgz#bd43ea6ceca40efc61f700be60e8a9160d1b2a0a"
+  integrity sha512-C/uE64cAkzTx9dvTs4l9bLnWPmdB1f/YxRWnT0tvcAfp6AZNBPxCNKc8iCaKcTNuZno96EG0HoiMW9GvMzgS3w==
+  dependencies:
+    "@opentelemetry/core" "1.2.0"
+    "@opentelemetry/sdk-trace-base" "1.2.0"
+    "@opentelemetry/semantic-conventions" "1.2.0"
+
 "@opentelemetry/semantic-conventions@1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@opentelemetry/semantic-conventions/-/semantic-conventions-1.2.0.tgz#1549c1d88dc45d720b8487e39077eacc69636c73"

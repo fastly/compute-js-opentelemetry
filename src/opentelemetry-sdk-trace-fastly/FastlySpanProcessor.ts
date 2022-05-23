@@ -89,7 +89,7 @@ export class FastlySpanProcessor implements SpanProcessor {
             } else {
               reject(
                 result.error ??
-                new Error('BatchSpanProcessor: span export failed')
+                new Error('FastlySpanProcessor: span export failed')
               );
             }
           }

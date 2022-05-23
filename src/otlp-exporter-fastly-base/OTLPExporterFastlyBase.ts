@@ -43,11 +43,6 @@ export abstract class OTLPExporterFastlyBase<
     onSuccess: () => void,
     onError: (error: OTLPExporterError) => void
   ): void {
-    if (this._shutdownOnce.isCalled) {
-      diag.debug('Shutdown already started. Cannot send objects');
-      return;
-    }
-
     const serviceRequest = this.convert(objects);
 
     const promise = this._send(serviceRequest)
