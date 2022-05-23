@@ -8,9 +8,11 @@ import { diag, trace, context, propagation, SpanKind, SpanStatusCode, } from "@o
 import { InstrumentationBase, safeExecuteInTheMiddle } from '@opentelemetry/instrumentation';
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
 
-import { patchRuntime } from "./util";
+import { patchRuntime, setPatchTarget } from "./util";
 import { AttributeNames } from "./enums/AttributeNames";
 import { FastlyBackendFetchInstrumentationConfig } from "./types";
+
+patchRuntime();
 
 export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unknown> {
 
@@ -34,7 +36,7 @@ export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unkno
 
   override enable() {
     if(!this._eventsInstalled) {
-      patchRuntime(this);
+      setPatchTarget(this);
       this._eventsInstalled = true;
     }
     this._eventsEnabled = true;
@@ -47,12 +49,9 @@ export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unkno
   // This event wraps the lifetime of a single backend fetch, or `fetch()` made to a backend, from the time it is called
   // to the time it returns.
   async onBackendFetch(resource: RequestInfo, init: RequestInit | undefined, fn: (resource: RequestInfo, init: RequestInit | undefined) => Promise<Response>): Promise<Response> {
-    if(!this._eventsEnabled) {
-      return await fn(resource, init);
-    }
     try {
       diag.debug('onBackendFetch start');
-      const url = resource instanceof Request ? resource.url : resource;
+      const url = typeof resource === 'object' && 'url' in resource ? resource.url : resource;
       const backendFetchSpan = this.tracer.startSpan('Backend Fetch', {
         kind: SpanKind.CLIENT,
         attributes: {
