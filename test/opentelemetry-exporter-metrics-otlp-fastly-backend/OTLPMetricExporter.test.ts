@@ -9,13 +9,16 @@ import * as assert from 'assert';
 import * as sinon from "sinon";
 
 import { diag } from "@opentelemetry/api";
-import { ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
+import { MetricProducer, ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
+import { Resource } from "@opentelemetry/resources";
 import { OTLPMetricExporterOptions } from "@opentelemetry/exporter-metrics-otlp-http";
 
-import { OTLPExporterFastlyBackendConfigBase } from "../../src/otlp-exporter-fastly-base";
-import { OTLPMetricExporter } from "../../src/opentelemetry-exporter-metrics-otlp-fastly-backend";
+import { MockedResponse } from "../computeHelpers";
 import { newNopDiagLogger } from "../commonHelpers";
 import { mockResourceMetrics } from "../metricsHelpers";
+import { OTLPExporterFastlyBackendConfigBase } from "../../src/otlp-exporter-fastly-base";
+import { OTLPMetricExporter } from "../../src/opentelemetry-exporter-metrics-otlp-fastly-backend";
+import { FastlyMetricReader } from "../../src/opentelemetry-sdk-metrics-fastly";
 
 const address = 'localhost:1501';
 
@@ -49,6 +52,52 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', func
         backend: 'test-logger'
       });
       assert.strictEqual(metricExporter._otlpExporter.url, 'http://localhost:4318/v1/metrics');
+    });
+  });
+
+  describe('attach to a metric reader', function() {
+    let metricReader: FastlyMetricReader;
+    let metricProducer: MetricProducer;
+    let getPreferredAggregationTemporalitySpy: sinon.SinonSpy;
+    beforeEach(function() {
+      fakeResponse = new MockedResponse('foo', {status: 200});
+      fakeFetch = sinon.fake.resolves(fakeResponse) as FakeFetch;
+      setFetchFunc(fakeFetch);
+
+      metricExporter = new OTLPMetricExporter({
+        backend: 'test-logger'
+      });
+
+      getPreferredAggregationTemporalitySpy = sinon.spy(metricExporter, 'getPreferredAggregationTemporality');
+
+      metricReader = new FastlyMetricReader({ exporter: metricExporter });
+
+      // Attach a producer too
+      metricProducer = new class implements MetricProducer {
+        async collect(): Promise<ResourceMetrics> {
+          return {
+            resource: new Resource({}),
+            instrumentationLibraryMetrics: [],
+          };
+        }
+      };
+      metricReader.setMetricProducer(metricProducer);
+    });
+
+    it('should get getPreferredAggregationTemporality called', function() {
+      assert.ok(getPreferredAggregationTemporalitySpy.calledOnce);
+    });
+
+    it('flushing metric reader should flush the exporter', async function() {
+      const spy = sinon.spy(metricExporter, 'forceFlush');
+      await metricReader.forceFlush();
+      assert.ok(spy.calledOnce);
+    });
+
+    it('shutdown of metric reader should shut down the exporter', async function() {
+      const spy = sinon.spy(metricExporter, 'shutdown');
+      await metricReader.shutdown();
+      assert.ok(spy.calledOnce);
     });
   });
 
