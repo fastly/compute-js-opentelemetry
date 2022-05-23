@@ -3,7 +3,8 @@ import * as assert from "assert";
 import * as sinon from "sinon";
 
 import { diag, DiagLogger, DiagLogLevel, Sampler, SamplingDecision, trace, } from "@opentelemetry/api";
-import { ReadableSpan, SpanExporter, SpanProcessor, Tracer } from "@opentelemetry/sdk-trace-base";
+import { ReadableSpan, SimpleSpanProcessor, SpanExporter, SpanProcessor, Tracer } from "@opentelemetry/sdk-trace-base";
+import { MetricReader } from "@opentelemetry/sdk-metrics-base";
 import { Resource } from "@opentelemetry/resources";
 import { Instrumentation } from "@opentelemetry/instrumentation";
 
@@ -14,6 +15,8 @@ import {
 } from "../computeHelpers";
 import { checkLog, newNopDiagLogger } from "../commonHelpers";
 import { FastlySDK } from "../../src/opentelemetry-sdk-fastly";
+import { OTLPTraceExporter } from "../../src/exporter-trace-otlp-fastly-backend";
+import { FastlySpanProcessor } from "../../src/opentelemetry-sdk-trace-fastly";
 
 describe('FastlySDK', function() {
   describe('instance', function() {
@@ -88,6 +91,39 @@ describe('FastlySDK', function() {
 
     });
 
+    it('if trace exporter is OTLPExporterFastlyBackend, then it uses FastlySpanProcessor', async function() {
+
+      const traceExporter = new OTLPTraceExporter({backend:'test-backend'});
+
+      // FastlySDK constructor calls configureTracerProvider with provider information
+      const configureTracerProviderSpy = sinon.spy(FastlySDK.prototype, 'configureTracerProvider');
+      const fastlySdk = new FastlySDK({traceExporter});
+      await fastlySdk.start();
+
+      // Second parameter should have been a FastlySpanProcessor
+      assert.ok(configureTracerProviderSpy.calledOnce);
+      assert.ok(configureTracerProviderSpy.args[0][1] instanceof FastlySpanProcessor);
+
+    });
+
+    it('if trace exporter is not OTLPExporterFastlyBackend, then it uses SimpleSpanProcessor', async function() {
+
+      const traceExporter: SpanExporter = {
+        export(spans, resultCallback) {},
+        async shutdown(): Promise<void> {}
+      };
+
+      // FastlySDK constructor calls configureTracerProvider with provider information
+      const configureTracerProviderSpy = sinon.spy(FastlySDK.prototype, 'configureTracerProvider');
+      const fastlySdk = new FastlySDK({traceExporter});
+      await fastlySdk.start();
+
+      // Second parameter should have been a SimpleSpanProcessor
+      assert.ok(configureTracerProviderSpy.calledOnce);
+      assert.ok(configureTracerProviderSpy.args[0][1] instanceof SimpleSpanProcessor);
+
+    });
+
     it('initializes with a span processor', async function() {
 
       const onStartStub = sinon.stub();
@@ -135,6 +171,23 @@ describe('FastlySDK', function() {
       assert.ok(onStartStub.called);
       assert.strictEqual(onStartStub.args[0][0], span);
       assert.ok(!exportStub.called);
+
+    });
+
+    it('initializes with a metric reader', async function() {
+
+      const onShutdown = sinon.stub().resolves();
+      const metricReader = new class extends MetricReader {
+        protected onShutdown = onShutdown
+        protected async onForceFlush(): Promise<void> {
+        }
+      } as MetricReader;
+
+      const fastlySdk = new FastlySDK({metricReader});
+      await fastlySdk.start();
+      await fastlySdk.shutdown();
+
+      assert.ok(onShutdown.called);
 
     });
 
