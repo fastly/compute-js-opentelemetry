@@ -43,6 +43,13 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
       const args = warnStub.args[0];
       assert.strictEqual(args[0], 'Metadata cannot be set when using http');
     });
+
+    it('should use default URL if not given', function() {
+      collectorExporter = new OTLPTraceExporter({
+        backend: 'test-logger'
+      });
+      assert.strictEqual(collectorExporter.url, 'http://localhost:4318/v1/traces');
+    });
   });
 
   describe('export', function () {
