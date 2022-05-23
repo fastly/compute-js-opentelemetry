@@ -15,7 +15,7 @@ export class ConsoleMetricExporter implements PushMetricExporter {
   protected _shutdown = true;
 
   export(metrics: ResourceMetrics, resultCallback: (result: ExportResult) => void) {
-    return this._sendMetrics(metrics, resultCallback);
+    return ConsoleMetricExporter._sendMetrics(metrics, resultCallback);
   }
 
   getPreferredAggregationTemporality() {
@@ -29,9 +29,9 @@ export class ConsoleMetricExporter implements PushMetricExporter {
     this._shutdown = true;
   }
 
-  private _sendMetrics(
+  private static _sendMetrics(
     metrics: ResourceMetrics,
-    done?: (result: ExportResult) => void
+    done: (result: ExportResult) => void
   ): void {
     for (const libraryMetrics of metrics.instrumentationLibraryMetrics) {
       for (const metric of libraryMetrics.metrics) {
@@ -42,9 +42,7 @@ export class ConsoleMetricExporter implements PushMetricExporter {
         }
       }
     }
-    if (done) {
-      return done({ code: ExportResultCode.SUCCESS });
-    }
+    done({ code: ExportResultCode.SUCCESS });
   }
 
 }
