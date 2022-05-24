@@ -7,7 +7,7 @@ import * as assert from 'assert';
 import * as sinon from "sinon";
 
 import { diag } from "@opentelemetry/api";
-import { ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
+import { AggregationTemporality, ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
 import { OTLPMetricExporterOptions } from "@opentelemetry/exporter-metrics-otlp-http";
 
 import { OTLPExporterFastlyLoggerConfigBase } from "../../src/otlp-exporter-fastly-base";
@@ -63,6 +63,15 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly logger', funct
       const args = warnStub.args[0];
       assert.strictEqual(args[0], 'config.headers is ignored when using named logger');
     });
+
+    it('should be possible to instantiate with an aggregation temporality', function() {
+      metricExporter = new OTLPMetricExporter({
+        endpoint: 'test-logger',
+        aggregationTemporality: AggregationTemporality.CUMULATIVE,
+      });
+      assert.strictEqual(metricExporter.getPreferredAggregationTemporality(), AggregationTemporality.CUMULATIVE);
+    });
+
   });
 
   describe('export', function() {

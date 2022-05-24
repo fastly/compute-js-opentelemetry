@@ -5,7 +5,7 @@
 
 import { ExportResult } from "@opentelemetry/core";
 import { AggregationTemporality, PushMetricExporter, ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
-import { defaultOptions, OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
+import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
 
 import { OTLPExporterFastlyBase } from "./OTLPExporterFastlyBase";
 
@@ -16,7 +16,7 @@ export class OTLPMetricExporterFastlyBase<
   protected _preferredAggregationTemporality: AggregationTemporality;
 
   constructor(exporter: T,
-              config: OTLPMetricExporterOptions = defaultOptions) {
+              config: OTLPMetricExporterOptions) {
     this._otlpExporter = exporter;
     this._preferredAggregationTemporality = config.aggregationTemporality ?? AggregationTemporality.CUMULATIVE;
   }

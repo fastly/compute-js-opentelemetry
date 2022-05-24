@@ -9,7 +9,7 @@ import * as assert from 'assert';
 import * as sinon from "sinon";
 
 import { diag } from "@opentelemetry/api";
-import { MetricProducer, ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
+import { AggregationTemporality, MetricProducer, ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
 import { Resource } from "@opentelemetry/resources";
 import { OTLPMetricExporterOptions } from "@opentelemetry/exporter-metrics-otlp-http";
 
@@ -49,9 +49,17 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', func
 
     it('should use default URL if not given', function() {
       metricExporter = new OTLPMetricExporter({
-        backend: 'test-logger'
+        backend: 'test-backend'
       });
       assert.strictEqual(metricExporter._otlpExporter.url, 'http://localhost:4318/v1/metrics');
+    });
+
+    it('should be possible to instantiate with an aggregation temporality', function() {
+      metricExporter = new OTLPMetricExporter({
+        backend: 'test-backend',
+        aggregationTemporality: AggregationTemporality.CUMULATIVE,
+      });
+      assert.strictEqual(metricExporter.getPreferredAggregationTemporality(), AggregationTemporality.CUMULATIVE);
     });
   });
 
@@ -65,7 +73,7 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', func
       setFetchFunc(fakeFetch);
 
       metricExporter = new OTLPMetricExporter({
-        backend: 'test-logger'
+        backend: 'test-backend'
       });
 
       getPreferredAggregationTemporalitySpy = sinon.spy(metricExporter, 'getPreferredAggregationTemporality');
