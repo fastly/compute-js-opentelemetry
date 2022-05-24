@@ -2,14 +2,20 @@ const origConsole = globalThis.console;
 
 let _replacementConsoleFunc = null;
 
-const logMethods = [ 'log', 'trace', 'info', 'warn', 'error' ];
+const logMethods = [ 'log', ['trace', 'debug'], 'info', 'warn', 'error' ];
 const replacementConsole = {};
-for(const key of logMethods) {
+for(const item of logMethods) {
+  let key, func;
+  if(typeof item === 'string') {
+    key = func = item;
+  } else {
+    [key, func] = item;
+  }
   replacementConsole[key] = (...args) => {
     if(_replacementConsoleFunc != null) {
       _replacementConsoleFunc(key, ...args);
     } else {
-      origConsole[key](...args);
+      origConsole[func](...args);
     }
   }
 }
