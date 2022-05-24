@@ -10,6 +10,8 @@ export function addFetchEventAction(priority: number, fn: (event: FetchEvent) =>
 }
 
 onInit(() => {
+  // The intent is for this event listener (and therefore all functions added
+  // by addFetchEventAction) to happen before the event listener provided by the consumer app.
   addEventListener('fetch', event => {
     doAction('fetchEvent', event);
   });
