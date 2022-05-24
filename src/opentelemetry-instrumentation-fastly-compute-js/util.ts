@@ -8,6 +8,7 @@ import { addFetchEventAction, onInit, onShutdown } from "../core";
 import { FastlyComputeJsInstrumentation } from "./instrumentation";
 
 let _target!: FastlyComputeJsInstrumentation;
+const respondWith_called = Symbol();
 
 onInit(() => {
   addFetchEventAction(10, event => {
@@ -25,13 +26,13 @@ onInit(() => {
     event.respondWith = (response) => {
       // Only do this patchwork on the first call to event.respondWith().
       // event.respondWith() can only be called once on a single event.
-      if((event as any).__instrumentation_compute_js_respondWith_called) {
+      if((event as any)[respondWith_called]) {
         diag.warn('instrumentation-fastly-compute-js: detected multiple calls to respondWith() on a single event');
         diag.debug('instrumentation-fastly-compute-js: calling previous event.respondWith()');
         origRespondWith.call(event, response);
         return;
       }
-      (event as any).__instrumentation_compute_js_respondWith_called = true;
+      (event as any)[respondWith_called] = true;
 
       diag.debug('instrumentation-fastly-compute-js: running patched event.respondWith()');
 

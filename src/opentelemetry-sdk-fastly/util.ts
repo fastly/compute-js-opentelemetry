@@ -8,6 +8,7 @@ import { addFetchEventAction, onInit } from "../core";
 import { FastlySDK } from "./FastlySDK";
 
 let _target!: FastlySDK;
+const respondWith_called = Symbol();
 
 onInit(() => {
   (_target as any) = null;
@@ -31,13 +32,13 @@ onInit(() => {
     event.respondWith = (response) => {
       // Only do this patchwork on the first call to event.respondWith().
       // event.respondWith() can only be called once on a single event.
-      if((event as any).__sdk_respondWith_called) {
+      if((event as any)[respondWith_called]) {
         diag.warn('sdk-fastly: detected multiple calls to respondWith() on a single event');
         diag.debug('sdk-fastly: calling previous event.respondWith()');
         origRespondWith.call(event, response);
         return;
       }
-      (event as any).__sdk_respondWith_called = true;
+      (event as any)[respondWith_called] = true;
 
       diag.debug('sdk-fastly: running patched event.respondWith()');
 
