@@ -5,28 +5,37 @@
 
 import { diag } from "@opentelemetry/api";
 import { FastlyBackendFetchInstrumentation } from "./instrumentation";
-import { onInit } from "../core";
+import { onShutdown } from "../core";
 
+let _origFetch: typeof globalThis.fetch;
 let _target!: FastlyBackendFetchInstrumentation;
 
 export function patchRuntime() {
   diag.debug('instrumentation-fastly-backend-fetch: running patchRuntime()');
 
   diag.debug('instrumentation-fastly-backend-fetch: patching runtime');
-  const origFetch = globalThis.fetch;
+  _origFetch = globalThis.fetch;
   globalThis.fetch = async (resource, init) => {
     if(_target == null || !_target._eventsEnabled || (init as any)?.excludeFromTelemetry) {
-      return await origFetch(resource, init);
+      return await _origFetch(resource, init);
     }
     diag.debug('instrumentation-fastly-backend-fetch: running patched fetch()');
     return await _target.onBackendFetch(resource, init, async (resource: RequestInfo, init: RequestInit | undefined) => {
       diag.debug('instrumentation-fastly-backend-fetch: calling original fetch()');
-      return await origFetch(resource, init);
+      return await _origFetch(resource, init);
     });
   };
 }
 
-onInit(() => {
+export function unPatchRuntime() {
+  /* istanbul ignore else */
+  if (_origFetch != null) {
+    globalThis.fetch = _origFetch;
+    (_origFetch as any) = null;
+  }
+}
+
+onShutdown(() => {
   (_target as any) = null;
 });
 

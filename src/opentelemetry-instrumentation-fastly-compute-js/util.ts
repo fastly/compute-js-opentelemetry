@@ -4,13 +4,12 @@
  */
 
 import { diag } from "@opentelemetry/api";
-import { addFetchEventAction, onInit } from "../core";
+import { addFetchEventAction, onInit, onShutdown } from "../core";
 import { FastlyComputeJsInstrumentation } from "./instrumentation";
 
 let _target!: FastlyComputeJsInstrumentation;
 
 onInit(() => {
-  (_target as any) = null;
   addFetchEventAction(10, event => {
     if(_target == null) {
       return;
@@ -68,15 +67,20 @@ onInit(() => {
       });
       diag.debug('instrumentation-fastly-compute-js: returned from onRespondWith handler');
     };
-
   });
 });
+
+onShutdown(() => {
+  (_target as any) = null;
+});
+
+let _origAddEventListener: typeof globalThis.addEventListener;
 
 export function patchRuntime() {
   diag.debug('instrumentation-fastly-compute-js: patching runtime');
 
   diag.debug('instrumentation-fastly-compute-js: patching addEventListener()');
-  const origAddEventListener = globalThis.addEventListener;
+  _origAddEventListener = globalThis.addEventListener;
   globalThis.addEventListener = ( type, listener ) => {
     diag.debug('instrumentation-fastly-compute-js: running patched addEventListener()');
 
@@ -105,8 +109,16 @@ export function patchRuntime() {
     };
 
     diag.debug('instrumentation-fastly-compute-js: registering patched listener fn');
-    origAddEventListener.call( null, type, patchedListener );
+    _origAddEventListener.call( null, type, patchedListener );
   };
+}
+
+export function unPatchRuntime() {
+  /* istanbul ignore else */
+  if(_origAddEventListener != null) {
+    globalThis.addEventListener = _origAddEventListener;
+    (_origAddEventListener as any) = null;
+  }
 }
 
 export function setPatchTarget(target: FastlyComputeJsInstrumentation) {

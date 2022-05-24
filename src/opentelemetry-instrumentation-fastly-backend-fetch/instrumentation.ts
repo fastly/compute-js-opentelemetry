@@ -8,11 +8,18 @@ import { diag, trace, context, propagation, SpanKind, SpanStatusCode, } from "@o
 import { InstrumentationBase, safeExecuteInTheMiddle } from '@opentelemetry/instrumentation';
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
 
-import { patchRuntime, setPatchTarget } from "./util";
+import { patchRuntime, setPatchTarget, unPatchRuntime } from "./util";
 import { AttributeNames } from "./enums/AttributeNames";
 import { FastlyBackendFetchInstrumentationConfig } from "./types";
+import { onInit, onShutdown } from "../core";
 
-patchRuntime();
+onInit(() => {
+  patchRuntime();
+});
+
+onShutdown(() => {
+  unPatchRuntime();
+});
 
 export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unknown> {
 

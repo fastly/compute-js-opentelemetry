@@ -100,9 +100,9 @@ export function isTest() {
   return typeof globalThis.it === 'function' && typeof globalThis.describe === 'function';
 }
 
-type InitFunction = () => void;
-const _initFunctions: InitFunction[] = [];
-export function onInit(fn: InitFunction) {
+type LifecycleFunction = () => void;
+const _initFunctions: LifecycleFunction[] = [];
+export function onInit(fn: LifecycleFunction) {
   /* istanbul ignore else */
   if(isTest()) {
     _initFunctions.push(fn);
@@ -113,6 +113,22 @@ export function onInit(fn: InitFunction) {
 
 export function doInit() {
   for(const fn of _initFunctions) {
+    fn();
+  }
+}
+
+const _shutdownFunctions: LifecycleFunction[] = [];
+export function onShutdown(fn: LifecycleFunction) {
+  /* istanbul ignore else */
+  if(isTest()) {
+    _shutdownFunctions.push(fn);
+  } else {
+    // we don't need to run shutdown functions in C@E
+  }
+}
+
+export function doShutdown() {
+  for(const fn of _shutdownFunctions) {
     fn();
   }
 }

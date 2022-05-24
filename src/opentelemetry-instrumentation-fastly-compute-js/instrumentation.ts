@@ -11,10 +11,16 @@ import {
   InstrumentationConfig,
 } from '@opentelemetry/instrumentation';
 import { AttributeNames } from './enums/AttributeNames';
-import { patchRuntime, setPatchTarget } from "./util";
+import { patchRuntime, setPatchTarget, unPatchRuntime } from "./util";
 import { _resetEventContext, _setEventContext } from "../opentelemetry-sdk-trace-fastly";
+import { onInit, onShutdown } from "../core";
 
-patchRuntime();
+onInit(() => {
+  patchRuntime();
+});
+onShutdown(() => {
+  unPatchRuntime();
+});
 
 export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown> {
 
