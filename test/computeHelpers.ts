@@ -131,6 +131,7 @@ globalThis.fastly = fastlyMock;
 
 type FetchEventListener = (event: FetchEvent) => void;
 
+let _fetchEventErrors: any[] = [];
 let _listeners: FetchEventListener[] = [];
 function registerFetchEventListener(listener: FetchEventListener): void {
   _listeners.push(listener);
@@ -138,9 +139,16 @@ function registerFetchEventListener(listener: FetchEventListener): void {
 export function getRegisteredFetchEventListeners() {
   return _listeners;
 }
+export function getRegisteredFetchEventErrors() {
+  return _fetchEventErrors;
+}
 export function runRegisteredFetchEventListeners(event: FetchEvent) {
   for(const listener of _listeners) {
-    listener(event);
+    try {
+      listener(event);
+    } catch(ex) {
+      _fetchEventErrors.push(ex);
+    }
     if((event as any)._stopPropagation) {
       break;
     }
@@ -148,6 +156,7 @@ export function runRegisteredFetchEventListeners(event: FetchEvent) {
 }
 export function resetRegisteredFetchEventListeners() {
   _listeners = [];
+  _fetchEventErrors = [];
 }
 
 function addEventListenerMock(type: 'fetch', listener: FetchEventListener): void {
