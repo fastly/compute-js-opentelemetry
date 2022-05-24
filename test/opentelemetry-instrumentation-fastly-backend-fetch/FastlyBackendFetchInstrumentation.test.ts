@@ -44,6 +44,14 @@ describe('FastlyBackendFetchInstrumentation', function() {
       assert.ok(instrumentation._eventsInstalled);
       assert.ok(instrumentation._eventsEnabled);
     });
+
+    it('can be instantiated enabled, disabled, and then enabled again', function() {
+      const instrumentation = new FastlyBackendFetchInstrumentation();
+      instrumentation.disable();
+      instrumentation.enable();
+      assert.ok(instrumentation._eventsInstalled);
+      assert.ok(instrumentation._eventsEnabled);
+    });
   });
 
   describe('fetch hook', function() {
@@ -56,21 +64,6 @@ describe('FastlyBackendFetchInstrumentation', function() {
       const onBackendFetchSpy = sinon.spy(instrumentation, 'onBackendFetch');
 
       await fetch('http://www.example.com/');
-
-      // the hook should not have been called.
-      assert.ok(onBackendFetchSpy.notCalled);
-
-    });
-
-    it('can also do it with Request object', async function() {
-
-      const instrumentation = new FastlyBackendFetchInstrumentation();
-      instrumentation.disable();
-
-      setFetchFunc(sinon.stub().resolves(new MockedResponse('foo', {status: 200})));
-      const onBackendFetchSpy = sinon.spy(instrumentation, 'onBackendFetch');
-
-      await fetch({url: 'http://www.example.com/'} as Request);
 
       // the hook should not have been called.
       assert.ok(onBackendFetchSpy.notCalled);
@@ -91,14 +84,28 @@ describe('FastlyBackendFetchInstrumentation', function() {
 
     });
 
-    it('if the instrumentation is enabled, then fetch() triggers onBackendFetch()', async function() {
+    it('if the instrumentation is enabled, then fetch() triggers onBackendFetch(), with string url', async function() {
 
       const instrumentation = new FastlyBackendFetchInstrumentation();
 
       setFetchFunc(sinon.stub().resolves(new MockedResponse('foo', {status: 200})));
       const onBackendFetchSpy = sinon.spy(instrumentation, 'onBackendFetch');
 
-      await fetch('http://www.example.com/', { backend: 'test-backend' });
+      await fetch('http://www.example.com/', { backend: 'test-backend', method: 'GET' });
+
+      // the hook should not have been called.
+      assert.ok(onBackendFetchSpy.calledOnce);
+
+    });
+
+    it('if the instrumentation is enabled, then fetch() triggers onBackendFetch(), with Request object', async function() {
+
+      const instrumentation = new FastlyBackendFetchInstrumentation();
+
+      setFetchFunc(sinon.stub().resolves(new MockedResponse('foo', {status: 200})));
+      const onBackendFetchSpy = sinon.spy(instrumentation, 'onBackendFetch');
+
+      await fetch({url: 'http://www.example.com/'} as Request, { backend: 'test-backend' });
 
       // the hook should not have been called.
       assert.ok(onBackendFetchSpy.calledOnce);
