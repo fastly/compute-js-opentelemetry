@@ -56,9 +56,6 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
   // This event marks the beginning of the lifetime of a single FetchEvent.
   // This is the absolute earliest that this event can be trapped.
   onEventStart(event: FetchEvent) {
-    if(!this._eventsEnabled) {
-      return;
-    }
     try {
       diag.debug('onEventStart start');
 

@@ -7,6 +7,7 @@ import { Context, ROOT_CONTEXT } from '@opentelemetry/api';
 
 // We are specifically ONLY bringing in StackContextManager from sdk-trace-web.
 import { StackContextManager } from '@opentelemetry/sdk-trace-web/build/src/StackContextManager';
+import { onShutdown } from "../core";
 
 let _eventContext: Context | null = null;
 
@@ -35,3 +36,7 @@ export class FastlyStackContextManager extends StackContextManager {
       _eventContext : this._currentContext;
   }
 }
+
+onShutdown(() => {
+  _resetEventContext();
+});

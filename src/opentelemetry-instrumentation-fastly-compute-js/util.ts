@@ -11,7 +11,7 @@ let _target!: FastlyComputeJsInstrumentation;
 
 onInit(() => {
   addFetchEventAction(10, event => {
-    if(_target == null) {
+    if(_target == null || !_target._eventsEnabled) {
       return;
     }
     diag.debug('instrumentation-fastly-compute-js: running listener');
