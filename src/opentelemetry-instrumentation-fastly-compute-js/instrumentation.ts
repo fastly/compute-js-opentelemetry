@@ -107,13 +107,11 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
   // the Response to be sent back is determined. This is the last opportunity we have of doing anything in the
   // c@e request lifecycle.
   onEventEnd(err: Error | null, response?: Response) {
-    if(!this._eventsEnabled) {
-      return;
-    }
     try {
       diag.debug('onEventEnd start');
 
       try {
+        /* istanbul ignore if */
         if(this._fetchEventSpan == null) {
           diag.error('onEventEnd: unexpected FetchEvent span is null');
           return;
@@ -146,10 +144,6 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
   // This event wraps the call to the app-provided listener function that is registered
   // with the 'fetch' event.
   onListener(event: FetchEvent, fn: () => void) {
-    if(!this._eventsEnabled) {
-      fn();
-      return;
-    }
     try {
       diag.debug('onListener start');
 
@@ -177,10 +171,6 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
   // This event wraps the call to event.respondWith from the app-provided listener function.
   // Receives the Response, or promise that resolves to the Response, built by the app.
   onRespondWith(event: FetchEvent, response: Response | Promise<Response>, fn: (response: Response | Promise<Response>) => void) {
-    if(!this._eventsEnabled) {
-      fn(response);
-      return;
-    }
     try {
       diag.debug('onRespondWith start');
 

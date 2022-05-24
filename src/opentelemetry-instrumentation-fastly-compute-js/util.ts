@@ -43,7 +43,7 @@ onInit(() => {
           diag.debug('instrumentation-fastly-compute-js: returned from onEventEnd');
         }, error => {
           diag.debug('instrumentation-fastly-compute-js: calling onEventEnd with Error');
-          _target.onEventEnd(error instanceof Error ? error : new Error(error));
+          _target.onEventEnd(error instanceof Error ? error : new Error(String(error)));
           diag.debug('instrumentation-fastly-compute-js: returned from onEventEnd');
         });
 
@@ -86,8 +86,8 @@ export function patchRuntime() {
     diag.debug('instrumentation-fastly-compute-js: running patched addEventListener()');
 
     diag.debug('instrumentation-fastly-compute-js: patching listener fn');
-    const patchedListener = async (event: FetchEvent) => {
-      if(_target == null) {
+    const patchedListener = (event: FetchEvent) => {
+      if(_target == null || !_target._eventsEnabled) {
         diag.debug('instrumentation-fastly-compute-js: calling previous listener fn');
         listener(event);
         return;
@@ -102,8 +102,9 @@ export function patchRuntime() {
         });
         diag.debug('instrumentation-fastly-compute-js: returned from onListener handler');
       } catch(error) {
-        // Even though this listener crashed, there may be others pending, so we just warn about
-        // this error and keep going.
+        // This means this listener crashed.
+        // However, if there were any other listeners registered, the runtime's run loop
+        // will pick those up and continue running.
         diag.warn('instrumentation-fastly-compute-js: detected exception from onListener handler');
         throw error;
       }

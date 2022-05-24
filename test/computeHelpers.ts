@@ -16,18 +16,37 @@ class CacheOverrideMock {
 }
 globalThis.CacheOverride = CacheOverrideMock;
 
+export class MockedHeaders implements Headers {
+  get(name: string): string | null {
+    return null;
+  }
+  has(name: string): boolean {
+    return false;
+  }
+  delete(name: string): void {}
+
+  set!: (name: string, value: string) => void;
+  append!: (name: string, value: string) => void;
+  entries!: () => IterableIterator<[string, string]>;
+  forEach!: (callback: (value: string, name: string) => void) => void;
+  keys!: () => IterableIterator<string>;
+  values!: () => IterableIterator<[string]>;
+  [Symbol.iterator]!: () => Iterator<[string, string]>;
+}
+
 export class MockedClientInfo implements ClientInfo {
   readonly address: string = "10.0.0.1";
   readonly geo!: Geolocation;
 }
 
 export class MockedRequest implements Request {
+  url = 'https://www.example.com/';
+  headers = new MockedHeaders();
+
   backend!: string;
   readonly body!: ReadableStream<any>;
   bodyUsed!: boolean;
-  headers!: Headers;
   method!: string;
-  url!: string;
 
   arrayBuffer!: () => Promise<ArrayBuffer>;
   json!: () => Promise<any>;
@@ -44,7 +63,10 @@ export class MockedFetchEvent implements FetchEvent {
   readonly client: ClientInfo;
   readonly request: Request;
 
-  respondWith = sinon.stub<[Response | Promise<Response>], void>();
+  respondWith = sinon.stub<[Response | Promise<Response>], void>()
+    .callsFake(() => {
+      (this as any)._stopPropagation = true
+    });
   waitUntil = sinon.stub<[Promise<any>], void>();
 }
 
