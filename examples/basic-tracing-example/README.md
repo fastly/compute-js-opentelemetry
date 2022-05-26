@@ -1,7 +1,5 @@
 # Basic Example of OpenTelemetry Instrumentation and Tracing on Compute@Edge
 
-[![Deploy to Fastly](https://deploy.edgecompute.app/button)](https://deploy.edgecompute.app/deploy)
-
 This is an example of using [@fastly/compute-js-opentelemetry](https://github.com/fastly/compute-js-opentelemetry),
 an implementation of the [OpenTelemetry JavaScript API](https://opentelemetry.io/docs/instrumentation/js/) for
 Compute@Edge.
