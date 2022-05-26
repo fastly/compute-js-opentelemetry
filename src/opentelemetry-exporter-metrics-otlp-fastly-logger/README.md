@@ -19,7 +19,7 @@ import { OTLPMetricExporter } from "@fastly/compute-js-opentelemetry/exporter-me
 // "@fastly/compute-js-opentelemetry/exporter-metrics-otlp-fastly-logger" sends metrics data to the named
 // log provider, using the OTLP format. Be sure to specify the log provider, rather than a URL.
 const metricExporter = new OTLPMetricExporter({
-  backend: 'test_logger'
+  endpoint: 'test_logger'
 });
 
 // Attach the exporter to a metric reader.
