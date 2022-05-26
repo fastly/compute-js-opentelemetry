@@ -48,7 +48,7 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
 
     it('should use default URL if not given', function() {
       collectorExporter = new OTLPTraceExporter({
-        backend: 'test-logger'
+        backend: 'test-backend'
       });
       assert.strictEqual(collectorExporter.url, 'http://localhost:4318/v1/traces');
     });
