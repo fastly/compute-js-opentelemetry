@@ -132,7 +132,7 @@ used to transform the configuration object immediately after the Fetch Event is 
 but before your listener function is called.
 
 This is useful if you need to use features that are not available during application initialization,
-such as to obtain values from [Edge Dictionaries](https://developer.fastly.com/learning/compute/javascript/#using-edge-dictionaries)
+such as to obtain values from [Dictionaries](https://developer.fastly.com/learning/compute/javascript/#using-edge-dictionaries)
 or to [perform logging](https://developer.fastly.com/learning/compute/javascript/#logging).
 
 If you provide this function, then the SDK's actual startup is deferred until after request processing
@@ -146,7 +146,7 @@ the transform function, as well as the startup steps of the SDK, to run after re
 They will not be included in the pre-initialization of the resulting Wasm module, and instead will be
 run on each request.
 
-**Example**. The following code shows the use of this mode to retrieve values from an Edge Dictionary for the initialization
+**Example**. The following code shows the use of this mode to retrieve values from a Dictionary for the initialization
 of an `OTLPTraceExporter` instance:
 
 ```javascript

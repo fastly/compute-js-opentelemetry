@@ -79,7 +79,7 @@ Configure your Fastly service with three backends:
 | `otel-backend` | public hostname of your OpenTelemetry collector |
 | `httpbin`      | `httpbin.org`                                   |
 
-Configure an [Edge Dictionary](https://docs.fastly.com/en/guides/about-dictionaries) named `config` with the following
+Configure a [Dictionary](https://docs.fastly.com/en/guides/about-dictionaries) named `config` with the following
 values:
 
 | Key                       | Description                                                            | Default Value                                                         |
@@ -133,7 +133,7 @@ Additionally, your Fastly service will need to be configured with a named log pr
 your `otel-http-proxy` instance.  For testing purposes, you may run it on your local machine and
 make it publicly available by using a reverse proxy tool such as [ngrok](https://ngrok.com).
 
-Finally, in the `config` Edge Dictionary, set the value of the `TRACE_EXPORTER_TYPE` key to `logger`.
+Finally, in the `config` Dictionary, set the value of the `TRACE_EXPORTER_TYPE` key to `logger`.
 
 ## Use with Compute@Edge local test server
 
@@ -194,7 +194,7 @@ If you're using a local instance of OpenTelemetry Collector Demo, then browse to
 http://0.0.0.0:16686/. Select `otel-demo-edge` from the `Service` dropdown, and then click `Find Traces` to find your trace.
 
 You will need to configure the Edge application by modifying `config.json` to
-configure the Edge Dictionary.
+configure the Dictionary.
 
 ## Example Output
 
