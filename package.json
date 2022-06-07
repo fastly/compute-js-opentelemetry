@@ -1,6 +1,6 @@
 {
   "name": "@fastly/compute-js-opentelemetry",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "description": "OpenTelemetry SDK for Fastly Compute@Edge",
   "main": "./build/src/index.js",
@@ -22,6 +22,7 @@
   },
   "types": "build/src/index.d.ts",
   "scripts": {
+    "prepack": "yarn clean && yarn test && yarn compile",
     "compile": "tsc --build tsconfig.json && cp -R types build",
     "clean": "tsc --build --clean tsconfig.json",
     "test": "nyc ts-mocha -p tsconfig.json --require test/mocha_bootstrap.js test/testHelpers.ts test/**/*.test.ts"
@@ -39,12 +40,12 @@
     "assert": "^2.0.0",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
+    "core-js": "^3.19.1",
     "file-replace-loader": "^1.4.0",
     "node-inspect-extracted": "^1.1.0",
     "stream-browserify": "^3.0.0",
     "timers-browserify": "^2.0.12",
     "util": "^0.12.4",
-    "core-js": "^3.19.1",
     "webpack": "^5.72.0"
   },
   "devDependencies": {
