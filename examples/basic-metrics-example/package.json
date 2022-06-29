@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@fastly/compute-js-opentelemetry": "link:../../",
-    "@fastly/js-compute": "^0.2.4",
+    "@fastly/js-compute": "^0.2.5",
     "@opentelemetry/api": "^1.1.0",
     "@opentelemetry/api-metrics": "^0.28.0",
     "@opentelemetry/resources": "^1.2.0",

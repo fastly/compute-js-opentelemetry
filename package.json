@@ -23,7 +23,7 @@
   "types": "build/src/index.d.ts",
   "scripts": {
     "prepack": "yarn clean && yarn test && yarn compile",
-    "compile": "tsc --build tsconfig.json && cp -R types build",
+    "compile": "tsc --build tsconfig.json",
     "clean": "tsc --build --clean tsconfig.json",
     "test": "nyc ts-mocha -p tsconfig.json --require test/mocha_bootstrap.js test/testHelpers.ts test/**/*.test.ts"
   },
@@ -49,6 +49,7 @@
     "webpack": "^5.72.0"
   },
   "devDependencies": {
+    "@fastly/js-compute": "^0.2.5",
     "@types/mocha": "8.2.3",
     "@types/node": "14.17.33",
     "@types/object-inspect": "^1.8.1",

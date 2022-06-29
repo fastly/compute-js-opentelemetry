@@ -11,10 +11,10 @@
   version "0.0.0"
   uid ""
 
-"@fastly/js-compute@^0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@fastly/js-compute/-/js-compute-0.2.4.tgz#b0b161bff536468e8d2b0286ecd847f20de47ed4"
-  integrity sha512-2e26D/2FiIF7W0eahvlp7NAoLwKTNdMi75W9vjaNbpUf2RPiYS0TkNvp5zJ4QlYF7h55ocKE4oM8iTTDYXfmZA==
+"@fastly/js-compute@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@fastly/js-compute/-/js-compute-0.2.5.tgz#8c282d4ac862e6911490623987004792b2edddb0"
+  integrity sha512-+aqvttcD23h0h1cWv+LtVzPYyPey3YXHSOKzrnsTtHBWi9udv4+aGS06EurQO1IdBJPgA0wcpas0BrUHsIFVdA==
 
 "@opentelemetry/api-metrics@0.28.0":
   version "0.28.0"

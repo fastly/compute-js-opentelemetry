@@ -185,6 +185,11 @@
     "@babel/helper-validator-identifier" "^7.16.7"
     to-fast-properties "^2.0.0"
 
+"@fastly/js-compute@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@fastly/js-compute/-/js-compute-0.2.5.tgz#8c282d4ac862e6911490623987004792b2edddb0"
+  integrity sha512-+aqvttcD23h0h1cWv+LtVzPYyPey3YXHSOKzrnsTtHBWi9udv4+aGS06EurQO1IdBJPgA0wcpas0BrUHsIFVdA==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
