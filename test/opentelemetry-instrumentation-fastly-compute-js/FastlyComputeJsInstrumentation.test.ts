@@ -396,15 +396,8 @@ describe('FastlyComputeJsInstrumentation', function() {
 
     it('if there are traceparent headers, then they are used to build a context', async function() {
       const fetchEvent = buildFakeFetchEvent();
-      fetchEvent.request.headers = {
-        get(field: string) {
-          if(field === 'traceparent') {
-            return '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01';
-          }
-          return null;
-        },
-        delete() {},
-      } as unknown as Headers;
+      fetchEvent.request.headers
+        .set('traceparent', '00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01');
 
       const spy = sinon.spy(spanProcessor, 'onStart');
 
