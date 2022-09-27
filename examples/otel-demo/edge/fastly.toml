@@ -6,7 +6,6 @@ description = "OpenTelemetry demo app"
 language = "javascript"
 manifest_version = 2
 name = "otel-demo"
-service_id = "7aWy2yfK8358SKjTLTunM1"
 
 [local_server]
   [local_server.backends]
