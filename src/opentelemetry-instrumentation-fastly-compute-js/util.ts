@@ -89,7 +89,7 @@ export function patchRuntime() {
     const patchedListener = (event: FetchEvent) => {
       if(_target == null || !_target._eventsEnabled) {
         diag.debug('instrumentation-fastly-compute-js: calling previous listener fn');
-        listener(event);
+        listener.call(globalThis, event);
         return;
       }
       diag.debug('instrumentation-fastly-compute-js: running patched listener fn');
@@ -98,7 +98,7 @@ export function patchRuntime() {
         diag.debug('instrumentation-fastly-compute-js: calling onListener handler');
         _target.onListener(event, () => {
           diag.debug('instrumentation-fastly-compute-js: calling previous listener fn');
-          listener(event);
+          listener.call(globalThis, event);
         });
         diag.debug('instrumentation-fastly-compute-js: returned from onListener handler');
       } catch(error) {

@@ -1,0 +1,18 @@
+# This file describes a Fastly Compute@Edge package. To learn more visit:
+# https://developer.fastly.com/reference/fastly-toml/
+
+authors = []
+description = "OpenTelemetry Passthrough Example"
+language = "javascript"
+manifest_version = 2
+name = "passthrough-example"
+
+[local_server]
+
+  [local_server.backends]
+
+    [local_server.backends.httpbin]
+      url = "https://httpbin.org"
+
+    [local_server.backends.otlp-collector]
+      url = "http://localhost:4318/"

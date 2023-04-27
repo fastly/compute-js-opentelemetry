@@ -6,7 +6,7 @@ const webpackHelpers = require("@fastly/compute-js-opentelemetry/webpack-helpers
 module.exports = {
   entry: "./src/index.js",
   optimization: {
-    minimize: true
+    minimize: false
   },
   target: "webworker",
   output: {
