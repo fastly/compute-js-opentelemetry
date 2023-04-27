@@ -17,18 +17,24 @@ class CacheOverrideMock {
 globalThis.CacheOverride = CacheOverrideMock;
 
 export class MockedHeaders implements Headers {
+  _headers: Record<string, string> = {};
+
+  set(name: string, value: string) {
+    this._headers[name] = value;
+  }
   get(name: string): string | null {
-    return null;
+    return this._headers[name] ?? null;
   }
   has(name: string): boolean {
-    return false;
+    return name in this._headers;
   }
-  delete(name: string): void {}
+  delete(name: string): void {
+    delete this._headers[name];
+  }
 
-  set!: (name: string, value: string) => void;
   append!: (name: string, value: string) => void;
   entries!: () => IterableIterator<[string, string]>;
-  forEach!: (callback: (value: string, name: string) => void) => void;
+  forEach!: (callback: (value: string, name: string, parent: Headers) => void, thisArg?: any) => void;
   keys!: () => IterableIterator<string>;
   values!: () => IterableIterator<[string]>;
   [Symbol.iterator]!: () => Iterator<[string, string]>;
@@ -88,6 +94,7 @@ export class MockedResponse implements Response {
     return Promise.resolve(this._body ?? '');
   };
 
+  statusText!: string;
   headers!: Headers;
   ok!: boolean;
   redirected!: boolean;
@@ -135,6 +142,8 @@ class FastlyMock implements Fastly {
     return logger;
   });
 
+  baseURL!: URL | null;
+  defaultBackend!: string;
   env!: Env;
   enableDebugLogging!: (enabled: boolean) => void;
   getGeolocationForIpAddress!: (address: string) => Geolocation;
