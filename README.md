@@ -1,4 +1,4 @@
-## OpenTelemetry for JavaScript on Compute@Edge
+# OpenTelemetry for JavaScript on Compute@Edge
 
 An implementation of the [OpenTelemetry JavaScript API](https://opentelemetry.io/docs/instrumentation/js/) for
 [Fastly Compute@Edge](https://developer.fastly.com/learning/compute/).
@@ -59,7 +59,7 @@ OpenTelemetry [JavaScript API](https://github.com/open-telemetry/opentelemetry-j
 Whereas `opentelemetry-js` would separate each concern into its own `npm` package,
 we provide our components as a single package with multiple exports.
 
-# Modules
+## Modules
 
 The table below lists the modules included in this package.
 
@@ -130,7 +130,7 @@ and not be accepted by [OpenTelemetry Collector](https://github.com/open-telemet
 including the [OpenTelemetry Collector Demo](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/examples/demo).
 
 `opentelemetry-js` [#2929](https://github.com/open-telemetry/opentelemetry-js/pull/2929) fixes this
-issue and has already landed in `main`. It should be included in their next release (0.29.x). 
+issue and has already landed in `main`. It should be included in their next release (0.29.x).
 
 ### Environment Variables
 

@@ -9,7 +9,7 @@ module.exports = {
     // Set to false if you wish to be able to read
     // the minified code that will be generated at ./bin/index.js,
     // useful for debugging purposes.
-    minimize: true,
+    minimize: false,
   },
   target: "webworker",
   output: {
