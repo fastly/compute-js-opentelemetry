@@ -1,5 +1,5 @@
 {
-  "name": "basic-tracing-example",
+  "name": "readme-demo",
   "version": "0.2.0",
   "main": "src/index.js",
   "author": "oss@fastly.com",
@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@fastly/compute-js-opentelemetry": "link:../../",
-    "@fastly/js-compute": "^0.2.5",
+    "@fastly/js-compute": "^0.3.0",
     "@opentelemetry/api": "^1.1.0",
     "@opentelemetry/resources": "^1.2.0",
     "@opentelemetry/semantic-conventions": "^1.2.0",
@@ -19,7 +19,7 @@
   },
   "scripts": {
     "prebuild": "webpack",
-    "build": "js-compute-runtime --skip-pkg bin/index.js bin/main.wasm",
+    "build": "js-compute-runtime bin/index.js bin/main.wasm",
     "deploy": "npm run build && fastly compute deploy"
   }
 }
