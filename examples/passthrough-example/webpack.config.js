@@ -10,7 +10,6 @@ module.exports = {
     // the minified code that will be generated at ./bin/index.js,
     // useful for debugging purposes.
     minimize: false,
-    // minimize: true,
   },
   target: "webworker",
   output: {
