@@ -15,7 +15,7 @@
     "@opentelemetry/resources": "^1.1.1",
     "@opentelemetry/semantic-conventions": "^1.1.1",
     "@opentelemetry/exporter-trace-otlp-http": "^0.28.0",
-    "node-fetch": "^3.2.2",
+    "node-fetch": "^3.2.10",
     "dotenv": "^16.0.0",
     "@opentelemetry/core": "^1.1.1"
   },
