@@ -5,7 +5,7 @@
   "author": "oss@fastly.com",
   "license": "MIT",
   "engines": {
-    "node": "^16"
+    "node": "^18"
   },
   "devDependencies": {
     "@fastly/compute-js-opentelemetry": "link:../../",
