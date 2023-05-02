@@ -5,6 +5,7 @@ const webpackHelpers = require("@fastly/compute-js-opentelemetry/webpack-helpers
 
 module.exports = {
   entry: "./src/index.js",
+  mode: 'development',
   optimization: {
     // Set to false if you wish to be able to read
     // the minified code that will be generated at ./bin/index.js,
@@ -37,6 +38,9 @@ module.exports = {
       URL: "core-js/web/url",
     }),
   ],
+  performance: {
+    hints: false,
+  },
 };
 
 module.exports = webpackHelpers.apply(module.exports);

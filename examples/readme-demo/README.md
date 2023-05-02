@@ -4,8 +4,8 @@ This is the demo in the [README.md](../../README.md) of the library.
 
 ## Run the example
 
-You will need [Node.js](https://nodejs.org/en/) (>= 16) and [Fastly CLI](https://developer.fastly.com/reference/cli/)
-(>= 2.x recommended, may work with 1.x).
+You will need [Node.js](https://nodejs.org/en/) (>= 18) and [Fastly CLI](https://developer.fastly.com/reference/cli/)
+(>= 9.0.3).
 
 This example will export traces to a local instance of an
 [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/). It has been tested with
@@ -26,12 +26,12 @@ Next, move to this subdirectory, and build this example:
 
 ```shell
 cd examples/readme-demo
-yarn
-fastly compute build
+npm install
+npm run build
 ```
 
 To run this example locally:
 
 ```shell
-fastly compute serve
+npm run serve
 ```
