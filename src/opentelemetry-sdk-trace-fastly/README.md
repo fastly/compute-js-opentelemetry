@@ -12,7 +12,7 @@ This is intended for use with `OTLPTraceExporter` exported by
 every Fastly Compute@Edge invocation has a limited number of backend fetches that
 it may perform.
 
-`FastlyTracerProvider` is a basic `TracerProvider` impelmentation based on
+`FastlyTracerProvider` is a basic `TracerProvider` implementation based on
 `BasicTracerProvider`, but uses `FastlyStackContextManager` (described below)
 as its default Context Manager implementation.
 
