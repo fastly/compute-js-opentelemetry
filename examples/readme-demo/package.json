@@ -18,7 +18,7 @@
   },
   "scripts": {
     "prebuild": "webpack",
-    "build": "fastly compute build",
+    "build": "js-compute-runtime bin/index.js bin/main.wasm",
     "serve": "fastly compute serve --watch",
     "deploy": "npm run build && fastly compute deploy"
   }
