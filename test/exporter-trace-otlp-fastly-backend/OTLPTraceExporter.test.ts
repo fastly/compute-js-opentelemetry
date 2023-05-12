@@ -12,7 +12,6 @@ import * as sinon from 'sinon';
 import { diag } from '@opentelemetry/api';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { ExportResult, ExportResultCode } from "@opentelemetry/core";
-import { otlpTypes } from "@opentelemetry/exporter-trace-otlp-http";
 import { CompressionAlgorithm, OTLPExporterError } from "@opentelemetry/otlp-exporter-base";
 
 import { OTLPTraceExporter } from '../../src/exporter-trace-otlp-fastly-backend';
@@ -20,6 +19,16 @@ import { OTLPExporterFastlyBackendConfigBase } from "../../src/otlp-exporter-fas
 import { ensureExportTraceServiceRequestIsSet, ensureSpanIsCorrect, mockedReadableSpan } from "../traceHelpers";
 import { newNopDiagLogger } from "../commonHelpers";
 import { MockedResponse } from "../computeHelpers";
+
+import {
+  ESpanKind,
+  IEvent,
+  IExportTraceServiceRequest,
+  IKeyValue,
+  ILink,
+  IResource,
+  ISpan,
+} from '@opentelemetry/otlp-transformer'
 
 const address = 'localhost:1501';
 
@@ -152,7 +161,7 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
         // Note that in 0.29.x we will need to use scopeSpans instead of instrumentationLibrarySpans
         // At that time we may also be able to switch to @opentelemetry/otlp-transformer for these types rather
         // than getting them out of @opentelemetry/exporter-trace-otlp-http
-        const span1 = json.resourceSpans?.[0].instrumentationLibrarySpans?.[0].spans?.[0];
+        const span1 = json.resourceSpans?.[0].scopeSpans?.[0].spans?.[0];
         assert.ok(typeof span1 !== 'undefined', "span doesn't exist");
         ensureSpanIsCorrect(span1);
         ensureExportTraceServiceRequestIsSet(json);
@@ -236,7 +245,7 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
         const requestBodyUnzipped = zlib.gunzipSync(requestBody).toString();
 
         const json = JSON.parse(requestBodyUnzipped) as otlpTypes.opentelemetryProto.collector.trace.v1.ExportTraceServiceRequest;
-        const span1 = json.resourceSpans?.[0].instrumentationLibrarySpans?.[0].spans?.[0];
+        const span1 = json.resourceSpans?.[0].scopeSpans?.[0].spans?.[0];
         assert.ok(typeof span1 !== 'undefined', "span doesn't exist");
         ensureSpanIsCorrect(span1);
         ensureExportTraceServiceRequestIsSet(json);

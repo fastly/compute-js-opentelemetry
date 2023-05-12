@@ -3,7 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { MetricReader, PushMetricExporter } from '@opentelemetry/sdk-metrics-base';
+import { MetricReader, PushMetricExporter } from '@opentelemetry/sdk-metrics';
 import { ExportResultCode } from "@opentelemetry/core";
 import { FastlyMetricReaderOptions } from "./types";
 

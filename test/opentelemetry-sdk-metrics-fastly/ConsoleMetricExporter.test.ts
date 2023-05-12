@@ -7,7 +7,7 @@ import { ExportResultCode } from "@opentelemetry/core";
 
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { AggregationTemporality } from "@opentelemetry/sdk-metrics-base";
+import { AggregationTemporality } from "@opentelemetry/sdk-metrics";
 
 import { ConsoleMetricExporter } from '../../src/opentelemetry-sdk-metrics-fastly';
 import { mockResourceMetrics } from "../metricsHelpers";

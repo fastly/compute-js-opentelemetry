@@ -38,6 +38,6 @@ const sdk = new FastlySDK({
 await sdk.start();
 
 // or, register it with the API directly
-import { metrics } from '@opentelemetry/api-metrics';
+import { metrics } from '@opentelemetry/api';
 metrics.setGlobalMeterProvider(meterProvider);
 ```

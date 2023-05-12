@@ -3,9 +3,9 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { ValueType } from "@opentelemetry/api-metrics";
+import { ValueType } from "@opentelemetry/api";
 import { Resource } from "@opentelemetry/resources";
-import { DataPointType, InstrumentType, ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
+import { DataPointType, InstrumentType, ResourceMetrics } from "@opentelemetry/sdk-metrics";
 
 export const mockResourceMetrics: ResourceMetrics = {
   resource: new Resource({}),

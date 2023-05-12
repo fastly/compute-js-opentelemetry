@@ -7,7 +7,7 @@ import * as assert from 'assert';
 import * as sinon from "sinon";
 
 import { diag } from "@opentelemetry/api";
-import { AggregationTemporality, ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
+import { AggregationTemporality, ResourceMetrics } from "@opentelemetry/sdk-metrics";
 import { OTLPMetricExporterOptions } from "@opentelemetry/exporter-metrics-otlp-http";
 
 import { OTLPExporterFastlyLoggerConfigBase } from "../../src/otlp-exporter-fastly-base";

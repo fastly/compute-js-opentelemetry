@@ -4,7 +4,7 @@
  */
 
 import { ExportResult } from "@opentelemetry/core";
-import { AggregationTemporality, PushMetricExporter, ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
+import { AggregationTemporality, PushMetricExporter, ResourceMetrics } from "@opentelemetry/sdk-metrics";
 import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
 
 import { OTLPExporterFastlyBase } from "./OTLPExporterFastlyBase";

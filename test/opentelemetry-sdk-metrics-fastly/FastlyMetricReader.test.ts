@@ -11,7 +11,7 @@ import {
   MetricProducer,
   PushMetricExporter,
   ResourceMetrics
-} from "@opentelemetry/sdk-metrics-base";
+} from "@opentelemetry/sdk-metrics";
 
 import { ExportResult, ExportResultCode } from "@opentelemetry/core";
 import { Resource } from "@opentelemetry/resources";

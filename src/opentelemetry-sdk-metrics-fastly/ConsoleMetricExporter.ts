@@ -8,7 +8,7 @@ import {
   DataPointType,
   PushMetricExporter,
   ResourceMetrics
-} from "@opentelemetry/sdk-metrics-base";
+} from "@opentelemetry/sdk-metrics";
 import { ExportResult, ExportResultCode } from "@opentelemetry/core";
 
 export class ConsoleMetricExporter implements PushMetricExporter {

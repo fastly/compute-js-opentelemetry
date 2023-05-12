@@ -8,7 +8,6 @@ import * as assert from 'assert';
 import * as sinon from 'sinon';
 import { diag } from "@opentelemetry/api";
 import { ReadableSpan } from "@opentelemetry/sdk-trace-base";
-import { otlpTypes } from "@opentelemetry/exporter-trace-otlp-http";
 
 import { OTLPTraceExporter } from '../../src/exporter-trace-otlp-fastly-logger';
 import { OTLPExporterFastlyLoggerConfigBase } from "../../src/otlp-exporter-fastly-base";
@@ -93,7 +92,7 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly logger', functi
       setTimeout(() => {
         const logBody = logger.loggedContent!;
         const json = JSON.parse(logBody) as otlpTypes.opentelemetryProto.collector.trace.v1.ExportTraceServiceRequest;
-        const span1 = json.resourceSpans?.[0].instrumentationLibrarySpans?.[0].spans?.[0];
+        const span1 = json.resourceSpans?.[0].scopeSpans?.[0].spans?.[0];
         assert.ok(typeof span1 !== 'undefined', "span doesn't exist");
         ensureSpanIsCorrect(span1);
         ensureExportTraceServiceRequestIsSet(json);

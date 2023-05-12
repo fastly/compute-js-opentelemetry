@@ -9,7 +9,7 @@ import * as assert from 'assert';
 import * as sinon from "sinon";
 
 import { diag } from "@opentelemetry/api";
-import { AggregationTemporality, MetricProducer, ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
+import { AggregationTemporality, MetricProducer, ResourceMetrics } from "@opentelemetry/sdk-metrics";
 import { Resource } from "@opentelemetry/resources";
 import { OTLPMetricExporterOptions } from "@opentelemetry/exporter-metrics-otlp-http";
 
