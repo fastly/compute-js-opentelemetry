@@ -22,7 +22,7 @@ Clone `fastly/compute-js-opentelemetry` and build it:
 git clone https://github.com/fastly/compute-js-opentelemetry.git
 cd compute-js-opentelemetry
 yarn
-yarn compile
+yarn build
 ```
 
 Next, move to this subdirectory, and build this example:

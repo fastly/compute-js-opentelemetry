@@ -25,8 +25,8 @@
   },
   "types": "build/src/index.d.ts",
   "scripts": {
-    "prepack": "yarn clean && yarn test && yarn compile",
-    "compile": "tsc --build tsconfig.json",
+    "prepack": "yarn clean && yarn test && yarn build",
+    "build": "tsc --build tsconfig.json",
     "clean": "tsc --build --clean tsconfig.json",
     "test": "nyc ts-mocha -p tsconfig.json --require test/mocha_bootstrap.js test/testHelpers.ts test/**/*.test.ts"
   },
