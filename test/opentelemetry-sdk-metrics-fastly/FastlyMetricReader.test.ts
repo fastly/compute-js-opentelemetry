@@ -56,7 +56,7 @@ describe('FastlyMetricReader', function() {
     beforeEach(function() {
       metrics = {
         resource: new Resource({}),
-        instrumentationLibraryMetrics: [],
+        scopeMetrics: [],
       };
       exporter = new class implements PushMetricExporter {
         export(metrics: ResourceMetrics, resultCallback: (result: ExportResult) => void) {

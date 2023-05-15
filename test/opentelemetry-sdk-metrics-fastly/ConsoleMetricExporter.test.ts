@@ -38,7 +38,7 @@ describe('ConsoleMetricExporter', function() {
 
       setTimeout(() => {
 
-        const metrics = mockResourceMetrics.instrumentationLibraryMetrics[0]
+        const metrics = mockResourceMetrics.scopeMetrics[0]
           .metrics[0];
 
         assert.strictEqual(consoleLogSpy.callCount, 4);

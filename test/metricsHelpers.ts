@@ -9,7 +9,7 @@ import { DataPointType, InstrumentType, ResourceMetrics } from "@opentelemetry/s
 
 export const mockResourceMetrics: ResourceMetrics = {
   resource: new Resource({}),
-  instrumentationLibraryMetrics: [
+  scopeMetrics: [
     {
       instrumentationLibrary: {
         name: 'foo',

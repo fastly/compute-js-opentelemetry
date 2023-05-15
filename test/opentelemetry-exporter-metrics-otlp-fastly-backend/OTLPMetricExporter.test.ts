@@ -85,7 +85,7 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', func
         async collect(): Promise<ResourceMetrics> {
           return {
             resource: new Resource({}),
-            instrumentationLibraryMetrics: [],
+            scopeMetrics: [],
           };
         }
       };
