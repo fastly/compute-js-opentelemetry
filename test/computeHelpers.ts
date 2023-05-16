@@ -58,6 +58,8 @@ export class MockedRequest implements Request {
   json!: () => Promise<any>;
   setCacheOverride!: (override: CacheOverride) => void;
   text!: () => Promise<string>;
+  clone!: () => Request;
+  setCacheKey!: () => Promise<boolean>;
 }
 
 export class MockedFetchEvent implements FetchEvent {
