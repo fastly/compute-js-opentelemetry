@@ -81,7 +81,6 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly logger', funct
       fastlyMock.mockLoggersRequireFetchEvent(false);
       logger = fastly.getLogger('test-logger') as LoggerMock;
       metricExporterConfig = {
-        attributes: {},
         endpoint: 'test-logger',
       };
       metricExporter = new OTLPMetricExporter(metricExporterConfig);

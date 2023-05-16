@@ -63,7 +63,6 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
           foo: 'bar',
         },
         hostname: 'foo',
-        attributes: {},
         url: 'http://foo.bar.com',
         backend: 'test-backend',
       };
@@ -214,7 +213,6 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
           foo: 'bar',
         },
         hostname: 'foo',
-        attributes: {},
         url: 'http://foo.bar.com',
         backend: 'test-backend',
         compression: CompressionAlgorithm.GZIP,

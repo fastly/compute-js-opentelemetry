@@ -70,7 +70,6 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly logger', functi
       fastlyMock.mockLoggersRequireFetchEvent(false);
       logger = fastly.getLogger('test-logger') as LoggerMock;
       collectorExporterConfig = {
-        attributes: {},
         endpoint: 'test-logger',
       };
       collectorExporter = new OTLPTraceExporter(collectorExporterConfig);

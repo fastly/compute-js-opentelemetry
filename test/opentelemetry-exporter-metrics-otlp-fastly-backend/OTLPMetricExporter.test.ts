@@ -120,7 +120,6 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', func
           foo: 'bar',
         },
         hostname: 'foo',
-        attributes: {},
         url: 'http://foo.bar.com',
         backend: 'test-backend',
       };
