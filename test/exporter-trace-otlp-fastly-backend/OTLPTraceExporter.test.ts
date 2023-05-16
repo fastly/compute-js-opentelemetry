@@ -20,16 +20,6 @@ import { ensureExportTraceServiceRequestIsSet, ensureSpanIsCorrect, mockedReadab
 import { newNopDiagLogger } from "../commonHelpers";
 import { MockedResponse } from "../computeHelpers";
 
-import {
-  ESpanKind,
-  IEvent,
-  IExportTraceServiceRequest,
-  IKeyValue,
-  ILink,
-  IResource,
-  ISpan,
-} from '@opentelemetry/otlp-transformer'
-
 const address = 'localhost:1501';
 
 describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', function() {
