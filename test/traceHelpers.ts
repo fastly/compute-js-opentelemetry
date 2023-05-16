@@ -17,7 +17,6 @@ import {
   IExportTraceServiceRequest,
   IKeyValue,
   ILink,
-  IResource,
   ISpan,
 } from '@opentelemetry/otlp-transformer'
 
