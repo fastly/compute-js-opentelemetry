@@ -25,7 +25,7 @@ export const mockResourceMetrics: ResourceMetrics = {
             type: InstrumentType.COUNTER,
             valueType: ValueType.DOUBLE,
           },
-          dataPointType: DataPointType.SINGULAR,
+          dataPointType: DataPointType.GAUGE,
           dataPoints: [
             {
               startTime: [1609504210, 150000000],
