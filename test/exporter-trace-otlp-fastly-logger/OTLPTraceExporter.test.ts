@@ -14,6 +14,7 @@ import { OTLPExporterFastlyLoggerConfigBase } from "../../src/otlp-exporter-fast
 import { ensureExportTraceServiceRequestIsSet, ensureSpanIsCorrect, mockedReadableSpan } from "../traceHelpers";
 import { newNopDiagLogger } from "../commonHelpers";
 import { fastlyMock, LoggerMock } from "../computeHelpers";
+import { IExportTraceServiceRequest } from "@opentelemetry/otlp-transformer"
 
 describe('OTLPTraceExporter - Compute@Edge with json over Fastly logger', function() {
   let collectorExporter: OTLPTraceExporter;
@@ -90,7 +91,7 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly logger', functi
 
       setTimeout(() => {
         const logBody = logger.loggedContent!;
-        const json = JSON.parse(logBody) as otlpTypes.opentelemetryProto.collector.trace.v1.ExportTraceServiceRequest;
+        const json = JSON.parse(logBody) as IExportTraceServiceRequest;
         const span1 = json.resourceSpans?.[0].scopeSpans?.[0].spans?.[0];
         assert.ok(typeof span1 !== 'undefined', "span doesn't exist");
         ensureSpanIsCorrect(span1);

@@ -19,7 +19,7 @@ import { OTLPExporterFastlyBackendConfigBase } from "../../src/otlp-exporter-fas
 import { ensureExportTraceServiceRequestIsSet, ensureSpanIsCorrect, mockedReadableSpan } from "../traceHelpers";
 import { newNopDiagLogger } from "../commonHelpers";
 import { MockedResponse } from "../computeHelpers";
-
+import { IExportTraceServiceRequest } from "@opentelemetry/otlp-transformer"
 const address = 'localhost:1501';
 
 describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', function() {
@@ -146,7 +146,7 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
         const args = fakeFetch.args[0];
         const init = args[1];
         const requestBody = init?.body as string;
-        const json = JSON.parse(requestBody) as otlpTypes.opentelemetryProto.collector.trace.v1.ExportTraceServiceRequest;
+        const json = JSON.parse(requestBody) as IExportTraceServiceRequest;
         // Note that in 0.29.x we will need to use scopeSpans instead of instrumentationLibrarySpans
         // At that time we may also be able to switch to @opentelemetry/otlp-transformer for these types rather
         // than getting them out of @opentelemetry/exporter-trace-otlp-http
@@ -232,7 +232,7 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
         const requestBody = init?.body as Buffer;
         const requestBodyUnzipped = zlib.gunzipSync(requestBody).toString();
 
-        const json = JSON.parse(requestBodyUnzipped) as otlpTypes.opentelemetryProto.collector.trace.v1.ExportTraceServiceRequest;
+        const json = JSON.parse(requestBodyUnzipped) as IExportTraceServiceRequest;
         const span1 = json.resourceSpans?.[0].scopeSpans?.[0].spans?.[0];
         assert.ok(typeof span1 !== 'undefined', "span doesn't exist");
         ensureSpanIsCorrect(span1);
