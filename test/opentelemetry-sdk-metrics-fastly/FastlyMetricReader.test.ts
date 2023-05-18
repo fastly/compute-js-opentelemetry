@@ -8,7 +8,6 @@ import * as sinon from 'sinon';
 
 import {
   AggregationTemporality,
-  MetricProducer,
   PushMetricExporter,
   ResourceMetrics
 } from "@opentelemetry/sdk-metrics";
@@ -50,7 +49,6 @@ describe('FastlyMetricReader', function() {
   describe('export', function() {
     let metrics: ResourceMetrics;
     let exporter: PushMetricExporter;
-    let metricProducer: MetricProducer;
     let metricReader: FastlyMetricReader;
 
     beforeEach(function() {
@@ -72,15 +70,7 @@ describe('FastlyMetricReader', function() {
           return Promise.resolve(undefined);
         }
       };
-      metricProducer = new class implements MetricProducer {
-        async collect(): Promise<ResourceMetrics> {
-          return metrics;
-        }
-      };
       metricReader = new FastlyMetricReader({exporter})
-
-      // The meter provider usually does this step.
-      metricReader.setMetricProducer(metricProducer);
     });
 
     it('when shutdown is called, collect is called, and they are sent to exporter\'s export function', async function() {
