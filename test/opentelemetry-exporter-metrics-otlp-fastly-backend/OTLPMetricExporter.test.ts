@@ -57,7 +57,7 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', func
     it('should be possible to instantiate with an aggregation temporality', function() {
       metricExporter = new OTLPMetricExporter({
         backend: 'test-backend',
-        aggregationTemporality: AggregationTemporality.CUMULATIVE,
+        temporalityPreference: AggregationTemporality.CUMULATIVE,
       });
       assert.strictEqual(metricExporter.getPreferredAggregationTemporality(), AggregationTemporality.CUMULATIVE);
     });

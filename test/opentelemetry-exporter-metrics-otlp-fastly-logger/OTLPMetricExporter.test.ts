@@ -67,7 +67,7 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly logger', funct
     it('should be possible to instantiate with an aggregation temporality', function() {
       metricExporter = new OTLPMetricExporter({
         endpoint: 'test-logger',
-        aggregationTemporality: AggregationTemporality.CUMULATIVE,
+        temporalityPreference: AggregationTemporality.CUMULATIVE,
       });
       assert.strictEqual(metricExporter.getPreferredAggregationTemporality(), AggregationTemporality.CUMULATIVE);
     });

@@ -18,7 +18,7 @@ export class OTLPMetricExporterFastlyBase<
   constructor(exporter: T,
               config: OTLPMetricExporterOptions) {
     this._otlpExporter = exporter;
-    this._preferredAggregationTemporality = config.aggregationTemporality ?? AggregationTemporality.CUMULATIVE;
+    this._preferredAggregationTemporality = config.temporalityPreference ?? AggregationTemporality.CUMULATIVE;
   }
 
   export(metrics: ResourceMetrics, resultCallback: (result: ExportResult) => void): void {
