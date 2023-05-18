@@ -9,8 +9,7 @@ import * as assert from 'assert';
 import * as sinon from "sinon";
 
 import { diag } from "@opentelemetry/api";
-import { AggregationTemporality, MetricProducer, ResourceMetrics } from "@opentelemetry/sdk-metrics";
-import { Resource } from "@opentelemetry/resources";
+import { AggregationTemporality, ResourceMetrics } from "@opentelemetry/sdk-metrics";
 import { OTLPMetricExporterOptions } from "@opentelemetry/exporter-metrics-otlp-http";
 
 import { MockedResponse } from "../computeHelpers";
@@ -65,7 +64,6 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', func
 
   describe('attach to a metric reader', function() {
     let metricReader: FastlyMetricReader;
-    let metricProducer: MetricProducer;
     let getPreferredAggregationTemporalitySpy: sinon.SinonSpy;
     beforeEach(function() {
       fakeResponse = new MockedResponse('foo', {status: 200});
@@ -79,17 +77,6 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', func
       getPreferredAggregationTemporalitySpy = sinon.spy(metricExporter, 'getPreferredAggregationTemporality');
 
       metricReader = new FastlyMetricReader({ exporter: metricExporter });
-
-      // Attach a producer too
-      metricProducer = new class implements MetricProducer {
-        async collect(): Promise<ResourceMetrics> {
-          return {
-            resource: new Resource({}),
-            scopeMetrics: [],
-          };
-        }
-      };
-      metricReader.setMetricProducer(metricProducer);
     });
 
     it('should get getPreferredAggregationTemporality called', function() {
