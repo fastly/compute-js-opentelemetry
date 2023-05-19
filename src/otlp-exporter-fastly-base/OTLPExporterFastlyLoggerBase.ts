@@ -14,8 +14,8 @@ import { sendWithFastlyLogger } from "./util";
  */
 export abstract class OTLPExporterFastlyLoggerBase<
   Converter extends ExportItemConverter<ExportItem, ServiceRequest>,
-  ExportItem = {},
-  ServiceRequest = {},
+  ExportItem extends {} = {},
+  ServiceRequest extends {} = {},
 > extends OTLPExporterFastlyBase<
   OTLPExporterFastlyLoggerConfigBase,
   Converter
