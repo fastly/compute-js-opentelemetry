@@ -15,8 +15,8 @@ import { sendWithFetch } from "./util";
  */
 export abstract class OTLPExporterFastlyBackendBase<
   Converter extends ExportItemConverter<ExportItem, ServiceRequest>,
-  ExportItem = {},
-  ServiceRequest = {},
+  ExportItem extends {} = {},
+  ServiceRequest extends {} = {},
 > extends OTLPExporterFastlyBase<
   OTLPExporterFastlyBackendConfigBase,
   Converter
