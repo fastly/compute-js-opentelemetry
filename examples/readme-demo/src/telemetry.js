@@ -11,7 +11,7 @@ import { OTLPTraceExporter } from "@fastly/compute-js-opentelemetry/exporter-tra
 import { getComputeJsAutoInstrumentations } from "@fastly/compute-js-opentelemetry/auto-instrumentations-compute-js";
 
 const sdk = new FastlySDK({
-  traceExporter: new OTLPTraceExporter({ backend: 'otlp-collector' }),
+  traceExporter: new OTLPTraceExporter({ backend: 'otlp-collector', url: 'http://127.0.0.1:4318/v1/traces' }),
   instrumentations: [ getComputeJsAutoInstrumentations(), ],
   resource: new Resource({ [SemanticResourceAttributes.SERVICE_NAME]: 'readme-demo', }),
 });
