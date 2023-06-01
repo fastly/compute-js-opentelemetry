@@ -57,7 +57,9 @@ export class MockedRequest implements Request {
   arrayBuffer!: () => Promise<ArrayBuffer>;
   json!: () => Promise<any>;
   setCacheOverride!: (override: CacheOverride) => void;
+  setCacheKey!: (key: string) => void;
   text!: () => Promise<string>;
+  clone!: () => Request;
 }
 
 export class MockedFetchEvent implements FetchEvent {
@@ -122,6 +124,10 @@ export class LoggerMock implements Logger {
     this.loggedContent = undefined;
   }
 }
+
+type Env = {
+  get(name: string): string,
+};
 
 class FastlyMock implements Fastly {
   _loggers: {[endpoint: string]: Logger} = {};
