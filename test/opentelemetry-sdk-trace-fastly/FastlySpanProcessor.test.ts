@@ -169,6 +169,7 @@ describe('FastlySpanProcessor', function() {
         await spanProcessor.forceFlush();
       },
       (err) => {
+        assert.ok(err instanceof Error);
         assert.strictEqual(err.name, 'Error');
         assert.strictEqual(err.message, 'FastlySpanProcessor: span export failed');
         return true;

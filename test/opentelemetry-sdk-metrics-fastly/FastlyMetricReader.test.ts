@@ -115,6 +115,7 @@ describe('FastlyMetricReader', function() {
       await assert.rejects(async () => {
         await metricReader.shutdown();
       }, (err) => {
+        assert.ok(err instanceof Error);
         assert.ok(err.name === 'Error');
         assert.ok(err.message === 'PeriodicExportingMetricReader: metrics export failed (error undefined)');
         return true;
