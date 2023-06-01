@@ -3,6 +3,8 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
+import { Logger } from "fastly:logger";
+
 import * as assert from 'assert';
 import * as sinon from "sinon";
 
@@ -14,7 +16,7 @@ import { OTLPExporterFastlyLoggerConfigBase } from "../../src/otlp-exporter-fast
 import { OTLPMetricExporter } from "../../src/opentelemetry-exporter-metrics-otlp-fastly-logger";
 import { newNopDiagLogger } from "../commonHelpers";
 import { mockResourceMetrics } from "../metricsHelpers";
-import { fastlyMock, LoggerMock } from "../computeHelpers";
+import { FastlyLoggerMock, LoggerMockInstance } from "../computeHelpers";
 
 describe('OTLPMetricExporter - Compute@Edge with json over Fastly logger', function() {
   let metricExporter: OTLPMetricExporter;
@@ -75,11 +77,11 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly logger', funct
   });
 
   describe('export', function() {
-    let logger: LoggerMock;
+    let logger: LoggerMockInstance;
 
     beforeEach(function() {
-      fastlyMock.mockLoggersRequireFetchEvent(false);
-      logger = fastly.getLogger('test-logger') as LoggerMock;
+      FastlyLoggerMock.mockLoggersRequireFetchEvent(false);
+      logger = new Logger('test-logger') as LoggerMockInstance;
       metricExporterConfig = {
         attributes: {},
         endpoint: 'test-logger',

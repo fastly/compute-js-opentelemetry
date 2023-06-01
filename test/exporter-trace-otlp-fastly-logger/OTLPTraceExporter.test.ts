@@ -3,9 +3,11 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import * as assert from 'assert';
+import { Logger } from 'fastly:logger';
 
+import * as assert from 'assert';
 import * as sinon from 'sinon';
+
 import { diag } from "@opentelemetry/api";
 import { ReadableSpan } from "@opentelemetry/sdk-trace-base";
 import { otlpTypes } from "@opentelemetry/exporter-trace-otlp-http";
@@ -14,7 +16,7 @@ import { OTLPTraceExporter } from '../../src/exporter-trace-otlp-fastly-logger';
 import { OTLPExporterFastlyLoggerConfigBase } from "../../src/otlp-exporter-fastly-base";
 import { ensureExportTraceServiceRequestIsSet, ensureSpanIsCorrect, mockedReadableSpan } from "../traceHelpers";
 import { newNopDiagLogger } from "../commonHelpers";
-import { fastlyMock, LoggerMock } from "../computeHelpers";
+import { FastlyLoggerMock, LoggerMockInstance } from "../computeHelpers";
 
 describe('OTLPTraceExporter - Compute@Edge with json over Fastly logger', function() {
   let collectorExporter: OTLPTraceExporter;
@@ -66,10 +68,10 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly logger', functi
   });
 
   describe('export', function () {
-    let logger: LoggerMock;
+    let logger: LoggerMockInstance;
     beforeEach(function () {
-      fastlyMock.mockLoggersRequireFetchEvent(false);
-      logger = fastly.getLogger('test-logger') as LoggerMock;
+      FastlyLoggerMock.mockLoggersRequireFetchEvent(false);
+      logger = new Logger('test-logger') as LoggerMockInstance;
       collectorExporterConfig = {
         attributes: {},
         endpoint: 'test-logger',

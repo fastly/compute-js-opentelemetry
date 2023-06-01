@@ -1,3 +1,21 @@
+const Module = require('module');
+
+const origRequire = Module.prototype.require;
+Module.prototype.require = function(id) {
+  if (_requireFunc != null) {
+    const module = _requireFunc(id);
+    if (module != null) {
+      return module;
+    }
+  }
+  return origRequire.call(this, id);
+};
+
+let _requireFunc = null;
+globalThis.setRequireFunc = (fn) => {
+  _requireFunc = fn;
+};
+
 let _replacementFetchFunc = null;
 globalThis.fetch = (requestInfo, requestInit) => {
   if(_replacementFetchFunc != null) {

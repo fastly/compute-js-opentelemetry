@@ -3,6 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
+import { Logger } from "fastly:logger";
 import { DiagLogFunction, DiagLogger } from "@opentelemetry/api";
 
 import { toLoggerString } from "../core";
@@ -27,7 +28,7 @@ export class DiagFastlyLogger implements DiagLogger {
       return function (...args) {
         if (logger == null) {
           try {
-            logger = fastly.getLogger(endpoint);
+            logger = new Logger(endpoint);
           } catch(ex) {
             // This can fail for example if you try to do this outside of
             // processing of requests. In that case we will log an error

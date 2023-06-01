@@ -3,6 +3,9 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
+import { CacheOverride } from "fastly:cache-override";
+import { Logger } from "fastly:logger";
+
 import * as zlib from "zlib";
 import { diag } from '@opentelemetry/api';
 import { CompressionAlgorithm, OTLPExporterError } from "@opentelemetry/otlp-exporter-base";
@@ -77,7 +80,7 @@ export function sendWithFastlyLogger<ExportItem, ServiceRequest>(
   data: string | Buffer,
 ): Promise<void> {
   return new Promise(resolve => {
-    const logger = fastly.getLogger(collector.loggerEndpoint);
+    const logger = new Logger(collector.loggerEndpoint);
     logger.log(data);
     diag.debug('Data sent to log');
     resolve();

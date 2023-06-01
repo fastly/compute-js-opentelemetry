@@ -3,6 +3,8 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
+import { env } from "fastly:env";
+
 import {
   DEFAULT_ENVIRONMENT,
   ENVIRONMENT,
@@ -17,7 +19,7 @@ import {
 export function getEnv(): Required<ENVIRONMENT> {
   return Object.assign(
     {
-      HOSTNAME: fastly.env.get('FASTLY_HOSTNAME'),
+      HOSTNAME: env('FASTLY_HOSTNAME'),
     },
     DEFAULT_ENVIRONMENT,
   );

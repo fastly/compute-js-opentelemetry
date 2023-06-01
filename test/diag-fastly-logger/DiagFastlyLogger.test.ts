@@ -3,12 +3,14 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
+import { Logger } from "fastly:logger";
+
 import * as assert from "assert";
 import * as sinon from "sinon";
 
 import { diag, DiagLogLevel } from "@opentelemetry/api";
 import { DiagFastlyLogger } from "../../src/diag-fastly-logger";
-import { buildFakeFetchEvent, LoggerMock, runRegisteredFetchEventListeners } from "../computeHelpers";
+import { buildFakeFetchEvent, LoggerMockInstance, runRegisteredFetchEventListeners } from "../computeHelpers";
 
 describe('DiagFastlyLogger', function() {
   describe('instance', function() {
@@ -66,7 +68,7 @@ describe('DiagFastlyLogger', function() {
       const fetchEvent = buildFakeFetchEvent();
       runRegisteredFetchEventListeners(fetchEvent);
 
-      const loggerMock = fastly.getLogger('test-logger') as LoggerMock;
+      const loggerMock = new Logger('test-logger') as LoggerMockInstance;
 
       logger.verbose('verbose');
       assert.ok(!consoleErrorSpy.called);
