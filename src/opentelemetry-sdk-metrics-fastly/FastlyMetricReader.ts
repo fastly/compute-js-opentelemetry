@@ -3,7 +3,8 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { MetricReader, PushMetricExporter } from '@opentelemetry/sdk-metrics-base';
+import { diag } from "@opentelemetry/api";
+import { MetricReader, PushMetricExporter } from '@opentelemetry/sdk-metrics';
 import { ExportResultCode } from "@opentelemetry/core";
 import { FastlyMetricReaderOptions } from "./types";
 
@@ -15,24 +16,33 @@ export class FastlyMetricReader extends MetricReader {
   private _exporter: PushMetricExporter;
 
   constructor(options: FastlyMetricReaderOptions) {
-    super(options.exporter.getPreferredAggregationTemporality());
+    super({
+      aggregationSelector: options.exporter.selectAggregation?.bind(
+        options.exporter
+      ),
+      aggregationTemporalitySelector:
+        options.exporter.selectAggregationTemporality?.bind(options.exporter),
+    });
     this._exporter = options.exporter;
   }
 
   private async _runOnce(): Promise<void> {
-    const metrics = await this.collect({});
+    const { resourceMetrics, errors } = await this.collect({});
 
-    if (metrics === undefined) {
-      return;
+    if (errors.length > 0) {
+      diag.error(
+        'FastlyMetricReader: metrics collection errors',
+        ...errors
+      );
     }
 
     return new Promise((resolve, reject) => {
-      this._exporter.export(metrics, result => {
+      this._exporter.export(resourceMetrics, result => {
         if (result.code !== ExportResultCode.SUCCESS) {
           reject(
             result.error ??
               new Error(
-                `PeriodicExportingMetricReader: metrics export failed (error ${result.error})`
+                `FastlyMetricReader: metrics export failed (error ${result.error})`
               )
           );
         } else {

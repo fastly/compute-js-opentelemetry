@@ -4,7 +4,7 @@
  */
 
 import { ExportResult } from "@opentelemetry/core";
-import { AggregationTemporality, PushMetricExporter, ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
+import { AggregationTemporality, PushMetricExporter, ResourceMetrics } from "@opentelemetry/sdk-metrics";
 import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
 
 import { OTLPExporterFastlyBase } from "./OTLPExporterFastlyBase";
@@ -15,12 +15,12 @@ export class OTLPMetricExporterFastlyBase<
   ServiceRequest,
 > implements PushMetricExporter {
   public _otlpExporter: T;
-  protected _preferredAggregationTemporality: AggregationTemporality;
+  protected _temporalityPreference: AggregationTemporality;
 
   constructor(exporter: T,
               config: OTLPMetricExporterOptions) {
     this._otlpExporter = exporter;
-    this._preferredAggregationTemporality = config.aggregationTemporality ?? AggregationTemporality.CUMULATIVE;
+    this._temporalityPreference = config.temporalityPreference ?? AggregationTemporality.CUMULATIVE;
   }
 
   export(metrics: ExportItem, resultCallback: (result: ExportResult) => void): void {
@@ -35,8 +35,8 @@ export class OTLPMetricExporterFastlyBase<
     return Promise.resolve();
   }
 
-  getPreferredAggregationTemporality(): AggregationTemporality {
-    return this._preferredAggregationTemporality;
+  selectAggregationTemporality(): AggregationTemporality {
+    return this._temporalityPreference;
   }
 
 }

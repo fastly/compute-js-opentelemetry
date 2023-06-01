@@ -3,13 +3,12 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { ContextManager, TextMapPropagator } from "@opentelemetry/api";
-import { metrics } from '@opentelemetry/api-metrics';
+import { ContextManager, TextMapPropagator, metrics } from "@opentelemetry/api";
 
 import { InstrumentationOption, registerInstrumentations } from "@opentelemetry/instrumentation";
 import { Resource } from "@opentelemetry/resources";
 import { SimpleSpanProcessor, SpanProcessor } from "@opentelemetry/sdk-trace-base";
-import { MeterProvider, MetricReader } from "@opentelemetry/sdk-metrics-base";
+import { MeterProvider, MetricReader } from "@opentelemetry/sdk-metrics";
 
 import { FastlySDKConfiguration } from "./types";
 import { FastlySpanProcessor, FastlyTracerConfig, FastlyTracerProvider } from "../opentelemetry-sdk-trace-fastly";

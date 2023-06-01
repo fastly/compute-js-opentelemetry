@@ -4,7 +4,7 @@ import * as sinon from "sinon";
 
 import { diag, DiagLogger, DiagLogLevel, Sampler, SamplingDecision, trace, } from "@opentelemetry/api";
 import { ReadableSpan, SimpleSpanProcessor, SpanExporter, SpanProcessor, Tracer } from "@opentelemetry/sdk-trace-base";
-import { MetricReader } from "@opentelemetry/sdk-metrics-base";
+import { MetricReader } from "@opentelemetry/sdk-metrics";
 import { Resource } from "@opentelemetry/resources";
 import { Instrumentation } from "@opentelemetry/instrumentation";
 

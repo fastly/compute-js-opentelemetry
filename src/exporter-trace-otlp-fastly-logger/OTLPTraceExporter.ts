@@ -4,11 +4,10 @@
  */
 
 import { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
-import { OTLPTraceExporter as OTLPTraceExporterNode, otlpTypes } from '@opentelemetry/exporter-trace-otlp-http';
+import { OTLPTraceExporter as OTLPTraceExporterNode } from '@opentelemetry/exporter-trace-otlp-http';
+import { IExportTraceServiceRequest } from "@opentelemetry/otlp-transformer";
 
 import { OTLPExporterFastlyLoggerBase, OTLPExporterFastlyLoggerConfigBase } from '../otlp-exporter-fastly-base';
-
-type IExportTraceServiceRequest = otlpTypes.opentelemetryProto.collector.trace.v1.ExportTraceServiceRequest;
 
 /**
  * Collector Trace Exporter for Fastly named log providers

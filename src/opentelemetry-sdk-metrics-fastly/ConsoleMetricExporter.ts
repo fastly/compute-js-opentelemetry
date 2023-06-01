@@ -8,7 +8,7 @@ import {
   DataPointType,
   PushMetricExporter,
   ResourceMetrics
-} from "@opentelemetry/sdk-metrics-base";
+} from "@opentelemetry/sdk-metrics";
 import { ExportResult, ExportResultCode } from "@opentelemetry/core";
 
 export class ConsoleMetricExporter implements PushMetricExporter {
@@ -33,7 +33,7 @@ export class ConsoleMetricExporter implements PushMetricExporter {
     metrics: ResourceMetrics,
     done: (result: ExportResult) => void
   ): void {
-    for (const libraryMetrics of metrics.instrumentationLibraryMetrics) {
+    for (const libraryMetrics of metrics.scopeMetrics) {
       for (const metric of libraryMetrics.metrics) {
         console.log(metric.descriptor);
         console.log(DataPointType[metric.dataPointType]);

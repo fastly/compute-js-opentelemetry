@@ -12,8 +12,8 @@ import * as sinon from 'sinon';
 import { diag } from '@opentelemetry/api';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { ExportResult, ExportResultCode } from "@opentelemetry/core";
-import { otlpTypes } from "@opentelemetry/exporter-trace-otlp-http";
 import { CompressionAlgorithm, OTLPExporterError } from "@opentelemetry/otlp-exporter-base";
+import { IExportTraceServiceRequest } from "@opentelemetry/otlp-transformer";
 
 import { OTLPTraceExporter } from '../../src/exporter-trace-otlp-fastly-backend';
 import { OTLPExporterFastlyBackendConfigBase } from "../../src/otlp-exporter-fastly-base";
@@ -64,7 +64,6 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
           foo: 'bar',
         },
         hostname: 'foo',
-        attributes: {},
         url: 'http://foo.bar.com',
         backend: 'test-backend',
       };
@@ -148,11 +147,11 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
         const args = fakeFetch.args[0];
         const init = args[1];
         const requestBody = init?.body as string;
-        const json = JSON.parse(requestBody) as otlpTypes.opentelemetryProto.collector.trace.v1.ExportTraceServiceRequest;
+        const json = JSON.parse(requestBody) as IExportTraceServiceRequest;
         // Note that in 0.29.x we will need to use scopeSpans instead of instrumentationLibrarySpans
         // At that time we may also be able to switch to @opentelemetry/otlp-transformer for these types rather
         // than getting them out of @opentelemetry/exporter-trace-otlp-http
-        const span1 = json.resourceSpans?.[0].instrumentationLibrarySpans?.[0].spans?.[0];
+        const span1 = json.resourceSpans?.[0].scopeSpans?.[0].spans?.[0];
         assert.ok(typeof span1 !== 'undefined', "span doesn't exist");
         ensureSpanIsCorrect(span1);
         ensureExportTraceServiceRequestIsSet(json);
@@ -215,7 +214,6 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
           foo: 'bar',
         },
         hostname: 'foo',
-        attributes: {},
         url: 'http://foo.bar.com',
         backend: 'test-backend',
         compression: CompressionAlgorithm.GZIP,
@@ -235,8 +233,8 @@ describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', funct
         const requestBody = init?.body as Buffer;
         const requestBodyUnzipped = zlib.gunzipSync(requestBody).toString();
 
-        const json = JSON.parse(requestBodyUnzipped) as otlpTypes.opentelemetryProto.collector.trace.v1.ExportTraceServiceRequest;
-        const span1 = json.resourceSpans?.[0].instrumentationLibrarySpans?.[0].spans?.[0];
+        const json = JSON.parse(requestBodyUnzipped) as IExportTraceServiceRequest;
+        const span1 = json.resourceSpans?.[0].scopeSpans?.[0].spans?.[0];
         assert.ok(typeof span1 !== 'undefined', "span doesn't exist");
         ensureSpanIsCorrect(span1);
         ensureExportTraceServiceRequestIsSet(json);

@@ -6,7 +6,7 @@
 import { TextMapPropagator, Sampler } from "@opentelemetry/api";
 import type { ContextManager } from '@opentelemetry/api';
 import { InstrumentationOption } from '@opentelemetry/instrumentation';
-import { MetricReader } from "@opentelemetry/sdk-metrics-base";
+import { MetricReader } from "@opentelemetry/sdk-metrics";
 import { Resource } from '@opentelemetry/resources';
 import {
   SpanExporter,

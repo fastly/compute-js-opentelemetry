@@ -9,14 +9,14 @@ import { SpanStatusCode, TraceFlags } from "@opentelemetry/api";
 import { hexToBase64 } from "@opentelemetry/core";
 import { ReadableSpan } from "@opentelemetry/sdk-trace-base";
 import { Resource } from "@opentelemetry/resources";
-import { otlpTypes } from "@opentelemetry/exporter-trace-otlp-http";
-
-type IKeyValue = otlpTypes.opentelemetryProto.common.v1.KeyValue;
-type ISpan = otlpTypes.opentelemetryProto.trace.v1.Span;
-type IEvent = otlpTypes.opentelemetryProto.trace.v1.Span.Event;
-type ILink = otlpTypes.opentelemetryProto.trace.v1.Span.Link;
-const ESpanKind = otlpTypes.opentelemetryProto.trace.v1.Span.SpanKind;
-type IExportTraceServiceRequest = otlpTypes.opentelemetryProto.collector.trace.v1.ExportTraceServiceRequest;
+import {
+  IKeyValue,
+  ISpan,
+  IEvent,
+  ILink,
+  ESpanKind,
+  IExportTraceServiceRequest,
+} from "@opentelemetry/otlp-transformer";
 
 const traceIdHex = '1f1008dc8e270e85c40a0d7c3939b278';
 const spanIdHex = '5e107261f64fa53e';
@@ -78,6 +78,9 @@ export const mockedReadableSpan: ReadableSpan = {
       cost: 112.12,
     })),
   instrumentationLibrary: { name: 'default', version: '0.0.1' },
+  droppedAttributesCount: 0,
+  droppedEventsCount: 0,
+  droppedLinksCount: 0,
 };
 
 export function ensureEventsAreCorrect(
@@ -248,13 +251,12 @@ export function ensureExportTraceServiceRequestIsSet(
   const resource = resourceSpans?.[0].resource;
   assert.ok(resource, 'resource is missing');
 
-  const instrumentationLibrarySpans = resourceSpans?.[0].instrumentationLibrarySpans;
-  assert.strictEqual(instrumentationLibrarySpans?.length, 1, 'scopeSpans is missing');
+  const scopeSpans = resourceSpans?.[0].scopeSpans;
+  assert.strictEqual(scopeSpans?.length, 1, 'scopeSpans is missing');
 
-  const instrumentationLibrary = instrumentationLibrarySpans?.[0].instrumentationLibrary;
+  const instrumentationScope = scopeSpans?.[0].scope;
+  assert.ok(instrumentationScope, 'instrumentationScope is missing');
 
-  assert.ok(instrumentationLibrary, 'instrumentationLibrary is missing');
-
-  const spans = instrumentationLibrarySpans?.[0].spans;
+  const spans = scopeSpans?.[0].spans;
   assert.strictEqual(spans?.length, 1, 'spans are missing');
 }

@@ -9,8 +9,9 @@ import * as assert from 'assert';
 import * as sinon from "sinon";
 
 import { diag } from "@opentelemetry/api";
-import { AggregationTemporality, MetricProducer, ResourceMetrics } from "@opentelemetry/sdk-metrics-base";
+import { AggregationTemporality, CollectionResult, InstrumentType, ResourceMetrics } from "@opentelemetry/sdk-metrics";
 import { Resource } from "@opentelemetry/resources";
+import { MetricProducer } from "@opentelemetry/sdk-metrics/build/src/export/MetricProducer";
 import { OTLPMetricExporterOptions } from "@opentelemetry/exporter-metrics-otlp-http";
 
 import { MockedResponse } from "../computeHelpers";
@@ -57,16 +58,16 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', func
     it('should be possible to instantiate with an aggregation temporality', function() {
       metricExporter = new OTLPMetricExporter({
         backend: 'test-backend',
-        aggregationTemporality: AggregationTemporality.CUMULATIVE,
+        temporalityPreference: AggregationTemporality.CUMULATIVE,
       });
-      assert.strictEqual(metricExporter.getPreferredAggregationTemporality(), AggregationTemporality.CUMULATIVE);
+      assert.strictEqual(metricExporter.selectAggregationTemporality(), AggregationTemporality.CUMULATIVE);
     });
   });
 
   describe('attach to a metric reader', function() {
     let metricReader: FastlyMetricReader;
     let metricProducer: MetricProducer;
-    let getPreferredAggregationTemporalitySpy: sinon.SinonSpy;
+    let selectAggregationTemporalitySpy: sinon.SinonSpy;
     beforeEach(function() {
       fakeResponse = new MockedResponse('foo', {status: 200});
       fakeFetch = sinon.fake.resolves(fakeResponse) as FakeFetch;
@@ -76,24 +77,28 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', func
         backend: 'test-backend'
       });
 
-      getPreferredAggregationTemporalitySpy = sinon.spy(metricExporter, 'getPreferredAggregationTemporality');
+      selectAggregationTemporalitySpy = sinon.spy(metricExporter, 'selectAggregationTemporality');
 
       metricReader = new FastlyMetricReader({ exporter: metricExporter });
 
       // Attach a producer too
       metricProducer = new class implements MetricProducer {
-        async collect(): Promise<ResourceMetrics> {
+        async collect(): Promise<CollectionResult> {
           return {
-            resource: new Resource({}),
-            instrumentationLibraryMetrics: [],
+            resourceMetrics: {
+              resource: new Resource({}),
+              scopeMetrics: [],
+            },
+            errors: [],
           };
         }
       };
       metricReader.setMetricProducer(metricProducer);
     });
 
-    it('should get getPreferredAggregationTemporality called', function() {
-      assert.ok(getPreferredAggregationTemporalitySpy.calledOnce);
+    it('calling selectAggregationTemporality on the reader should get selectAggregationTemporality on the exporter called', function() {
+      metricReader.selectAggregationTemporality(InstrumentType.COUNTER);
+      assert.ok(selectAggregationTemporalitySpy.calledOnce);
     });
 
     it('flushing metric reader should flush the exporter', async function() {
@@ -120,7 +125,6 @@ describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', func
           foo: 'bar',
         },
         hostname: 'foo',
-        attributes: {},
         url: 'http://foo.bar.com',
         backend: 'test-backend',
       };

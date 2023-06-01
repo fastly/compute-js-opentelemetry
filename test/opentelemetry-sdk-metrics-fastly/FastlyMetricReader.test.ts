@@ -8,10 +8,13 @@ import * as sinon from 'sinon';
 
 import {
   AggregationTemporality,
-  MetricProducer,
+  CollectionResult,
+  InstrumentType,
+  MetricReader,
   PushMetricExporter,
-  ResourceMetrics
-} from "@opentelemetry/sdk-metrics-base";
+  ResourceMetrics,
+} from "@opentelemetry/sdk-metrics";
+import { MetricProducer } from "@opentelemetry/sdk-metrics/build/src/export/MetricProducer";
 
 import { ExportResult, ExportResultCode } from "@opentelemetry/core";
 import { Resource } from "@opentelemetry/resources";
@@ -20,30 +23,36 @@ import { FastlyMetricReader } from "../../src/opentelemetry-sdk-metrics-fastly";
 
 describe('FastlyMetricReader', function() {
   describe('instance', function() {
-    it('can be instantiated with a Push Metric Exporter', function() {
+    let exporter: PushMetricExporter;
+    let metricReader: MetricReader;
+    let selectAggregationTemporalitySpy: sinon.SinonSpy;
 
-      const exporter = new class implements PushMetricExporter {
+    beforeEach(function() {
+      exporter = new class implements PushMetricExporter {
         export(metrics: ResourceMetrics, resultCallback: (result: ExportResult) => void) {}
         forceFlush(): Promise<void> {
           return Promise.resolve(undefined);
         }
-        getPreferredAggregationTemporality(): AggregationTemporality {
+        selectAggregationTemporality(): AggregationTemporality {
           return AggregationTemporality.CUMULATIVE;
         }
         shutdown(): Promise<void> {
           return Promise.resolve(undefined);
         }
       };
+      selectAggregationTemporalitySpy = sinon.spy(exporter, 'selectAggregationTemporality');
 
-      // FastlyMetricReader is supposed to call exporter.getPreferredAggregationTemporality()
-      // in its constructor
-      const getPreferredAggregationTemporalitySpy =
-        sinon.spy(exporter, 'getPreferredAggregationTemporality');
+      metricReader = new FastlyMetricReader({ exporter });
 
-      const metricReader = new FastlyMetricReader({ exporter });
+    });
 
+    it('can be instantiated with a Push Metric Exporter', function() {
       assert.ok(metricReader != null);
-      assert.ok(getPreferredAggregationTemporalitySpy.calledOnce);
+    });
+
+    it('calling selectAggregationTemporality on reader gets selectAggregationTemporality on exporter called', function() {
+      metricReader.selectAggregationTemporality(InstrumentType.COUNTER)
+      assert.ok(selectAggregationTemporalitySpy.called);
     });
   });
 
@@ -56,7 +65,7 @@ describe('FastlyMetricReader', function() {
     beforeEach(function() {
       metrics = {
         resource: new Resource({}),
-        instrumentationLibraryMetrics: [],
+        scopeMetrics: [],
       };
       exporter = new class implements PushMetricExporter {
         export(metrics: ResourceMetrics, resultCallback: (result: ExportResult) => void) {
@@ -73,8 +82,11 @@ describe('FastlyMetricReader', function() {
         }
       };
       metricProducer = new class implements MetricProducer {
-        async collect(): Promise<ResourceMetrics> {
-          return metrics;
+        async collect(): Promise<CollectionResult> {
+          return {
+            resourceMetrics: metrics,
+            errors: [],
+          };
         }
       };
       metricReader = new FastlyMetricReader({exporter})
@@ -93,16 +105,23 @@ describe('FastlyMetricReader', function() {
 
     });
 
-    it('when shutdown is called, if collect returns no metrics, then exporter\'s export function won\'t be called', async function() {
+    it('when shutdown is called, if collect returns no metrics, then exporter\'s export function is still called.', async function() {
 
       metricReader.collect = async() => {
-        return undefined;
+        return {
+          resourceMetrics: {
+            resource: new Resource({}),
+            scopeMetrics: [],
+          },
+          errors: [],
+        } as CollectionResult;
       };
 
       const exportSpy = sinon.spy(exporter, 'export');
       await metricReader.shutdown();
 
-      assert.ok(!exportSpy.called);
+      assert.ok(exportSpy.called);
+      assert.ok(exportSpy.args[0][0].scopeMetrics.length === 0);
 
     });
 
@@ -117,7 +136,7 @@ describe('FastlyMetricReader', function() {
       }, (err) => {
         assert.ok(err instanceof Error);
         assert.ok(err.name === 'Error');
-        assert.ok(err.message === 'PeriodicExportingMetricReader: metrics export failed (error undefined)');
+        assert.ok(err.message === 'FastlyMetricReader: metrics export failed (error undefined)');
         return true;
       });
 

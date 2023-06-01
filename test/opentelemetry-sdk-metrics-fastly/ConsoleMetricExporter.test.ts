@@ -7,7 +7,7 @@ import { ExportResultCode } from "@opentelemetry/core";
 
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { AggregationTemporality } from "@opentelemetry/sdk-metrics-base";
+import { AggregationTemporality } from "@opentelemetry/sdk-metrics";
 
 import { ConsoleMetricExporter } from '../../src/opentelemetry-sdk-metrics-fastly';
 import { mockResourceMetrics } from "../metricsHelpers";
@@ -38,12 +38,12 @@ describe('ConsoleMetricExporter', function() {
 
       setTimeout(() => {
 
-        const metrics = mockResourceMetrics.instrumentationLibraryMetrics[0]
+        const metrics = mockResourceMetrics.scopeMetrics[0]
           .metrics[0];
 
         assert.strictEqual(consoleLogSpy.callCount, 4);
         assert.strictEqual(consoleLogSpy.args[0][0], metrics.descriptor);
-        assert.strictEqual(consoleLogSpy.args[1][0], 'SINGULAR');
+        assert.strictEqual(consoleLogSpy.args[1][0], 'GAUGE');
         assert.strictEqual(consoleLogSpy.args[2][0], metrics.dataPoints[0]);
         assert.strictEqual(consoleLogSpy.args[3][0], metrics.dataPoints[1]);
 
