@@ -14,12 +14,12 @@ import { sendWithFetch } from "./util";
  * Collector Metric Exporter abstract base class for Fastly backend
  */
 export abstract class OTLPExporterFastlyBackendBase<
-  Converter extends ExportItemConverter<ExportItem, ServiceRequest>,
-  ExportItem = {},
-  ServiceRequest = {},
+  ExportItem,
+  ServiceRequest,
 > extends OTLPExporterFastlyBase<
   OTLPExporterFastlyBackendConfigBase,
-  Converter
+  ExportItem,
+  ServiceRequest
 > {
   DEFAULT_HEADERS: Record<string, string> = {};
   headers: Record<string, string>;
@@ -27,7 +27,7 @@ export abstract class OTLPExporterFastlyBackendBase<
   backend: string;
   compression: CompressionAlgorithm;
 
-  protected constructor(config: OTLPExporterFastlyBackendConfigBase, converter: Converter) {
+  protected constructor(config: OTLPExporterFastlyBackendConfigBase, converter: ExportItemConverter<ExportItem, ServiceRequest>) {
     super(config, converter);
 
     this.headers = Object.assign(

@@ -15,17 +15,16 @@ export interface ExportItemConverter<TExportItem, TServiceRequest> {
  */
 export abstract class OTLPExporterFastlyBase<
   T extends OTLPExporterConfigBase,
-  Converter extends ExportItemConverter<ExportItem, ServiceRequest>,
-  ExportItem = {},
-  ServiceRequest = {},
+  ExportItem,
+  ServiceRequest,
 > extends OTLPExporterBase<
   T,
   ExportItem,
   ServiceRequest
 > {
-  _converter: Converter;
+  _converter: ExportItemConverter<ExportItem, ServiceRequest>;
 
-  protected constructor(config: T, converter: Converter) {
+  protected constructor(config: T, converter: ExportItemConverter<ExportItem, ServiceRequest>) {
     super(config);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

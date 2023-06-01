@@ -13,16 +13,16 @@ import { sendWithFastlyLogger } from "./util";
  * Collector Metric Exporter abstract base class for Fastly named log providers
  */
 export abstract class OTLPExporterFastlyLoggerBase<
-  Converter extends ExportItemConverter<ExportItem, ServiceRequest>,
-  ExportItem = {},
-  ServiceRequest = {},
+  ExportItem,
+  ServiceRequest,
 > extends OTLPExporterFastlyBase<
   OTLPExporterFastlyLoggerConfigBase,
-  Converter
+  ExportItem,
+  ServiceRequest
 > {
   loggerEndpoint: string;
 
-  protected constructor(config: OTLPExporterFastlyLoggerConfigBase, converter: Converter) {
+  protected constructor(config: OTLPExporterFastlyLoggerConfigBase, converter: ExportItemConverter<ExportItem, ServiceRequest>) {
     super(config, converter);
 
     if (config.url) {

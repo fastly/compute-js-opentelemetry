@@ -19,7 +19,7 @@ import { OTLPExporterFastlyLoggerBase } from "./OTLPExporterFastlyLoggerBase";
  * @param contentType
  */
 export async function sendWithFetch<ExportItem, ServiceRequest>(
-  collector: OTLPExporterFastlyBackendBase<any, ExportItem, ServiceRequest>,
+  collector: OTLPExporterFastlyBackendBase<ExportItem, ServiceRequest>,
   data: string | Buffer,
   contentType: string,
 ): Promise<void> {
@@ -76,7 +76,7 @@ export async function sendWithFetch<ExportItem, ServiceRequest>(
  * @param data
  */
 export function sendWithFastlyLogger<ExportItem, ServiceRequest>(
-  collector: OTLPExporterFastlyLoggerBase<any, ExportItem, ServiceRequest>,
+  collector: OTLPExporterFastlyLoggerBase<ExportItem, ServiceRequest>,
   data: string | Buffer,
 ): Promise<void> {
   return new Promise(resolve => {
