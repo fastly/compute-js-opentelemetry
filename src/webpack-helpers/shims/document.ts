@@ -3,4 +3,4 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-export const document = null;
+export const document: undefined = undefined;
