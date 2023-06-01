@@ -1,11 +1,12 @@
-# README demo for OpenTelemetry for Compute@Edge JavaScript
+# Passthrough example demo for OpenTelemetry for Compute@Edge JavaScript
 
-This is the demo in the [README.md](../../README.md) of the library.
+This is a very simple demo of passing a request to a backend, making a small change to the response, and returning it,
+meanwhile capturing the trace data.
 
 ## Run the example
 
-You will need [Node.js](https://nodejs.org/en/) (>= 16) and [Fastly CLI](https://developer.fastly.com/reference/cli/)
-(>= 2.x recommended, may work with 1.x).
+You will need [Node.js](https://nodejs.org/en/) (>= 18) and [Fastly CLI](https://developer.fastly.com/reference/cli/)
+(>= 9.x recommended).
 
 This example will export traces to a local instance of an
 [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/). It has been tested with
@@ -18,15 +19,15 @@ Clone `fastly/compute-js-opentelemetry` and build it:
 ```shell
 git clone https://github.com/fastly/compute-js-opentelemetry.git
 cd compute-js-opentelemetry
-yarn
-yarn compile
+npm install
+npm run build
 ```
 
 Next, move to this subdirectory, and build this example:
 
 ```shell
 cd examples/readme-demo
-yarn
+npm install
 fastly compute build
 ```
 

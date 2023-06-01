@@ -23,9 +23,12 @@ const sdk = new NodeSDK({
   ],
 });
 
-sdk.start()
-  .then(() => console.log('Tracing initialized'))
-  .catch((error) => console.log('Error initializing tracing', error));
+try {
+  sdk.start();
+  console.log('Tracing initialized');
+} catch(error) {
+  console.log('Error initializing tracing', error);
+}
 
 process.on('SIGTERM', () => {
   sdk.shutdown()
@@ -33,4 +36,3 @@ process.on('SIGTERM', () => {
     .catch((error) => console.log('Error terminating tracing', error))
     .finally(() => process.exit(0));
 });
-

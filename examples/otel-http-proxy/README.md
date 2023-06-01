@@ -48,13 +48,13 @@ value receives the default value listed below.
 2. Install dependencies.
 
 ```shell
-yarn
+npm install
 ```
 
 3. Run the application.
 
 ```shell
-yarn start
+npm run start
 ```
 
 ## Use with Compute@Edge local test server

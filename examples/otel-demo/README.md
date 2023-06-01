@@ -79,7 +79,7 @@ Configure your Fastly service with three backends:
 | `otel-backend` | public hostname of your OpenTelemetry collector |
 | `httpbin`      | `httpbin.org`                                   |
 
-Configure a [Dictionary](https://docs.fastly.com/en/guides/about-dictionaries) named `config` with the following
+Configure a [Config Store](https://developer.fastly.com/learning/concepts/dynamic-config/#config-stores) named `config` with the following
 values:
 
 | Key                       | Description                                                            | Default Value                                                         |
@@ -102,13 +102,13 @@ value receives the default value listed below.
 3. Install dependencies for "appengine".
 
 ```shell
-yarn
+npm install
 ```
 
 4. Run "appengine".
 
 ```shell
-yarn start
+npm run start
 ```
 
 5. Browse to your Edge application
@@ -177,13 +177,13 @@ value receives the default value listed below.
 3. Install dependencies for "appengine".
 
 ```shell
-yarn
+npm install
 ```
 
 4. Run "appengine".
 
 ```shell
-yarn start
+npm run start
 ```
 
 5. Browse to your Edge application

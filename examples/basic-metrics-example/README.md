@@ -4,15 +4,14 @@ This is an example of using [@fastly/compute-js-opentelemetry](https://github.co
 an implementation of the [OpenTelemetry JavaScript API](https://opentelemetry.io/docs/instrumentation/js/) for
 Compute@Edge.
 
-> :warning: As of this writing, this demo may not be able to successfully send data to the OpenTelemetry Collector Demo. See [here](../../README.md#metrics) for details.
-
 ## Run the example
 
-You will need [Node.js](https://nodejs.org/en/) (>= 16) and [Fastly CLI](https://developer.fastly.com/reference/cli/)
-(>= 2.x recommended, may work with 1.x).
+You will need [Node.js](https://nodejs.org/en/) (>= 18) and [Fastly CLI](https://developer.fastly.com/reference/cli/)
+(>= 9.x).
 
 This example will export metrics to a local instance of an
-[OpenTelemetry Collector](https://opentelemetry.io/docs/collector/).
+[OpenTelemetry Collector](https://opentelemetry.io/docs/collector/). It has been tested with
+[OpenTelemetry Collector Demo](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/examples/demo).
 
 First, build `compute-js-opentelemetry`.
 
@@ -21,15 +20,15 @@ Clone `fastly/compute-js-opentelemetry` and build it:
 ```shell
 git clone https://github.com/fastly/compute-js-opentelemetry.git
 cd compute-js-opentelemetry
-yarn
-yarn compile
+npm install
+npm run build
 ```
 
 Next, move to this subdirectory, and build this example:
 
 ```shell
 cd examples/basic-tracing-example
-yarn
+npm install
 fastly compute build
 ```
 
@@ -65,7 +64,7 @@ generates a `Response` object (or Promise that resolves to one).
 
 Additionally, this example application will count the number of requests that were
 made to it. To do this, it needs to import the `metrics` object exported from
-`@opentelemetry/api-metrics`. It obtains a meter named `my-meter` from the
+`@opentelemetry/api`. It obtains a meter named `my-meter` from the
 default meter provider, then creates a [Counter](https://opentelemetry.io/docs/reference/specification/metrics/api/#counter)
 named `requests`. It then adds 1 to the counter, along with the path as an attribute.
 The metric queued for sending to the backend, and is sent when the application lifecycle ends.

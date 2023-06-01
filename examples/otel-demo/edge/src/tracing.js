@@ -3,6 +3,8 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
+import { env } from "fastly:env";
+
 import { Resource } from "@opentelemetry/resources";
 import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
 
@@ -11,7 +13,7 @@ import { OTLPTraceExporter as OTLPTraceExporterLogger } from "@fastly/compute-js
 import { OTLPTraceExporter as OTLPTraceExporterBackend } from "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend";
 import { getComputeJsAutoInstrumentations } from "@fastly/compute-js-opentelemetry/auto-instrumentations-compute-js";
 
-const IS_LOCAL = fastly.env.get('FASTLY_HOSTNAME') === 'localhost';
+const IS_LOCAL = env('FASTLY_HOSTNAME') === 'localhost';
 
 const OTEL_BACKEND_NAME = 'otel-collector';
 const OTEL_HTTP_PROXY_ENDPOINT = 'otel-http-proxy';
@@ -27,7 +29,7 @@ const resource = new Resource({
   [SemanticResourceAttributes.TELEMETRY_SDK_LANGUAGE]: 'JavaScript',
   [SemanticResourceAttributes.TELEMETRY_SDK_NAME]: 'opentelemetry',
   [SemanticResourceAttributes.TELEMETRY_SDK_VERSION]: '1.2.0',
-  [SemanticResourceAttributes.HOST_NAME]: fastly.env.get('FASTLY_HOSTNAME'),
+  [SemanticResourceAttributes.HOST_NAME]: env('FASTLY_HOSTNAME'),
 });
 
 // Start OpenTelemetry

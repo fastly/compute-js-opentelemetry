@@ -6,8 +6,8 @@ Compute@Edge.
 
 ## Run the example
 
-You will need [Node.js](https://nodejs.org/en/) (>= 16) and [Fastly CLI](https://developer.fastly.com/reference/cli/)
-(>= 2.x recommended, may work with 1.x).
+You will need [Node.js](https://nodejs.org/en/) (>= 18) and [Fastly CLI](https://developer.fastly.com/reference/cli/)
+(>= 9.x).
 
 This example will export traces to a local instance of an
 [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/). It has been tested with
@@ -20,15 +20,15 @@ Clone `fastly/compute-js-opentelemetry` and build it:
 ```shell
 git clone https://github.com/fastly/compute-js-opentelemetry.git
 cd compute-js-opentelemetry
-yarn
-yarn compile
+npm install
+npm run build
 ```
 
 Next, move to this subdirectory, and build this example:
 
 ```shell
 cd examples/basic-tracing-example
-yarn
+npm install
 fastly compute build
 ```
 

@@ -1,5 +1,6 @@
 {
   "name": "otel-http-proxy",
+  "private": true,
   "version": "1.0.0",
   "main": "src/server.js",
   "scripts": {
@@ -13,7 +14,7 @@
     "node-fetch": "^3.2.10"
   },
   "engines": {
-    "node": "16.x"
+    "node": "^18"
   },
   "license": "MIT"
 }

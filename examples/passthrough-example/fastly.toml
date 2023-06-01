@@ -8,11 +8,11 @@ manifest_version = 2
 name = "passthrough-example"
 
 [local_server]
+[local_server.backends]
+[local_server.backends.httpbin]
+url = "https://httpbin.org"
+[local_server.backends.otlp-collector]
+url = "http://localhost:4318/"
 
-  [local_server.backends]
-
-    [local_server.backends.httpbin]
-      url = "https://httpbin.org"
-
-    [local_server.backends.otlp-collector]
-      url = "http://localhost:4318/"
+[scripts]
+build = "npm run build"

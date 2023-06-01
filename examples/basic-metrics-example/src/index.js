@@ -6,7 +6,7 @@
 /// <reference types="@fastly/js-compute" />
 
 import './telemetry';
-import { metrics } from '@opentelemetry/api-metrics';
+import { metrics } from '@opentelemetry/api';
 
 // Standard Compute@Edge JavaScript entry point
 addEventListener("fetch", (event) => event.respondWith(handleRequest(event)));
