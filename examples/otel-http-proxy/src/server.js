@@ -35,14 +35,14 @@ app.post("/", async (req, res) => {
     const data = JSON.parse(line);
     let traceId;
     if (data.resourceSpans) {
-      traceId = data.resourceSpans[0].instrumentationLibrarySpans[0].spans[0].traceId;
+      traceId = data.resourceSpans[0].scopeSpans[0].spans[0].traceId;
       if (!spansByTrace[traceId]) spansByTrace[traceId] = []
       spansByTrace[traceId].push(data);
       console.log(" - Saved trace data", traceId);
     } else if (data.resourceLogs) {
-      traceId = data.resourceLogs[0].instrumentationLibraryLogs[0].logRecords[0].traceId;
+      traceId = data.resourceLogs[0].scopeLogs[0].logRecords[0].traceId;
       if (!logsByTrace[traceId]) logsByTrace[traceId] = []
-      logsByTrace[traceId].push(...data.resourceLogs[0].instrumentationLibraryLogs[0].logRecords);
+      logsByTrace[traceId].push(...data.resourceLogs[0].scopeLogs[0].logRecords);
       console.log(" - Saved log data", traceId);
     }
     if (traceTimers[traceId]) clearTimeout(traceTimers[traceId]);
@@ -65,7 +65,7 @@ const processTrace = async (traceId) => {
   (logsByTrace[traceId] ?? []).forEach(log => {
     console.log(" - Looking at log", log.body.stringValue);
     spansByTrace[traceId].find(spanData => {
-      const spans = spanData.resourceSpans[0].instrumentationLibrarySpans[0].spans;
+      const spans = spanData.resourceSpans[0].scopeSpans[0].spans;
       console.log("   - Looking at spans", spans.map(s => s.spanId));
       const span = spans.find(s => s.spanId === log.spanId);
       if (span) {
