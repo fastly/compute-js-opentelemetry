@@ -16,7 +16,7 @@ import {
 } from "@opentelemetry/sdk-metrics";
 import { MetricProducer } from "@opentelemetry/sdk-metrics/build/src/export/MetricProducer";
 
-import { ExportResult, ExportResultCode } from "@opentelemetry/core";
+import { setGlobalErrorHandler, ExportResult, ExportResultCode } from "@opentelemetry/core";
 import { Resource } from "@opentelemetry/resources";
 
 import { FastlyMetricReader } from "../../src/opentelemetry-sdk-metrics-fastly";
@@ -57,12 +57,16 @@ describe('FastlyMetricReader', function() {
   });
 
   describe('export', function() {
+    let defaultHandler: sinon.SinonSpy;
+
     let metrics: ResourceMetrics;
     let exporter: PushMetricExporter;
     let metricProducer: MetricProducer;
     let metricReader: FastlyMetricReader;
 
     beforeEach(function() {
+      defaultHandler = sinon.spy();
+      setGlobalErrorHandler(defaultHandler);
       metrics = {
         resource: new Resource({}),
         scopeMetrics: [],
@@ -131,14 +135,13 @@ describe('FastlyMetricReader', function() {
         resultCallback({ code: ExportResultCode.FAILED });
       }
 
-      await assert.rejects(async () => {
-        await metricReader.shutdown();
-      }, (err) => {
-        assert.ok(err instanceof Error);
-        assert.ok(err.name === 'Error');
-        assert.ok(err.message === 'FastlyMetricReader: metrics export failed (error undefined)');
-        return true;
-      });
+      await metricReader.shutdown();
+
+      assert.ok(defaultHandler.calledOnce);
+      const err = defaultHandler.args[0][0];
+      assert.ok(err instanceof Error);
+      assert.ok(err.name === 'Error');
+      assert.ok(err.message === 'FastlyMetricReader: metrics export failed (error undefined)');
 
     });
 
@@ -149,12 +152,13 @@ describe('FastlyMetricReader', function() {
         resultCallback({ code: ExportResultCode.FAILED, error: theError });
       }
 
-      await assert.rejects(async () => {
-        await metricReader.shutdown();
-      }, (err) => {
-        assert.strictEqual(err, theError);
-        return true;
-      });
+      await metricReader.shutdown();
+
+      assert.ok(defaultHandler.calledOnce);
+      const err = defaultHandler.args[0][0];
+      assert.ok(err instanceof Error);
+      assert.ok(err.name === 'Error');
+      assert.ok(err.message === 'FastlyMetricReader: metrics export failed (error Error: the error!)');
 
     });
 

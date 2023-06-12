@@ -5,7 +5,7 @@
 
 import { diag } from "@opentelemetry/api";
 import { MetricReader, PushMetricExporter } from '@opentelemetry/sdk-metrics';
-import { ExportResultCode } from "@opentelemetry/core";
+import { internal, globalErrorHandler, ExportResultCode, } from "@opentelemetry/core";
 import { FastlyMetricReaderOptions } from "./types";
 
 /**
@@ -27,6 +27,14 @@ export class FastlyMetricReader extends MetricReader {
   }
 
   private async _runOnce(): Promise<void> {
+    try {
+      await this._doRun();
+    } catch (err) {
+      globalErrorHandler(err);
+    }
+  }
+
+  private async _doRun(): Promise<void> {
     const { resourceMetrics, errors } = await this.collect({});
 
     if (errors.length > 0) {
@@ -36,20 +44,25 @@ export class FastlyMetricReader extends MetricReader {
       );
     }
 
-    return new Promise((resolve, reject) => {
-      this._exporter.export(resourceMetrics, result => {
-        if (result.code !== ExportResultCode.SUCCESS) {
-          reject(
-            result.error ??
-              new Error(
-                `FastlyMetricReader: metrics export failed (error ${result.error})`
-              )
-          );
-        } else {
-          resolve();
-        }
-      });
-    });
+    const doExport = async () => {
+      const result = await internal._export(this._exporter, resourceMetrics);
+      if (result.code !== ExportResultCode.SUCCESS) {
+        throw new Error(
+          `FastlyMetricReader: metrics export failed (error ${result.error})`
+        );
+      }
+    };
+
+    // Avoid scheduling a promise to make the behavior more predictable and easier to test
+    if (resourceMetrics.resource.asyncAttributesPending) {
+      resourceMetrics.resource
+        .waitForAsyncAttributes?.()
+        .then(doExport, err =>
+          diag.debug('Error while resolving async portion of resource: ', err)
+        );
+    } else {
+      await doExport();
+    }
   }
 
   protected async onForceFlush(): Promise<void> {

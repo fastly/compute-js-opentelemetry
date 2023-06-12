@@ -13,8 +13,14 @@
  * an exporter that sends data using a Fastly backend, because each Compute@Edge invocation
  * has a limit on the number of allowed backend fetches.
  */
-import { context, Context, TraceFlags } from "@opentelemetry/api";
-import { BindOnceFuture, ExportResultCode, suppressTracing } from "@opentelemetry/core";
+import { Context, TraceFlags } from "@opentelemetry/api";
+import {
+  internal,
+  globalErrorHandler,
+  BindOnceFuture,
+  ExportResultCode,
+  ExportResult,
+} from "@opentelemetry/core";
 import { ReadableSpan, Span, SpanExporter, SpanProcessor } from "@opentelemetry/sdk-trace-base";
 
 export class FastlySpanProcessor implements SpanProcessor {
@@ -75,27 +81,33 @@ export class FastlySpanProcessor implements SpanProcessor {
     if (this._finishedSpans.length === 0) {
       return Promise.resolve();
     }
-    return new Promise((resolve, reject) => {
-      // prevent downstream exporter calls from generating spans
-      context.with(suppressTracing(context.active()), () => {
-        // Reset the finished spans buffer here because the next invocations of the _flush method
-        // could pass the same finished spans to the exporter if the buffer is cleared
-        // outside of the execution of this callback.
-        this._exporter.export(
-          this._finishedSpans,
-          result => {
-            if (result.code === ExportResultCode.SUCCESS) {
-              resolve();
-            } else {
-              reject(
-                result.error ??
-                new Error('FastlySpanProcessor: span export failed')
-              );
-            }
+
+    const doExport = () =>
+      internal
+        ._export(this._exporter, this._finishedSpans)
+        .then((result: ExportResult) => {
+          if (result.code !== ExportResultCode.SUCCESS) {
+            globalErrorHandler(
+              result.error ??
+              new Error(
+                `FastlySpanProcessor: span export failed (status ${result})`
+              )
+            );
           }
-        );
-      });
-    });
+        });
+
+    const resourceAsyncAttributes =
+      this._finishedSpans
+        .map(span => {
+          if (span.resource.asyncAttributesPending) {
+            return span.resource.waitForAsyncAttributes?.();
+          }
+          return null;
+        });
+
+    return Promise.all(resourceAsyncAttributes)
+      .then(() => doExport())
+      .catch(error => globalErrorHandler(error));
   }
 
   protected onShutdown(): void {

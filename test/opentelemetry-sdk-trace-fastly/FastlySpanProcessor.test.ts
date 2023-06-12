@@ -7,9 +7,10 @@ import * as assert from 'assert';
 import * as sinon from 'sinon';
 
 import { ReadableSpan, Span, SpanExporter } from "@opentelemetry/sdk-trace-base";
-import { ExportResult, ExportResultCode } from "@opentelemetry/core";
+import {ExportResult, ExportResultCode, setGlobalErrorHandler} from "@opentelemetry/core";
 import { FastlySpanProcessor } from "../../src/opentelemetry-sdk-trace-fastly";
 import { Context, TraceFlags } from "@opentelemetry/api";
+import { Resource } from "@opentelemetry/resources";
 
 function buildMockSpan(sampled = true) {
   return {
@@ -17,7 +18,8 @@ function buildMockSpan(sampled = true) {
       return {
         traceFlags: sampled ? TraceFlags.SAMPLED : TraceFlags.NONE,
       }
-    }
+    },
+    resource: {} as Resource
   } as ReadableSpan;
 }
 
@@ -91,6 +93,13 @@ describe('FastlySpanProcessor', function() {
   });
 
   describe('forceFlush', function() {
+    let defaultHandler: sinon.SinonSpy;
+
+    beforeEach(function() {
+      defaultHandler = sinon.spy();
+      setGlobalErrorHandler(defaultHandler);
+    });
+
     it('should cause exporter\'s export to be called', async function() {
 
       const spy = sinon.spy(exporter, 'export');
@@ -165,15 +174,13 @@ describe('FastlySpanProcessor', function() {
       spanProcessor.onStart({} as Span, {} as Context);
       spanProcessor.onEnd(span0);
 
-      await assert.rejects(async () => {
-        await spanProcessor.forceFlush();
-      },
-      (err) => {
-        assert.ok(err instanceof Error);
-        assert.strictEqual(err.name, 'Error');
-        assert.strictEqual(err.message, 'FastlySpanProcessor: span export failed');
-        return true;
-      });
+      await spanProcessor.forceFlush();
+
+      assert.ok(defaultHandler.calledOnce);
+      const err = defaultHandler.args[0][0];
+      assert.ok(err instanceof Error);
+      assert.strictEqual(err.name, 'Error');
+      assert.strictEqual(err.message, 'FastlySpanProcessor: span export failed (status [object Object])');
     });
 
     it('should throw if exporter\'s export returns specific error', async function() {
@@ -190,13 +197,14 @@ describe('FastlySpanProcessor', function() {
       spanProcessor.onStart({} as Span, {} as Context);
       spanProcessor.onEnd(span0);
 
-      await assert.rejects(async () => {
-        await spanProcessor.forceFlush();
-      },
-      (err) => {
-        assert.strictEqual(err, error);
-        return true;
-      });
+      await spanProcessor.forceFlush();
+
+      assert.ok(defaultHandler.calledOnce);
+      const err = defaultHandler.args[0][0];
+      assert.ok(err instanceof Error);
+      assert.strictEqual(err.name, 'Error');
+      assert.strictEqual(err.message, 'foo');
+
     });
   });
 
