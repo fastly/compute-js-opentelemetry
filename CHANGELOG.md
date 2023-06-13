@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.2.0-alpha.2] - 2023-06-13
+
+### Added
+
+- Requires @fastly/js-compute@2.3.0
+- Supports performance API, for higher resolution timestamps
+- Support for Async Resource Attributes
+
 ## [0.2.0-alpha.1] - 2023-06-02
 
 ### Added
