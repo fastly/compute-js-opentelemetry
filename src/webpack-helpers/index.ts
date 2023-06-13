@@ -45,7 +45,6 @@ export function apply(webpackConfig: Configuration): Configuration {
         alias: {
           "document": path.resolve(__dirname, "./shims/document"),
           "process": path.resolve(__dirname, "./shims/process"),
-          "perf_hooks": path.resolve(__dirname, "./shims/perf_hooks"),
         },
         fallback: {
           "assert": require.resolve("assert/"),
@@ -100,7 +99,6 @@ export function apply(webpackConfig: Configuration): Configuration {
         ...(webpackConfig?.plugins ?? []),
         new ProvidePlugin({
           process: "process",
-          performance: [ "perf_hooks", "performance" ],
           document: [ "document", "document" ],
         })
       ],
