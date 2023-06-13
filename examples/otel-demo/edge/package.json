@@ -6,7 +6,7 @@
         "url": "https://github.com/fastly/compute-starter-kit-js-proto/issues"
     },
     "dependencies": {
-        "@fastly/js-compute": "^2.0.2"
+        "@fastly/js-compute": "^2.3.0"
     },
     "devDependencies": {
         "@fastly/compute-js-opentelemetry": "file:../../../",
