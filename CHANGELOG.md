@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Changed
+
+- Support for updated OpenTelemetry libraries:
+  - OpenTelemetry API version 1.4.x
+  - Core implementations at 1.14.x
+  - Experimental modules at 0.40.x
+
 ### Removed
 
 - Removed `FastlySpanProcessor`, as `BatchSpanProcessor` can be used.
