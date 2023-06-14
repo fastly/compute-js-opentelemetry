@@ -61,11 +61,6 @@ The following objects are implicitly instantiated:
     support asynchronous context stacks, it is able to associate all traces created to
     the current fetch event.
 
-* **FastlySpanProcessor** (by `FastlySDK`)  
-    a Span Processor that buffers the spans generated during one invocation of the
-    Compute@Edge application and sends them to the exporter at the end of the
-    lifecycle.
-
 * **FastlyTraceProvider** (by `FastlySDK`)  
     a Trace Provider that associates the trace exporter with a default context
     manager.

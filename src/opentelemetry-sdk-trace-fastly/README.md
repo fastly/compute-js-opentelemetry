@@ -1,16 +1,9 @@
 # OpenTelemetry Trace SDK Fastly Compute@Edge
 
-This module provides a Span Processor, a Tracer Provider, and a Context Manager for use
-with OpenTelemetry in Fastly Compute@Edge.
+This module provides a Tracer Provider and a Context Manager for use with OpenTelemetry
+on Fastly Compute@Edge.
 
 ## Notes
-
-`FastlySpanProcessor` will batch all the spans that are generated
-during its lifetime and submit them when `forceFlush()` or `shutdown()` are called.
-This is intended for use with `OTLPTraceExporter` exported by
-`@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend`, as
-every Fastly Compute@Edge invocation has a limited number of backend fetches that
-it may perform.
 
 `FastlyTracerProvider` is a basic `TracerProvider` implementation based on
 `BasicTracerProvider`, but uses `FastlyStackContextManager` (described below)

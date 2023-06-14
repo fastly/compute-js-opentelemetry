@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+### Removed
+
+- Removed `FastlySpanProcessor`, as `BatchSpanProcessor` can be used.
+
 ## [0.2.0-alpha.2] - 2023-06-13
 
 ### Added

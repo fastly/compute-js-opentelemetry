@@ -6,4 +6,3 @@
 import '../core';
 export * from './FastlyTracerProvider';
 export * from './FastlyStackContextManager';
-export * from './FastlySpanProcessor';

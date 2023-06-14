@@ -10,8 +10,7 @@ import {
   MockedResponse,
   runRegisteredFetchEventListeners
 } from "../computeHelpers";
-import { ReadableSpan, SpanExporter, SpanProcessor } from "@opentelemetry/sdk-trace-base";
-import { FastlySpanProcessor } from "../../src/opentelemetry-sdk-trace-fastly";
+import { ReadableSpan, SimpleSpanProcessor, SpanProcessor } from "@opentelemetry/sdk-trace-base";
 import { FastlySDK } from "../../src/opentelemetry-sdk-fastly";
 import { ExportResult } from "@opentelemetry/core";
 
@@ -358,15 +357,13 @@ describe('FastlyComputeJsInstrumentation', function() {
 
 
   describe('incoming propagation', function() {
-    let traceExporter: SpanExporter;
     let spanProcessor: SpanProcessor;
     beforeEach(async function() {
-      traceExporter = {
+      spanProcessor = new SimpleSpanProcessor({
         export(spans: ReadableSpan[], resultCallback: (result: ExportResult) => void) {},
         async shutdown(): Promise<void> {}
-      };
+      });
 
-      spanProcessor = new FastlySpanProcessor(traceExporter);
       const sdk = new FastlySDK({
         spanProcessor,
         instrumentations: [

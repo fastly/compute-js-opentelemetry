@@ -10,7 +10,7 @@ import { SpanStatusCode, SpanKind, Span } from "@opentelemetry/api";
 import { ExportResult, ExportResultCode, parseTraceParent } from "@opentelemetry/core";
 import { Resource } from "@opentelemetry/resources";
 import { SemanticAttributes, SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
-import { ReadableSpan, SpanExporter } from "@opentelemetry/sdk-trace-base";
+import { ReadableSpan, SimpleSpanProcessor, SpanExporter } from "@opentelemetry/sdk-trace-base";
 
 import { MockedResponse } from "../computeHelpers";
 import {
@@ -140,7 +140,8 @@ describe('FastlyBackendFetchInstrumentation', function() {
       const resource = new Resource({
         'service.name': 'test-resource',
       });
-      fastlySdk = new FastlySDK({traceExporter, instrumentations, resource});
+      const spanProcessor = new SimpleSpanProcessor(traceExporter);
+      fastlySdk = new FastlySDK({spanProcessor, instrumentations, resource});
       await fastlySdk.start();
 
       fetchFunc = sinon.stub<[RequestInfo, RequestInit | undefined], Promise<Response>>().resolves(new MockedResponse('foo', {status: 200}));

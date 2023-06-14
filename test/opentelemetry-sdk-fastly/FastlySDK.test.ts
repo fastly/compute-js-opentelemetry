@@ -3,7 +3,13 @@ import * as assert from "assert";
 import * as sinon from "sinon";
 
 import { diag, DiagLogger, DiagLogLevel, Sampler, SamplingDecision, trace, } from "@opentelemetry/api";
-import { ReadableSpan, SimpleSpanProcessor, SpanExporter, SpanProcessor, Tracer } from "@opentelemetry/sdk-trace-base";
+import {
+  BatchSpanProcessor,
+  ReadableSpan, SimpleSpanProcessor,
+  SpanExporter,
+  SpanProcessor,
+  Tracer,
+} from "@opentelemetry/sdk-trace-base";
 import { MetricReader } from "@opentelemetry/sdk-metrics";
 import { Resource } from "@opentelemetry/resources";
 import { Instrumentation } from "@opentelemetry/instrumentation";
@@ -15,8 +21,6 @@ import {
 } from "../computeHelpers";
 import { checkLog, newNopDiagLogger } from "../commonHelpers";
 import { FastlySDK } from "../../src/opentelemetry-sdk-fastly";
-import { OTLPTraceExporter } from "../../src/exporter-trace-otlp-fastly-backend";
-import { FastlySpanProcessor } from "../../src/opentelemetry-sdk-trace-fastly";
 
 describe('FastlySDK', function() {
   describe('instance', function() {
@@ -76,41 +80,9 @@ describe('FastlySDK', function() {
       const exportStub = sinon.stub();
       const traceExporter: SpanExporter = {
         export: exportStub,
-        async shutdown(): Promise<void> {}
-      };
-      const fastlySdk = new FastlySDK({traceExporter});
-      await fastlySdk.start();
-
-      const tracer = trace.getTracerProvider()
-        .getTracer('test-tracer');
-      const span = tracer.startSpan('test-span');
-      span.end();
-
-      assert.ok(exportStub.called);
-      assert.strictEqual(exportStub.args[0][0][0], span);
-
-    });
-
-    it('if trace exporter is OTLPExporterFastlyBackend, then it uses FastlySpanProcessor', async function() {
-
-      const traceExporter = new OTLPTraceExporter({backend:'test-backend'});
-
-      // FastlySDK constructor calls configureTracerProvider with provider information
-      const configureTracerProviderSpy = sinon.spy(FastlySDK.prototype, 'configureTracerProvider');
-      const fastlySdk = new FastlySDK({traceExporter});
-      await fastlySdk.start();
-
-      // Second parameter should have been a FastlySpanProcessor
-      assert.ok(configureTracerProviderSpy.calledOnce);
-      assert.ok(configureTracerProviderSpy.args[0][1] instanceof FastlySpanProcessor);
-
-    });
-
-    it('if trace exporter is not OTLPExporterFastlyBackend, then it uses SimpleSpanProcessor', async function() {
-
-      const traceExporter: SpanExporter = {
-        export(spans, resultCallback) {},
-        async shutdown(): Promise<void> {}
+        async shutdown(): Promise<void> {
+          console.log('shutdown');
+        }
       };
 
       // FastlySDK constructor calls configureTracerProvider with provider information
@@ -118,9 +90,9 @@ describe('FastlySDK', function() {
       const fastlySdk = new FastlySDK({traceExporter});
       await fastlySdk.start();
 
-      // Second parameter should have been a SimpleSpanProcessor
+      // Second parameter should have been a BatchSpanProcessor
       assert.ok(configureTracerProviderSpy.calledOnce);
-      assert.ok(configureTracerProviderSpy.args[0][1] instanceof SimpleSpanProcessor);
+      assert.ok(configureTracerProviderSpy.args[0][1] instanceof BatchSpanProcessor);
 
     });
 
@@ -196,12 +168,12 @@ describe('FastlySDK', function() {
       const resource = new Resource({__test_value: 'foo'});
 
       const exportStub = sinon.stub();
-      const traceExporter: SpanExporter = {
+      const spanProcessor = new SimpleSpanProcessor({
         export: exportStub,
         async shutdown(): Promise<void> {}
-      };
+      });
 
-      const fastlySdk = new FastlySDK({traceExporter, resource});
+      const fastlySdk = new FastlySDK({spanProcessor, resource});
       await fastlySdk.start();
 
       const tracer = trace.getTracerProvider()
@@ -268,12 +240,12 @@ describe('FastlySDK', function() {
       const resource = new Resource({__test_value: 'foo'});
 
       const exportStub = sinon.stub();
-      const traceExporter: SpanExporter = {
+      const spanProcessor = new SimpleSpanProcessor({
         export: exportStub,
         async shutdown(): Promise<void> {}
-      };
+      });
 
-      const fastlySdk = new FastlySDK({traceExporter, resource});
+      const fastlySdk = new FastlySDK({spanProcessor, resource});
       fastlySdk.addResource(new Resource({__test_value: 'bar'}))
       await fastlySdk.start();
 
