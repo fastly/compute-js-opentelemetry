@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.2.0-alpha.3] - 2023-06-14
+
 ### Changed
 
 - Support for updated OpenTelemetry libraries:
@@ -64,6 +66,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[unreleased]: https://github.com/fastly/compute-js-opentelemetry/compare/0.2.0-alpha.1...HEAD
-[0.2.0-alpha.1]: https://github.com/fastly/compute-js-opentelemetry/compare/0.1.0...v0.2.0-alpha.1
+[unreleased]: https://github.com/fastly/compute-js-opentelemetry/compare/0.2.0-alpha.3...HEAD
+[0.2.0-alpha.3]: https://github.com/fastly/compute-js-opentelemetry/compare/0.1.0...v0.2.0-alpha.3
 [0.1.0]: https://github.com/fastly/compute-js-opentelemetry/releases/tag/0.1.0
