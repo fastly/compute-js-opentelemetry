@@ -5,7 +5,7 @@
     "start": "node src/server.js"
   },
   "dependencies": {
-    "@grpc/grpc-js": "^1.5.9",
+    "@grpc/grpc-js": "^1.8.8",
     "@opentelemetry/api": "^1.1.0",
     "@opentelemetry/sdk-trace-node": "^1.2.0",
     "@opentelemetry/sdk-node": "^0.28.0",
