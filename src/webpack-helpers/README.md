@@ -56,8 +56,7 @@ have been added to the environment.
 * util
 * zlib
 
-Additionally the following globals are made available.
+Additionally, the following globals are made available.
 
 * document - returns null
-* performance - for timers
 * process - for fake values of pid and version
