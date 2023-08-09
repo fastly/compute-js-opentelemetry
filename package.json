@@ -38,7 +38,7 @@
     "@opentelemetry/core": "~1.14.0",
     "@opentelemetry/exporter-metrics-otlp-http": "^0.40.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.40.0",
-    "@opentelemetry/instrumentation": "^0.40.0",
+    "@opentelemetry/instrumentation": "^0.41.2",
     "@opentelemetry/otlp-exporter-base": "^0.40.0",
     "@opentelemetry/otlp-transformer": "^0.40.0",
     "@opentelemetry/resources": "~1.14.0",
