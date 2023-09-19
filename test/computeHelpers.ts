@@ -8,6 +8,7 @@ import { Logger } from "fastly:logger";
 
 import * as sinon from 'sinon';
 import { addFetchEventAction, onInit } from "../src/core";
+import {Geolocation} from "fastly:geolocation";
 
 declare function setRequireFunc(fn: (id: string) => any | undefined): void;
 
@@ -38,6 +39,11 @@ export class MockedHeaders implements Headers {
 export class MockedClientInfo implements ClientInfo {
   readonly address: string = "10.0.0.1";
   readonly geo!: Geolocation;
+  readonly tlsCipherOpensslName!: string;
+  readonly tlsClientCertificate!: ArrayBuffer;
+  readonly tlsClientHello!: ArrayBuffer;
+  readonly tlsJA3MD5!: string;
+  readonly tlsProtocol!: string;
 }
 
 export class MockedRequest implements Request {
