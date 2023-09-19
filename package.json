@@ -32,7 +32,6 @@
     "test": "nyc ts-mocha -p tsconfig.json --require test/mocha_bootstrap.js test/testHelpers.ts test/**/*.test.ts"
   },
   "dependencies": {
-    "@fastly/js-compute": "^2.3.0",
     "@opentelemetry/api": "^1.4.1",
     "@opentelemetry/api-logs": "^0.40.0",
     "@opentelemetry/core": "~1.14.0",
@@ -58,6 +57,7 @@
     "webpack": "^5.72.0"
   },
   "devDependencies": {
+    "@fastly/js-compute": "^3.4.0",
     "@types/mocha": "8.2.3",
     "@types/node": "^18.16.16",
     "@types/object-inspect": "^1.8.1",
@@ -70,6 +70,9 @@
     "ts-loader": "8.3.0",
     "ts-mocha": "10.0.0",
     "typescript": "^5.0.4"
+  },
+  "peerDependencies": {
+    "@fastly/js-compute": "^2.0.0 || ^3.0.0"
   },
   "files": [
     "build/src/**/*.js",
