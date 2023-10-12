@@ -87,6 +87,7 @@ See the examples in the [`/examples`](./examples) directory.
 | **Example Directory**                                           | Description                                                                                                                                |
 |-----------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
 | [readme-demo](./examples/readme-demo)                           | Example demo from the beginning of this README                                                                                             |
+| [readme-demo-ts](./examples/readme-demo-ts)                     | Example demo from the beginning of this README, ported to TypeScript                                                                       |
 | [basic-tracing-example](./examples/basic-tracing-example)       | Basic Tracing Example                                                                                                                      |
 | [basic-tracing-example-ts](./examples/basic-tracing-example-ts) | Basic Tracing Example in TypeScript                                                                                                        |
 | [basic-metrics-example](./examples/basic-metrics-example)       | Basic Metrics Example                                                                                                                      |
