@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added README demo example in TypeScript
 - Added Basic Tracing TypeScript example
+- Added TypeScript tips to README
 
 ### Fixed
 

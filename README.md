@@ -120,6 +120,64 @@ The use of this module is technically optional, but if you do choose not to use 
 make the appropriate modifications yourself. See [webpack-helpers](./src/webpack-helpers) for
 details.
 
+## Use with TypeScript
+
+This library is designed to work with both JavaScript and [TypeScript](https://www.typescriptlang.org) applications written for
+Fastly Compute.
+
+If your Compute application is written in TypeScript, your `tsconfig.json` file will need to include
+at least the following (feel free to add any other compiler options you need):
+
+  ```json
+  {
+    "compilerOptions": {
+      "sourceMap": true,
+      "target": "es2022",
+      "module": "nodenext",
+      "moduleResolution": "nodenext"
+    }
+  }
+  ```
+
+You will need to install `ts-loader`:
+
+```
+npm install --save-dev ts-loader
+```
+
+Make the following configurations in your Webpack configuration:
+
+* Add `.ts` to `resolve.extensions` and `resolve.extensionAlias`:
+
+  ```
+  resolve: {
+    // Add `.ts` and `.tsx` as resolvable extensions.
+    extensions: ['.ts', '.tsx', '.js'],
+    // Add support for TypeScripts fully qualified ESM imports.
+    extensionAlias: {
+      '.js': ['.js', '.ts'],
+      '.cjs': ['.cjs', '.cts'],
+      '.mjs': ['.mjs', '.mts'],
+    },
+  },
+  ```
+
+* Add the `ts-loader` to your loader rules:
+
+  ```
+  module: {
+    rules: [
+      {
+        test: /\.([cm]?ts|tsx)$/,
+        loader: 'ts-loader',
+      }
+    ],
+  },
+  ```
+
+Check out [readme-demo-ts](./examples/readme-demo-ts) and [basic-tracing-example-ts](./examples/basic-tracing-example-ts)
+in the `examples` directory for working sample programs using TypeScript. 
+
 ## Notes
 
 ### Environment Variables
