@@ -1,0 +1,17 @@
+# This file describes a Fastly Compute package. To learn more visit:
+# https://developer.fastly.com/reference/fastly-toml/
+
+authors = []
+description = "Basic OpenTelemetry Tracing Example in TypeScript"
+language = "javascript"
+manifest_version = 2
+name = "basic-tracing-example-ts"
+
+[local_server]
+[local_server.backends]
+[local_server.backends.test_backend]
+url = "http://localhost:4318/"
+
+[scripts]
+  build = "npm run build"
+  post_init = "npm install"
