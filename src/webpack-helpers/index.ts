@@ -53,6 +53,7 @@ export function apply(webpackConfig: Configuration): Configuration {
       },
       module: {
         rules: [
+          ...webpackConfig?.module?.rules ?? [],
           {
             test: (resource: string) => {
               return disableAliasFieldsRegexes.some(
