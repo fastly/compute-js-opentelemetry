@@ -1,4 +1,4 @@
-# README demo for OpenTelemetry for Compute@Edge JavaScript
+# README demo for OpenTelemetry for JavaScript on Fastly Compute
 
 This is the demo in the [README.md](../../README.md) of the library.
 

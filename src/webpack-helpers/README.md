@@ -1,10 +1,10 @@
-# Webpack helpers for using OpenTelemetry libraries with Fastly Compute@Edge
+# Webpack helpers for using OpenTelemetry libraries with Fastly Compute
 
 ## Usage
 
-Compute@Edge JavaScript applications are
+Compute JavaScript applications are
 [compiled as a web worker using Webpack](https://developer.fastly.com/learning/compute/javascript/#module-bundling) as
-part of their build process. The Compute@Edge starter kit contains a Webpack configuration file
+part of their build process. The Compute starter kit contains a Webpack configuration file
 that sets reasonable defaults for a starting point application.
 
 In order to use the OpenTelemetry packages that we rely on, additions need to be made to this configuration,

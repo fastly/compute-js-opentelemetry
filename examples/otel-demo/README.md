@@ -11,7 +11,7 @@ application for using a named log provider to send traces.
 
 * [`./edge`](./edge) - Edge Application "edge"
 
-  The Compute@Edge JavaScript application that serves as the entry point of the
+  The Compute JavaScript application that serves as the entry point of the
   demo. Calling this application normally calls the "appengine" backend, described below,
   returning the body from that backend.
 
@@ -19,7 +19,7 @@ application for using a named log provider to send traces.
   call `https://httpbin.org/json` and return the body from that response.
 
   This app uses `FastlyComputeJsInstrumentation` and `FastlyBackendFetchInstrumentation`,
-  so Compute@Edge lifecycle events and the backend fetch will generate OpenTelemetry traces.
+  so Compute lifecycle events and the backend fetch will generate OpenTelemetry traces.
 
   This application uses the Trace Exporter from `@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend`,
   and sends its traces to an OpenTelemetry collector.
@@ -54,7 +54,7 @@ application for using a named log provider to send traces.
 
 ## Requirements
 
-This demo is designed for the Edge Application to run in a Fastly Compute@Edge service, and for
+This demo is designed for the Edge Application to run in a Fastly Compute service, and for
 the "appengine" application running at publicly available endpoint.
 
 You will also need an OpenTelemetry collector that will receive the emitted traces. This demo has
@@ -123,7 +123,7 @@ http://0.0.0.0:16686/. Select `otel-demo` from the `Service` dropdown, and then 
 The Edge application can be configured to send traces using a named log provider instead of
 directly to the OpenTelemetry collector. This is more performant for the Edge application,
 because it outputs to [Fastly real-time log streaming](https://docs.fastly.com/en/guides/about-fastlys-realtime-log-streaming-features)
-freeing your Compute@Edge application from having to book its own network request.
+freeing your Compute application from having to book its own network request.
 
 To do this, you will also need to have an instance of the [`otel-http-proxy`](../otel-http-proxy)
 example application running at a publicly available endpoint.
@@ -135,10 +135,10 @@ make it publicly available by using a reverse proxy tool such as [ngrok](https:/
 
 Finally, in the `config` Dictionary, set the value of the `TRACE_EXPORTER_TYPE` key to `logger`.
 
-## Use with Compute@Edge local test server
+## Use with Fastly local test server
 
 It's possible to run this demo locally as well, by running the Edge application under the
-[Compute@Edge local test server](https://developer.fastly.com/learning/compute/testing/#running-a-local-testing-server),
+[Fastly local test server](https://developer.fastly.com/learning/compute/testing/#running-a-local-testing-server),
 and the "appengine" and the OpenTelemetry collector locally.
 
 Note that it is not possible to use a named log provider when running the Edge application under

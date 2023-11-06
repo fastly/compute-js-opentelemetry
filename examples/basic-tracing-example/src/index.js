@@ -8,7 +8,7 @@
 import './telemetry';
 import { context, trace } from "@opentelemetry/api";
 
-// Standard Compute@Edge JavaScript entry point
+// Standard Compute JavaScript entry point
 addEventListener("fetch", (event) => event.respondWith(handleRequest(event)));
 
 async function handleRequest() {
@@ -19,7 +19,7 @@ async function handleRequest() {
     .getTracer('fastly-js-basic-tracing-example');
 
   // Create a span.  This span will be created under the active context.
-  // Since this function is running within the Compute@Edge lifetime,
+  // Since this function is running within the Compute lifetime,
   // the parent span will be the 'listener fn' span, provided by
   // "@fastly/compute-js-opentelemetry/instrumentation-fastly-compute-js"
   const span1 = tracer.startSpan('my-span');

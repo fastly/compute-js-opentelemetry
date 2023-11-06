@@ -5,7 +5,7 @@ that sends data over HTTPS, re-emitting them to an OpenTelemetry collector.
 
 ## Introduction
 
-When a Compute@Edge application (or VCL service) running on Fastly generates OpenTelemetry traces,
+When a Compute application (or VCL service) running on Fastly generates OpenTelemetry traces,
 it can emit them using the OTLP (OpenTelemetry Protocol) format. Emitting them using Fastly's
 [real-time log streaming](https://docs.fastly.com/en/guides/about-fastlys-realtime-log-streaming-features)
 is a performant, ideal method for doing this.
@@ -57,9 +57,9 @@ npm install
 npm run start
 ```
 
-## Use with Compute@Edge local test server
+## Use with Fastly local test server
 
-Note that it is **not** possible to use this proxy to collect traces from an application running under the [Compute@Edge local
+Note that it is **not** possible to use this proxy to collect traces from an application running under the [Fastly local
 test server](https://developer.fastly.com/learning/compute/testing/#running-a-local-testing-server).
 
 This is because when named log endpoints are used on the local test server, output is emitted to stdout instead of being

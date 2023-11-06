@@ -1,8 +1,8 @@
-# Basic Example of OpenTelemetry Instrumentation and Tracing on Compute@Edge
+# Basic Example of OpenTelemetry Instrumentation and Tracing on Fastly Compute
 
 This is an example of using [@fastly/compute-js-opentelemetry](https://github.com/fastly/compute-js-opentelemetry),
 an implementation of the [OpenTelemetry JavaScript API](https://opentelemetry.io/docs/instrumentation/js/) for
-Compute@Edge.
+Compute.
 
 ## Run the example
 
@@ -45,7 +45,7 @@ TODO: If you would like to deploy this to Fastly, then you will have to make mod
 This simple example shows the instantiation of the following objects:
 
 * **OTLPTraceExporter**  
-    an OpenTelemetry Trace Exporter adapted for use in a Compute@Edge handler.
+    an OpenTelemetry Trace Exporter adapted for use in a Compute handler.
 
 * **FastlySDK**  
     an optional class that simplifies the initialization and coordination of
@@ -67,7 +67,7 @@ The following objects are implicitly instantiated:
 
 * **FastlyComputeJsInstrumentation** (by `getComputeJsAutoInstrumentations`)  
   an OpenTelemetry instrumentation that generates traces for the
-  Compute@Edge lifecycle.
+  Compute lifecycle.
 
 As **FastlyComputeJsInstrumentation** is active, OpenTelemetry will also automatically create spans to
 trace the following events:
@@ -89,7 +89,7 @@ These events occur in nested contexts, setting the active context at each event.
 the `my-span` span created in the application code happens as a child span of the `listener fn`
 span.
 
-Beyond this, this is a basic Compute@Edge JavaScript application. A `fetch` handler
+Beyond this, this is a basic Compute JavaScript application. A `fetch` handler
 is registered using the `addEventListener()` function, which receives an `event` object.
 The application responds by running `handleRequest`, which takes the event object and
 generates a `Response` object (or Promise that resolves to one).

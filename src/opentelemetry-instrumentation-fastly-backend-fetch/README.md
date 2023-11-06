@@ -1,7 +1,7 @@
 # OpenTelemetry Fastly Backend Fetch instrumentation
 
 This module provides an instrumentation that generate traces for performing `fetch()` calls to Fastly backends from a
-Compute@Edge JavaScript application.
+Compute JavaScript application.
 
 ## Installation
 

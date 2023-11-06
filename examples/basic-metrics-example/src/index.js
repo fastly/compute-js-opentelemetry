@@ -8,7 +8,7 @@
 import './telemetry';
 import { metrics } from '@opentelemetry/api';
 
-// Standard Compute@Edge JavaScript entry point
+// Standard Compute JavaScript entry point
 addEventListener("fetch", (event) => event.respondWith(handleRequest(event)));
 
 async function handleRequest(event) {

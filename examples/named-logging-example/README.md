@@ -1,4 +1,4 @@
-# Basic Example of OpenTelemetry Instrumentation and Tracing on Compute@Edge using a Fastly Named Log Provider
+# Basic Example of OpenTelemetry Instrumentation and Tracing on Compute using a Fastly Named Log Provider
 
 This is a very simple demo of capturing trace data using a Fastly named log provider. This demo has been tested with the New Relic OTLP logging endpoint
 

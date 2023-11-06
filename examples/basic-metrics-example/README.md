@@ -1,8 +1,8 @@
-# Basic Example of OpenTelemetry Metrics on Compute@Edge
+# Basic Example of OpenTelemetry Metrics on Fastly Compute
 
 This is an example of using [@fastly/compute-js-opentelemetry](https://github.com/fastly/compute-js-opentelemetry),
 an implementation of the [OpenTelemetry JavaScript API](https://opentelemetry.io/docs/instrumentation/js/) for
-Compute@Edge.
+Compute.
 
 ## Run the example
 
@@ -45,10 +45,10 @@ TODO: If you would like to deploy this to Fastly, then you will have to make mod
 This simple example shows the instantiation of the following objects:
 
 * **OTLPMetricExporter**  
-    an OpenTelemetry Metric Exporter adapted for use in a Compute@Edge handler.
+    an OpenTelemetry Metric Exporter adapted for use in a Compute handler.
 
 * **FastlyMetricReader**  
-    an OpenTelemetry Metric Reader adapted for use in a Compute@Edge handler.
+    an OpenTelemetry Metric Reader adapted for use in a Compute handler.
 
 * **FastlySDK**  
     an optional class that simplifies the initialization and coordination of the
@@ -57,7 +57,7 @@ This simple example shows the instantiation of the following objects:
 * **DiagConsoleLogger** (@opentelemetry/api)  
     standard logger that outputs debug messages to the console.
 
-Beyond this, this is a basic Compute@Edge JavaScript application. A `fetch` handler
+Beyond this, this is a basic Compute JavaScript application. A `fetch` handler
 is registered using the `addEventListener()` function, which receives an `event` object.
 The application responds by running `handleRequest`, which takes the event object and
 generates a `Response` object (or Promise that resolves to one).

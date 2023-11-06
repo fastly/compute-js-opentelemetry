@@ -1,6 +1,6 @@
-# OpenTelemetry Meta Package for Compute@Edge JavaScript
+# OpenTelemetry Meta Package for JavaScript on Fastly Compute
 
-Provides a simple way to initialize multiple Compute@Edge JavaScript instrumentations.
+Provides a simple way to initialize multiple Fastly Compute instrumentations.
 
 ## Installation
 
@@ -10,7 +10,7 @@ npm install --save @fastly/compute-js-opentelemetry
 
 ## Usage
 
-Automatically loads instrumentations for Compute@Edge JavaScript.
+Automatically loads instrumentations for Compute JavaScript.
 
 Custom configuration for each of the instrumentations can be passed to the function, by providing an object with the name of the instrumentation as a key, and its configuration as the value.
 

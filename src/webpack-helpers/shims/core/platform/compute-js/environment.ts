@@ -12,7 +12,7 @@ import {
 
 /**
  * Gets environment variables.
- * In Compute@Edge, we cannot use environment variables, so
+ * In Compute, we cannot use environment variables, so
  * this simply returns the default values as defined by
  * OpenTelemetry.
  */
