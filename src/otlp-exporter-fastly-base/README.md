@@ -1,4 +1,4 @@
-# OpenTelemetry Exporter base classes for Fastly Compute@Edge
+# OpenTelemetry Exporter base classes for Fastly Compute
 
 This module provides base classes for trace and metrics collector exporters.
 

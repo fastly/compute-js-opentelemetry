@@ -1,4 +1,4 @@
-# Passthrough example demo for OpenTelemetry for Compute@Edge JavaScript
+# Passthrough example demo for OpenTelemetry for JavaScript on Fastly Compute
 
 This is a very simple demo of passing a request to a backend, making a small change to the response, and returning it,
 meanwhile capturing the trace data.

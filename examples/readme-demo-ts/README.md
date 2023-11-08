@@ -1,4 +1,4 @@
-# README demo for OpenTelemetry for Compute@Edge JavaScript in TypeScript
+# README demo for OpenTelemetry for JavaScript on Fastly Compute in TypeScript
 
 This is the demo in the [README.md](../../README.md) of the library.
 

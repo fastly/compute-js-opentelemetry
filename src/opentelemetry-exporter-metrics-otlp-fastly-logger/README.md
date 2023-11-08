@@ -1,4 +1,4 @@
-# OpenTelemetry Metrics Exporter for Fastly Compute@Edge named log providers
+# OpenTelemetry Metrics Exporter for Fastly Compute named log providers
 
 This module provides a metrics exporter that exports metrics using the
 [OTLP/HTTP JSON](https://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/protocol/otlp.md#otlphttp) format
@@ -23,7 +23,7 @@ const metricExporter = new OTLPMetricExporter({
 });
 
 // Attach the exporter to a metric reader.
-// For Fastly Compute@Edge, use FastlyMetricReader which collects metrics
+// For Fastly Compute, use FastlyMetricReader which collects metrics
 // for a single invocation and submits them at the end of the invocation.
 const metricReader = new FastlyMetricReader({
   exporter: metricExporter,

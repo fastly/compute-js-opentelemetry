@@ -23,7 +23,7 @@ import { MockedResponse } from "../computeHelpers";
 
 const address = 'localhost:1501';
 
-describe('OTLPTraceExporter - Compute@Edge with json over Fastly backend', function() {
+describe('OTLPTraceExporter - Compute with json over Fastly backend', function() {
   let collectorExporter: OTLPTraceExporter;
   let collectorExporterConfig: OTLPExporterFastlyBackendConfigBase;
   let spans: ReadableSpan[];

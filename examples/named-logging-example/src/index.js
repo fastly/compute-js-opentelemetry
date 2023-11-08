@@ -1,4 +1,4 @@
-//! Default Compute@Edge template program.                                                                                                                                                                                                                                                                                                                                 
+//! Default Compute template program.
 
 /// <reference types="@fastly/js-compute" />                                                                                                                                                                                                                                                                                                                               
 import './tracing.js';

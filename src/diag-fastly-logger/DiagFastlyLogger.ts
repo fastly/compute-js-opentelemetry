@@ -17,7 +17,7 @@ const consoleMap: { n: keyof DiagLogger; l: string }[] = [
 ];
 
 /**
- * A simple diagnostic logger which will output any messages through a Fastly Compute@Edge
+ * A simple diagnostic logger which will output any messages through a Fastly Compute
  * named log provider.
  */
 export class DiagFastlyLogger implements DiagLogger {

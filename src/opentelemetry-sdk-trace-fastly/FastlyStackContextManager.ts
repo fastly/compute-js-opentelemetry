@@ -22,9 +22,9 @@ export function _resetEventContext() {
 }
 
 /**
- * Stack Context Manager for managing the state in Fastly Compute@Edge apps.
+ * Stack Context Manager for managing the state in Fastly Compute apps.
  * It doesn't fully support async calls.
- * It (ab)uses the fact that there is only one FetchEvent in Compute@Edge apps,
+ * It (ab)uses the fact that there is only one FetchEvent in Compute apps,
  * to fall back to the FetchEvent context if it exists instead of ROOT_CONTEXT.
  */
 export class FastlyStackContextManager extends StackContextManager {

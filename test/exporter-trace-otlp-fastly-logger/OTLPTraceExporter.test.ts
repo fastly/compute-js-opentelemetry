@@ -18,7 +18,7 @@ import { ensureExportTraceServiceRequestIsSet, ensureSpanIsCorrect, mockedReadab
 import { newNopDiagLogger } from "../commonHelpers";
 import { FastlyLoggerMock, LoggerMockInstance } from "../computeHelpers";
 
-describe('OTLPTraceExporter - Compute@Edge with json over Fastly logger', function() {
+describe('OTLPTraceExporter - Compute with json over Fastly logger', function() {
   let collectorExporter: OTLPTraceExporter;
   let collectorExporterConfig: OTLPExporterFastlyLoggerConfigBase;
   let spans: ReadableSpan[];

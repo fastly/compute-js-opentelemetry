@@ -1,6 +1,6 @@
-# OpenTelemetry SDK for Fastly Compute@Edge
+# OpenTelemetry SDK for Fastly Compute
 
-This package provides the full OpenTelemetry SDK for Fastly Compute@Edge including tracing and metrics.
+This package provides the full OpenTelemetry SDK for Fastly Compute including tracing and metrics.
 
 ## Installation
 

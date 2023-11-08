@@ -1,6 +1,6 @@
-# OpenTelemetry Fastly Compute@Edge Lifecycle instrumentation
+# OpenTelemetry Fastly Compute Lifecycle instrumentation
 
-This module provides an instrumentation that generate traces for the Compute@Edge JavaScript application lifecycle.
+This module provides an instrumentation that generate traces for the Compute JavaScript application lifecycle.
 
 ## Installation
 

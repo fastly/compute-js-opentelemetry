@@ -23,7 +23,7 @@ import { FastlyMetricReader } from "../../src/opentelemetry-sdk-metrics-fastly";
 
 const address = 'localhost:1501';
 
-describe('OTLPMetricExporter - Compute@Edge with json over Fastly backend', function() {
+describe('OTLPMetricExporter - Compute with json over Fastly backend', function() {
   let metricExporter: OTLPMetricExporter;
   let metricExporterConfig: OTLPExporterFastlyBackendConfigBase & OTLPMetricExporterOptions;
 

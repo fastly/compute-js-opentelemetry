@@ -18,7 +18,7 @@ import { newNopDiagLogger } from "../commonHelpers";
 import { mockResourceMetrics } from "../metricsHelpers";
 import { FastlyLoggerMock, LoggerMockInstance } from "../computeHelpers";
 
-describe('OTLPMetricExporter - Compute@Edge with json over Fastly logger', function() {
+describe('OTLPMetricExporter - Compute with json over Fastly logger', function() {
   let metricExporter: OTLPMetricExporter;
   let metricExporterConfig: OTLPExporterFastlyLoggerConfigBase & OTLPMetricExporterOptions;
 

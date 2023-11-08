@@ -6,7 +6,7 @@
 import { CompressionAlgorithm, OTLPExporterConfigBase } from '@opentelemetry/otlp-exporter-base';
 
 /**
- * Collector Exporter Fastly Compute@Edge backend base config
+ * Collector Exporter Fastly Compute backend base config
  */
 export interface OTLPExporterFastlyBackendConfigBase extends OTLPExporterConfigBase {
     backend: string;
@@ -14,7 +14,7 @@ export interface OTLPExporterFastlyBackendConfigBase extends OTLPExporterConfigB
 }
 
 /**
- * Collector Exporter Fastly Compute@Edge named log providers base config
+ * Collector Exporter Fastly Compute named log providers base config
  */
 export interface OTLPExporterFastlyLoggerConfigBase extends OTLPExporterConfigBase {
     endpoint: string;

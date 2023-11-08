@@ -1,4 +1,4 @@
-# OpenTelemetry Diagnostics Logger for Fastly Compute@Edge named log providers
+# OpenTelemetry Diagnostics Logger for Fastly Compute named log providers
 
 This module provides a diagnostics logger that logs to a
 [Fastly named log provider](https://developer.fastly.com/learning/integrations/logging).
