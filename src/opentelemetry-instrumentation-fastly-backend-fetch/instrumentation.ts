@@ -8,7 +8,7 @@ import { diag, trace, context, propagation, SpanKind, SpanStatusCode, } from "@o
 import { InstrumentationBase, safeExecuteInTheMiddle } from '@opentelemetry/instrumentation';
 import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
 
-import { patchRuntime, setPatchTarget, unPatchRuntime } from "./util";
+import { headersToObject, patchRuntime, setPatchTarget, unPatchRuntime } from "./util";
 import { AttributeNames } from "./enums/AttributeNames";
 import { FastlyBackendFetchInstrumentationConfig } from "./types";
 import { onInit, onShutdown } from "../core";
@@ -71,8 +71,13 @@ export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unkno
       const carrier = {};
       propagation.inject(backendFetchContext, carrier);
       return context.with(backendFetchContext, async () => {
-        const options = { ...(init ?? {}) };
-        options.headers = Object.assign({}, init?.headers, carrier);
+        const options = {
+          ...(init ?? {}),
+          headers: ({
+            ...(init?.headers ? headersToObject(init.headers) : {}),
+            ...carrier
+          }),
+        };
         try {
           let result: Response;
           try {
