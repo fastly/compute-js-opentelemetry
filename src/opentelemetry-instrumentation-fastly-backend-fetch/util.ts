@@ -42,3 +42,13 @@ onShutdown(() => {
 export function setPatchTarget(target: FastlyBackendFetchInstrumentation) {
   _target = target;
 }
+
+export function headersToObject(headers: HeadersInit): Record<string, string> {
+  if (headers instanceof Headers) {
+    return Object.fromEntries([...headers]);
+  } else if (Array.isArray(headers)) {
+    return Object.fromEntries(headers);
+  } else {
+    return headers;
+  }
+}
