@@ -35,7 +35,7 @@ globalThis.resetFetchFunc = () => {
 }
 
 // Restores the default sandbox after every test
-exports.mochaHooks = {
+export const mochaHooks = {
   beforeEach() {
     resetFetchFunc();
     onBeforeEach();
