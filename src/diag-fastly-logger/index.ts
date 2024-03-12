@@ -3,5 +3,5 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import '../core';
-export * from './DiagFastlyLogger';
+import '../core/index.js';
+export * from './DiagFastlyLogger.js';

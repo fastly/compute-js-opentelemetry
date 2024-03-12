@@ -3,17 +3,17 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { diag, trace, context, propagation, Context, Span, SpanKind, SpanStatusCode, } from "@opentelemetry/api";
+import { diag, trace, context, propagation, Context, Span, SpanKind, SpanStatusCode, } from '@opentelemetry/api';
 
-import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
+import { SemanticAttributes } from '@opentelemetry/semantic-conventions';
 import {
   InstrumentationBase,
   InstrumentationConfig,
 } from '@opentelemetry/instrumentation';
-import { AttributeNames } from './enums/AttributeNames';
-import { patchRuntime, setPatchTarget, unPatchRuntime } from "./util";
-import { _resetEventContext, _setEventContext } from "../opentelemetry-sdk-trace-fastly";
-import { onInit, onShutdown } from "../core";
+import { AttributeNames } from './enums/AttributeNames.js';
+import { patchRuntime, setPatchTarget, unPatchRuntime } from './util.js';
+import { _resetEventContext, _setEventContext } from '../opentelemetry-sdk-trace-fastly/index.js';
+import { onInit, onShutdown } from '../core/index.js';
 
 onInit(() => {
   patchRuntime();

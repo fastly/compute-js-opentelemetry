@@ -3,6 +3,6 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import '../core';
-export * from './instrumentation';
-export * from './types';
+import '../core/index.js';
+export * from './instrumentation.js';
+export * from './types.js';

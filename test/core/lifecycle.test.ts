@@ -3,14 +3,14 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import * as assert from "assert";
+import * as assert from 'assert';
 import * as sinon from 'sinon';
 
 import {
   buildFakeFetchEvent,
   runRegisteredFetchEventListeners,
-} from "../computeHelpers";
-import { addFetchEventAction } from "../../src/core";
+} from '../computeHelpers.js';
+import { addFetchEventAction } from '../../src/core/index.js';
 
 describe('core/lifecycle', function() {
 

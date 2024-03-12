@@ -3,9 +3,9 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import * as assert from "assert";
+import * as assert from 'assert';
 
-import { toLoggerString } from "../../src/core";
+import { toLoggerString } from '../../src/core/index.js';
 
 describe('core/console', function() {
   describe('toLoggerString', function() {

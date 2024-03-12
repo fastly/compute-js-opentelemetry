@@ -3,10 +3,10 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { diag } from "@opentelemetry/api";
-import { Instrumentation } from "@opentelemetry/instrumentation";
-import { FastlyComputeJsInstrumentation } from "../opentelemetry-instrumentation-fastly-compute-js";
-import { FastlyBackendFetchInstrumentation } from "../opentelemetry-instrumentation-fastly-backend-fetch";
+import { diag } from '@opentelemetry/api';
+import { Instrumentation } from '@opentelemetry/instrumentation';
+import { FastlyComputeJsInstrumentation } from '../opentelemetry-instrumentation-fastly-compute-js/index.js';
+import { FastlyBackendFetchInstrumentation } from '../opentelemetry-instrumentation-fastly-backend-fetch/index.js';
 
 const InstrumentationMap = {
   '@fastly/compute-js-opentelemetry/instrumentation-fastly-compute-js': FastlyComputeJsInstrumentation,

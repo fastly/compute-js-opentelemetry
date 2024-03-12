@@ -13,13 +13,13 @@ import {
   MetricReader,
   PushMetricExporter,
   ResourceMetrics,
-} from "@opentelemetry/sdk-metrics";
-import { MetricProducer } from "@opentelemetry/sdk-metrics/build/src/export/MetricProducer";
+} from '@opentelemetry/sdk-metrics';
+import { MetricProducer } from '@opentelemetry/sdk-metrics/build/src/export/MetricProducer.js';
 
-import { setGlobalErrorHandler, ExportResult, ExportResultCode } from "@opentelemetry/core";
-import { Resource } from "@opentelemetry/resources";
+import { setGlobalErrorHandler, ExportResult, ExportResultCode } from '@opentelemetry/core';
+import { Resource } from '@opentelemetry/resources';
 
-import { FastlyMetricReader } from "../../src/opentelemetry-sdk-metrics-fastly";
+import { FastlyMetricReader } from '../../src/opentelemetry-sdk-metrics-fastly/index.js';
 
 describe('FastlyMetricReader', function() {
   describe('instance', function() {

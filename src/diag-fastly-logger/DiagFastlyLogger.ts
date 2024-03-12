@@ -3,10 +3,10 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { Logger } from "fastly:logger";
-import { DiagLogFunction, DiagLogger } from "@opentelemetry/api";
+import { Logger } from 'fastly:logger';
+import { DiagLogFunction, DiagLogger } from '@opentelemetry/api';
 
-import { toLoggerString } from "../core";
+import { toLoggerString } from '../core/index.js';
 
 const consoleMap: { n: keyof DiagLogger; l: string }[] = [
   { n: 'error', l: 'ERROR', },

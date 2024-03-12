@@ -5,9 +5,9 @@
 
 import { diag } from '@opentelemetry/api';
 
-import { OTLPExporterFastlyBase, ExportItemConverter } from "./OTLPExporterFastlyBase";
-import { OTLPExporterFastlyLoggerConfigBase } from './types';
-import { sendWithFastlyLogger } from "./util";
+import { OTLPExporterFastlyBase, ExportItemConverter } from './OTLPExporterFastlyBase.js';
+import { OTLPExporterFastlyLoggerConfigBase } from './types.js';
+import { sendWithFastlyLogger } from './util.js';
 
 /**
  * Collector Metric Exporter abstract base class for Fastly named log providers

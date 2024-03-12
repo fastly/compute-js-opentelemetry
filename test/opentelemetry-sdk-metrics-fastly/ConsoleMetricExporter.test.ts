@@ -3,14 +3,14 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { ExportResultCode } from "@opentelemetry/core";
-
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { AggregationTemporality } from "@opentelemetry/sdk-metrics";
 
-import { ConsoleMetricExporter } from '../../src/opentelemetry-sdk-metrics-fastly';
-import { mockResourceMetrics } from "../metricsHelpers";
+import { ExportResultCode } from '@opentelemetry/core';
+import { AggregationTemporality } from '@opentelemetry/sdk-metrics';
+
+import { ConsoleMetricExporter } from '../../src/opentelemetry-sdk-metrics-fastly/index.js';
+import { mockResourceMetrics } from '../metricsHelpers.js';
 
 describe('ConsoleMetricExporter', function() {
   describe('instance', function() {

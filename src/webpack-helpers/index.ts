@@ -3,8 +3,8 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import path from "path";
-import { Configuration, ProvidePlugin } from "webpack";
+import path from 'path';
+import { Configuration, ProvidePlugin } from 'webpack';
 
 // Replace some files in /platform/browser with shims in /platform/compute-js
 const platformReplacements = [

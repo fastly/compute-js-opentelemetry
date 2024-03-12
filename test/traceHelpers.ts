@@ -3,12 +3,12 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import assert from "assert";
+import assert from 'assert';
 
-import { SpanStatusCode, TraceFlags } from "@opentelemetry/api";
-import { hexToBase64 } from "@opentelemetry/core";
-import { ReadableSpan } from "@opentelemetry/sdk-trace-base";
-import { Resource } from "@opentelemetry/resources";
+import { SpanStatusCode, TraceFlags } from '@opentelemetry/api';
+import { hexToBase64 } from '@opentelemetry/core';
+import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+import { Resource } from '@opentelemetry/resources';
 import {
   IKeyValue,
   ISpan,
@@ -16,7 +16,7 @@ import {
   ILink,
   ESpanKind,
   IExportTraceServiceRequest,
-} from "@opentelemetry/otlp-transformer";
+} from '@opentelemetry/otlp-transformer';
 
 const traceIdHex = '1f1008dc8e270e85c40a0d7c3939b278';
 const spanIdHex = '5e107261f64fa53e';

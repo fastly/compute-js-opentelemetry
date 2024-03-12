@@ -3,12 +3,12 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { CacheOverride } from "fastly:cache-override";
-import { Logger } from "fastly:logger";
+import { CacheOverride } from 'fastly:cache-override';
+import { Geolocation } from 'fastly:geolocation';
+import { Logger } from 'fastly:logger';
 
 import * as sinon from 'sinon';
-import { addFetchEventAction, onInit } from "../src/core";
-import {Geolocation} from "fastly:geolocation";
+import { addFetchEventAction, onInit } from '../src/core/index.js';
 
 declare function setRequireFunc(fn: (id: string) => any | undefined): void;
 
@@ -61,6 +61,7 @@ export class MockedRequest implements Request {
   setCacheKey!: (key: string) => void;
   text!: () => Promise<string>;
   clone!: () => Request;
+  setManualFramingHeaders!: (manual: boolean) => void;
 }
 
 export class MockedFetchEvent implements FetchEvent {
@@ -106,6 +107,7 @@ export class MockedResponse implements Response {
   bodyUsed!: boolean;
   arrayBuffer!: () => Promise<ArrayBuffer>;
   json!: () => Promise<any>;
+  setManualFramingHeaders!: (manual: boolean) => void;
 }
 
 // fastly:logger

@@ -3,16 +3,16 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { ContextManager, TextMapPropagator, metrics } from "@opentelemetry/api";
+import { ContextManager, TextMapPropagator, metrics } from '@opentelemetry/api';
 
-import { InstrumentationOption, registerInstrumentations } from "@opentelemetry/instrumentation";
-import { Resource } from "@opentelemetry/resources";
-import { BatchSpanProcessor, SpanProcessor } from "@opentelemetry/sdk-trace-base";
-import { MeterProvider, MetricReader } from "@opentelemetry/sdk-metrics";
+import { InstrumentationOption, registerInstrumentations } from '@opentelemetry/instrumentation';
+import { Resource } from '@opentelemetry/resources';
+import { BatchSpanProcessor, SpanProcessor } from '@opentelemetry/sdk-trace-base';
+import { MeterProvider, MetricReader } from '@opentelemetry/sdk-metrics';
 
-import { FastlySDKConfiguration } from "./types";
-import { FastlyTracerConfig, FastlyTracerProvider } from "../opentelemetry-sdk-trace-fastly";
-import { setPatchTarget } from "./util";
+import { FastlySDKConfiguration } from './types.js';
+import { FastlyTracerConfig, FastlyTracerProvider } from '../opentelemetry-sdk-trace-fastly/index.js';
+import { setPatchTarget } from './util.js';
 
 type TransformConfigurationFunction = (configuration: Partial<FastlySDKConfiguration>, event: FetchEvent) => Partial<FastlySDKConfiguration>;
 

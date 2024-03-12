@@ -3,10 +3,10 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import '../core';
-export * from './OTLPExporterFastlyBase';
-export * from './OTLPExporterFastlyBackendBase';
-export * from './OTLPExporterFastlyLoggerBase';
-export * from './OTLPMetricExporterFastlyBase';
-export * from './util';
-export * from './types';
+import '../core/index.js';
+export * from './OTLPExporterFastlyBase.js';
+export * from './OTLPExporterFastlyBackendBase.js';
+export * from './OTLPExporterFastlyLoggerBase.js';
+export * from './OTLPMetricExporterFastlyBase.js';
+export * from './util.js';
+export * from './types.js';

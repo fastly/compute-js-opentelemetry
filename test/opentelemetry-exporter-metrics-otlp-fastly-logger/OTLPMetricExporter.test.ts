@@ -3,20 +3,20 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { Logger } from "fastly:logger";
+import { Logger } from 'fastly:logger';
 
 import * as assert from 'assert';
-import * as sinon from "sinon";
+import * as sinon from 'sinon';
 
-import { diag } from "@opentelemetry/api";
-import { AggregationTemporality, ResourceMetrics } from "@opentelemetry/sdk-metrics";
-import { OTLPMetricExporterOptions } from "@opentelemetry/exporter-metrics-otlp-http";
+import { diag } from '@opentelemetry/api';
+import { AggregationTemporality, ResourceMetrics } from '@opentelemetry/sdk-metrics';
+import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
 
-import { OTLPExporterFastlyLoggerConfigBase } from "../../src/otlp-exporter-fastly-base";
-import { OTLPMetricExporter } from "../../src/opentelemetry-exporter-metrics-otlp-fastly-logger";
-import { newNopDiagLogger } from "../commonHelpers";
-import { mockResourceMetrics } from "../metricsHelpers";
-import { FastlyLoggerMock, LoggerMockInstance } from "../computeHelpers";
+import { OTLPExporterFastlyLoggerConfigBase } from '../../src/otlp-exporter-fastly-base/index.js';
+import { OTLPMetricExporter } from '../../src/opentelemetry-exporter-metrics-otlp-fastly-logger/index.js';
+import { newNopDiagLogger } from '../commonHelpers.js';
+import { mockResourceMetrics } from '../metricsHelpers.js';
+import { FastlyLoggerMock, LoggerMockInstance } from '../computeHelpers.js';
 
 describe('OTLPMetricExporter - Compute with json over Fastly logger', function() {
   let metricExporter: OTLPMetricExporter;

@@ -3,9 +3,9 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { diag } from "@opentelemetry/api";
-import { addFetchEventAction, onInit, onShutdown } from "../core";
-import { FastlyComputeJsInstrumentation } from "./instrumentation";
+import { diag } from '@opentelemetry/api';
+import { addFetchEventAction, onInit, onShutdown } from '../core/index.js';
+import { FastlyComputeJsInstrumentation } from './instrumentation.js';
 
 let _target!: FastlyComputeJsInstrumentation;
 const respondWith_called = Symbol();
@@ -82,7 +82,8 @@ export function patchRuntime() {
 
   diag.debug('instrumentation-fastly-compute-js: patching addEventListener()');
   _origAddEventListener = globalThis.addEventListener;
-  globalThis.addEventListener = ( type, listener ) => {
+  // @ts-ignore
+  globalThis.addEventListener = ( type: 'fetch', listener: FetchEventListener ) => {
     diag.debug('instrumentation-fastly-compute-js: running patched addEventListener()');
 
     diag.debug('instrumentation-fastly-compute-js: patching listener fn');

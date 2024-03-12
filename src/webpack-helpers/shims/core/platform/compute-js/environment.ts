@@ -3,7 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { env } from "fastly:env";
+import { env } from 'fastly:env';
 
 import {
   DEFAULT_ENVIRONMENT,

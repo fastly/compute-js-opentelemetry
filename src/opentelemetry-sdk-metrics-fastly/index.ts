@@ -3,7 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import '../core';
-export * from './ConsoleMetricExporter';
-export * from './FastlyMetricReader';
-export * from './types';
+import '../core/index.js';
+export * from './ConsoleMetricExporter.js';
+export * from './FastlyMetricReader.js';
+export * from './types.js';

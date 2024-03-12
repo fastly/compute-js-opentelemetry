@@ -6,18 +6,18 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
 
-import { SpanStatusCode, SpanKind, Span } from "@opentelemetry/api";
-import { ExportResult, ExportResultCode, parseTraceParent } from "@opentelemetry/core";
-import { Resource } from "@opentelemetry/resources";
-import { SemanticAttributes, SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
-import { ReadableSpan, SimpleSpanProcessor, SpanExporter } from "@opentelemetry/sdk-trace-base";
+import { SpanStatusCode, SpanKind, Span } from '@opentelemetry/api';
+import { ExportResult, ExportResultCode, parseTraceParent } from '@opentelemetry/core';
+import { Resource } from '@opentelemetry/resources';
+import { SemanticAttributes, SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+import { ReadableSpan, SimpleSpanProcessor, SpanExporter } from '@opentelemetry/sdk-trace-base';
 
-import { MockedResponse } from "../computeHelpers";
+import { MockedResponse } from '../computeHelpers.js';
 import {
   FastlyBackendFetchInstrumentation,
   FastlyBackendFetchInstrumentationConfig
-} from "../../src/opentelemetry-instrumentation-fastly-backend-fetch";
-import { FastlySDK } from "../../src/opentelemetry-sdk-fastly";
+} from '../../src/opentelemetry-instrumentation-fastly-backend-fetch/index.js';
+import { FastlySDK } from '../../src/opentelemetry-sdk-fastly/index.js';
 
 declare function setFetchFunc(fn: (resource: RequestInfo, init?: RequestInit) => Promise<Response>): void;
 declare function resetFetchFunc(): void;

@@ -3,14 +3,14 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { Logger } from "fastly:logger";
+import { Logger } from 'fastly:logger';
 
-import * as assert from "assert";
-import * as sinon from "sinon";
+import * as assert from 'assert';
+import * as sinon from 'sinon';
 
-import { diag, DiagLogLevel } from "@opentelemetry/api";
-import { DiagFastlyLogger } from "../../src/diag-fastly-logger";
-import { buildFakeFetchEvent, LoggerMockInstance, runRegisteredFetchEventListeners } from "../computeHelpers";
+import { diag, DiagLogLevel } from '@opentelemetry/api';
+import { DiagFastlyLogger } from '../../src/diag-fastly-logger/index.js';
+import { buildFakeFetchEvent, LoggerMockInstance, runRegisteredFetchEventListeners } from '../computeHelpers.js';
 
 describe('DiagFastlyLogger', function() {
   describe('instance', function() {

@@ -5,8 +5,9 @@
 
 import * as assert from 'assert';
 import * as sinon from 'sinon';
-import { context, Context, ContextManager, ROOT_CONTEXT } from "@opentelemetry/api";
-import { FastlyStackContextManager, FastlyTracerProvider } from "../../src/opentelemetry-sdk-trace-fastly";
+
+import { context, Context, ContextManager, ROOT_CONTEXT } from '@opentelemetry/api';
+import { FastlyStackContextManager, FastlyTracerProvider } from '../../src/opentelemetry-sdk-trace-fastly/index.js';
 
 describe('FastlyTracerProvider', function() {
   describe('instance', function() {

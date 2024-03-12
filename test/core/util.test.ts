@@ -6,7 +6,7 @@
 import * as assert from 'assert';
 import * as sinon from 'sinon';
 
-import { addAction, doAction, isTest, removeAction, removeAllActions } from "../../src/core";
+import { addAction, doAction, isTest, removeAction, removeAllActions } from '../../src/core/index.js';
 
 describe('core/util', function() {
   describe('actions', function() {

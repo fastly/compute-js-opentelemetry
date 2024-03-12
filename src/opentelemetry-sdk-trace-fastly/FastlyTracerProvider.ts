@@ -10,7 +10,7 @@ import {
 } from '@opentelemetry/sdk-trace-base';
 import {
   FastlyStackContextManager
-} from './FastlyStackContextManager';
+} from './FastlyStackContextManager.js';
 
 /**
  * FastlyTracerConfig provides an interface for configuring a Fastly Tracer.

@@ -3,12 +3,12 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { baggageUtils, getEnv } from "@opentelemetry/core";
-import { parseHeaders, configureCompression, CompressionAlgorithm } from "@opentelemetry/otlp-exporter-base";
+import { baggageUtils, getEnv } from '@opentelemetry/core';
+import { parseHeaders, configureCompression, CompressionAlgorithm } from '@opentelemetry/otlp-exporter-base';
 
-import { OTLPExporterFastlyBase, ExportItemConverter } from "./OTLPExporterFastlyBase";
-import { OTLPExporterFastlyBackendConfigBase } from "./types";
-import { sendWithFetch } from "./util";
+import { OTLPExporterFastlyBase, ExportItemConverter } from './OTLPExporterFastlyBase.js';
+import { OTLPExporterFastlyBackendConfigBase } from './types.js';
+import { sendWithFetch } from './util.js';
 
 /**
  * Collector Metric Exporter abstract base class for Fastly backend

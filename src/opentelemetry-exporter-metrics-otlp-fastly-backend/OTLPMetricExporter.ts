@@ -3,18 +3,18 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { baggageUtils, getEnv } from "@opentelemetry/core";
-import { ResourceMetrics } from "@opentelemetry/sdk-metrics";
-import { OTLPExporterNodeConfigBase } from "@opentelemetry/otlp-exporter-base";
-import { OTLPMetricExporterOptions } from "@opentelemetry/exporter-metrics-otlp-http";
-import { createExportMetricsServiceRequest, IExportMetricsServiceRequest } from "@opentelemetry/otlp-transformer";
+import { baggageUtils, getEnv } from '@opentelemetry/core';
+import { ResourceMetrics } from '@opentelemetry/sdk-metrics';
+import { OTLPExporterNodeConfigBase } from '@opentelemetry/otlp-exporter-base';
+import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
+import { createExportMetricsServiceRequest, IExportMetricsServiceRequest } from '@opentelemetry/otlp-transformer';
 
 import {
   ExportItemConverter,
   OTLPExporterFastlyBackendBase,
   OTLPExporterFastlyBackendConfigBase,
   OTLPMetricExporterFastlyBase
-} from "../otlp-exporter-fastly-base";
+} from '../otlp-exporter-fastly-base/index.js';
 
 const DEFAULT_COLLECTOR_RESOURCE_PATH = '/v1/metrics';
 const DEFAULT_COLLECTOR_URL = `http://localhost:4318${DEFAULT_COLLECTOR_RESOURCE_PATH}`;

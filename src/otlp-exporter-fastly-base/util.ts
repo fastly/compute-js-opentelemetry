@@ -3,14 +3,14 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { CacheOverride } from "fastly:cache-override";
-import { Logger } from "fastly:logger";
+import { CacheOverride } from 'fastly:cache-override';
+import { Logger } from 'fastly:logger';
 
-import * as zlib from "zlib";
+import * as zlib from 'zlib';
 import { diag } from '@opentelemetry/api';
-import { CompressionAlgorithm, OTLPExporterError } from "@opentelemetry/otlp-exporter-base";
-import { OTLPExporterFastlyBackendBase } from "./OTLPExporterFastlyBackendBase";
-import { OTLPExporterFastlyLoggerBase } from "./OTLPExporterFastlyLoggerBase";
+import { CompressionAlgorithm, OTLPExporterError } from '@opentelemetry/otlp-exporter-base';
+import { OTLPExporterFastlyBackendBase } from './OTLPExporterFastlyBackendBase.js';
+import { OTLPExporterFastlyLoggerBase } from './OTLPExporterFastlyLoggerBase.js';
 
 /**
  * Sends data using fetch

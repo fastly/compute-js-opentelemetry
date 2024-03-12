@@ -3,8 +3,8 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import assert from "assert";
-import { headersToObject } from "../../src/opentelemetry-instrumentation-fastly-backend-fetch/util";
+import assert from 'assert';
+import { headersToObject } from '../../src/opentelemetry-instrumentation-fastly-backend-fetch/util.js';
 
 describe('utils', () => {
   describe('headersToObject', () => {

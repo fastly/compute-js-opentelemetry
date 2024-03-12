@@ -11,7 +11,7 @@ import {
   _resetEventContext,
   _setEventContext,
   FastlyStackContextManager
-} from "../../src/opentelemetry-sdk-trace-fastly";
+} from '../../src/opentelemetry-sdk-trace-fastly/index.js';
 
 describe('FastlyStackContextManager', function() {
   describe('instance', function () {

@@ -3,9 +3,9 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { diag } from "@opentelemetry/api";
-import { addFetchEventAction, onInit } from "../core";
-import { FastlySDK } from "./FastlySDK";
+import { diag } from '@opentelemetry/api';
+import { addFetchEventAction, onInit } from '../core/index.js';
+import { FastlySDK } from './FastlySDK.js';
 
 let _target!: FastlySDK;
 const respondWith_called = Symbol();

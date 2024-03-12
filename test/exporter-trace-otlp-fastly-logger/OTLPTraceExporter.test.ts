@@ -8,15 +8,15 @@ import { Logger } from 'fastly:logger';
 import * as assert from 'assert';
 import * as sinon from 'sinon';
 
-import { diag } from "@opentelemetry/api";
-import { IExportTraceServiceRequest } from "@opentelemetry/otlp-transformer";
-import { ReadableSpan } from "@opentelemetry/sdk-trace-base";
+import { diag } from '@opentelemetry/api';
+import { IExportTraceServiceRequest } from '@opentelemetry/otlp-transformer';
+import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 
-import { OTLPTraceExporter } from '../../src/exporter-trace-otlp-fastly-logger';
-import { OTLPExporterFastlyLoggerConfigBase } from "../../src/otlp-exporter-fastly-base";
-import { ensureExportTraceServiceRequestIsSet, ensureSpanIsCorrect, mockedReadableSpan } from "../traceHelpers";
-import { newNopDiagLogger } from "../commonHelpers";
-import { FastlyLoggerMock, LoggerMockInstance } from "../computeHelpers";
+import { OTLPTraceExporter } from '../../src/exporter-trace-otlp-fastly-logger/index.js';
+import { OTLPExporterFastlyLoggerConfigBase } from '../../src/otlp-exporter-fastly-base/index.js';
+import { ensureExportTraceServiceRequestIsSet, ensureSpanIsCorrect, mockedReadableSpan } from '../traceHelpers.js';
+import { newNopDiagLogger } from '../commonHelpers.js';
+import { FastlyLoggerMock, LoggerMockInstance } from '../computeHelpers.js';
 
 describe('OTLPTraceExporter - Compute with json over Fastly logger', function() {
   let collectorExporter: OTLPTraceExporter;

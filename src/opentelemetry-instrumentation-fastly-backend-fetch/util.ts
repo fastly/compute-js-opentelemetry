@@ -3,9 +3,9 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { diag } from "@opentelemetry/api";
-import { FastlyBackendFetchInstrumentation } from "./instrumentation";
-import { onShutdown } from "../core";
+import { diag } from '@opentelemetry/api';
+import { FastlyBackendFetchInstrumentation } from './instrumentation.js';
+import { onShutdown } from '../core/index.js';
 
 let _origFetch: typeof globalThis.fetch;
 let _target!: FastlyBackendFetchInstrumentation;
@@ -20,7 +20,7 @@ export function patchRuntime() {
       return await _origFetch(resource, init);
     }
     diag.debug('instrumentation-fastly-backend-fetch: running patched fetch()');
-    return await _target.onBackendFetch(resource, init, async (resource: RequestInfo, init: RequestInit | undefined) => {
+    return await _target.onBackendFetch(resource, init, async (resource: RequestInfo | URL, init: RequestInit | undefined) => {
       diag.debug('instrumentation-fastly-backend-fetch: calling original fetch()');
       return await _origFetch(resource, init);
     });

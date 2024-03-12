@@ -1,18 +1,23 @@
-import assert from "assert";
+/*
+ * Copyright Fastly, Inc.
+ * Licensed under the MIT license. See LICENSE file for details.
+ */
 
-import { FastlyComputeJsInstrumentation } from "../../src/opentelemetry-instrumentation-fastly-compute-js";
-import { checkLog, newNopDiagLogger } from "../commonHelpers";
-import * as sinon from "sinon";
-import { diag, DiagLogLevel, ROOT_CONTEXT, trace } from "@opentelemetry/api";
+import assert from 'assert';
+import * as sinon from 'sinon';
+
+import { diag, DiagLogLevel, ROOT_CONTEXT, trace } from '@opentelemetry/api';
+import { ExportResult } from '@opentelemetry/core';
+import { ReadableSpan, SimpleSpanProcessor, SpanProcessor } from '@opentelemetry/sdk-trace-base';
+import { FastlyComputeJsInstrumentation } from '../../src/opentelemetry-instrumentation-fastly-compute-js/index.js';
+import { checkLog, newNopDiagLogger } from '../commonHelpers.js';
 import {
   buildFakeFetchEvent,
   getRegisteredFetchEventErrors,
   MockedResponse,
   runRegisteredFetchEventListeners
-} from "../computeHelpers";
-import { ReadableSpan, SimpleSpanProcessor, SpanProcessor } from "@opentelemetry/sdk-trace-base";
-import { FastlySDK } from "../../src/opentelemetry-sdk-fastly";
-import { ExportResult } from "@opentelemetry/core";
+} from '../computeHelpers.js';
+import { FastlySDK } from '../../src/opentelemetry-sdk-fastly/index.js';
 
 describe('FastlyComputeJsInstrumentation', function() {
   describe('instance', function() {

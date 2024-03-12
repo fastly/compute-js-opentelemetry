@@ -3,7 +3,7 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { addAction, doAction, onInit } from "./util";
+import { addAction, doAction, onInit } from './util.js';
 
 export function addFetchEventAction(priority: number, fn: (event: FetchEvent) => void) {
   addAction('fetchEvent', priority, fn);

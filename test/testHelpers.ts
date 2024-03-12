@@ -1,10 +1,15 @@
+/*
+ * Copyright Fastly, Inc.
+ * Licensed under the MIT license. See LICENSE file for details.
+ */
+
 import * as sinon from 'sinon';
-import { diag, context, propagation, trace } from "@opentelemetry/api";
-import { doInit, doShutdown, removeAllActions } from "../src/core";
+import { diag, context, propagation, trace } from '@opentelemetry/api';
+import { doInit, doShutdown, removeAllActions } from '../src/core/index.js';
 import {
   registerFastlyNamespacedMocks,
   resetRegisteredFetchEventListeners,
-} from "./computeHelpers";
+} from './computeHelpers.js';
 
 declare global {
   function onBeforeEach(): void;

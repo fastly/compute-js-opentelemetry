@@ -3,16 +3,16 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import assert from "assert";
+import assert from 'assert';
 
-import * as sinon from "sinon";
+import * as sinon from 'sinon';
 
-import { diag } from "@opentelemetry/api";
+import { diag } from '@opentelemetry/api';
 
-import '../computeHelpers';
-import { getComputeJsAutoInstrumentations } from "../../src/auto-instrumentations-compute-js";
-import { FastlyBackendFetchInstrumentationConfig } from "../../src/opentelemetry-instrumentation-fastly-backend-fetch";
-import { newNopDiagLogger } from "../commonHelpers";
+import '../computeHelpers.js';
+import { getComputeJsAutoInstrumentations } from '../../src/auto-instrumentations-compute-js/index.js';
+import { FastlyBackendFetchInstrumentationConfig } from '../../src/opentelemetry-instrumentation-fastly-backend-fetch/index.js';
+import { newNopDiagLogger } from '../commonHelpers.js';
 
 describe('utils', () => {
   describe('getComputeJsAutoInstrumentations', () => {

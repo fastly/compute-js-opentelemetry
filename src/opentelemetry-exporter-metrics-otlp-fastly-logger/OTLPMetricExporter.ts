@@ -3,17 +3,17 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { ResourceMetrics } from "@opentelemetry/sdk-metrics";
-import { OTLPExporterNodeConfigBase } from "@opentelemetry/otlp-exporter-base";
+import { ResourceMetrics } from '@opentelemetry/sdk-metrics';
+import { OTLPExporterNodeConfigBase } from '@opentelemetry/otlp-exporter-base';
 import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
-import { createExportMetricsServiceRequest, IExportMetricsServiceRequest } from "@opentelemetry/otlp-transformer";
+import { createExportMetricsServiceRequest, IExportMetricsServiceRequest } from '@opentelemetry/otlp-transformer';
 
 import {
   ExportItemConverter,
   OTLPExporterFastlyLoggerBase,
   OTLPExporterFastlyLoggerConfigBase,
   OTLPMetricExporterFastlyBase
-} from "../otlp-exporter-fastly-base";
+} from '../otlp-exporter-fastly-base/index.js';
 
 class Converter implements ExportItemConverter<ResourceMetrics, IExportMetricsServiceRequest> {
   convert(metrics: ResourceMetrics[]): IExportMetricsServiceRequest {

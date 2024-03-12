@@ -1,26 +1,31 @@
-import * as assert from "assert";
+/*
+ * Copyright Fastly, Inc.
+ * Licensed under the MIT license. See LICENSE file for details.
+ */
 
-import * as sinon from "sinon";
+import * as assert from 'assert';
 
-import { diag, DiagLogger, DiagLogLevel, Sampler, SamplingDecision, trace, } from "@opentelemetry/api";
+import * as sinon from 'sinon';
+
+import { diag, DiagLogger, DiagLogLevel, Sampler, SamplingDecision, trace, } from '@opentelemetry/api';
 import {
   BatchSpanProcessor,
   ReadableSpan, SimpleSpanProcessor,
   SpanExporter,
   SpanProcessor,
   Tracer,
-} from "@opentelemetry/sdk-trace-base";
-import { MetricReader } from "@opentelemetry/sdk-metrics";
-import { Resource } from "@opentelemetry/resources";
-import { Instrumentation } from "@opentelemetry/instrumentation";
+} from '@opentelemetry/sdk-trace-base';
+import { MetricReader } from '@opentelemetry/sdk-metrics';
+import { Resource } from '@opentelemetry/resources';
+import { Instrumentation } from '@opentelemetry/instrumentation';
 
 import {
   buildFakeFetchEvent,
   runRegisteredFetchEventListeners,
   MockedResponse,
-} from "../computeHelpers";
-import { checkLog, newNopDiagLogger } from "../commonHelpers";
-import { FastlySDK } from "../../src/opentelemetry-sdk-fastly";
+} from '../computeHelpers.js';
+import { checkLog, newNopDiagLogger } from '../commonHelpers.js';
+import { FastlySDK } from '../../src/opentelemetry-sdk-fastly/index.js';
 
 describe('FastlySDK', function() {
   describe('instance', function() {

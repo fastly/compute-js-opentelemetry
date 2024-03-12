@@ -6,20 +6,20 @@
 declare function setFetchFunc(fn: (resource: RequestInfo, init?: RequestInit) => Promise<Response>): void;
 
 import * as assert from 'assert';
-import * as sinon from "sinon";
+import * as sinon from 'sinon';
 
-import { diag } from "@opentelemetry/api";
-import { AggregationTemporality, CollectionResult, InstrumentType, ResourceMetrics } from "@opentelemetry/sdk-metrics";
-import { Resource } from "@opentelemetry/resources";
-import { MetricProducer } from "@opentelemetry/sdk-metrics/build/src/export/MetricProducer";
-import { OTLPMetricExporterOptions } from "@opentelemetry/exporter-metrics-otlp-http";
+import { diag } from '@opentelemetry/api';
+import { AggregationTemporality, CollectionResult, InstrumentType, ResourceMetrics } from '@opentelemetry/sdk-metrics';
+import { Resource } from '@opentelemetry/resources';
+import { MetricProducer } from '@opentelemetry/sdk-metrics/build/src/export/MetricProducer.js';
+import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
 
-import { MockedResponse } from "../computeHelpers";
-import { newNopDiagLogger } from "../commonHelpers";
-import { mockResourceMetrics } from "../metricsHelpers";
-import { OTLPExporterFastlyBackendConfigBase } from "../../src/otlp-exporter-fastly-base";
-import { OTLPMetricExporter } from "../../src/opentelemetry-exporter-metrics-otlp-fastly-backend";
-import { FastlyMetricReader } from "../../src/opentelemetry-sdk-metrics-fastly";
+import { MockedResponse } from '../computeHelpers.js';
+import { newNopDiagLogger } from '../commonHelpers.js';
+import { mockResourceMetrics } from '../metricsHelpers.js';
+import { OTLPExporterFastlyBackendConfigBase } from '../../src/otlp-exporter-fastly-base/index.js';
+import { OTLPMetricExporter } from '../../src/opentelemetry-exporter-metrics-otlp-fastly-backend/index.js';
+import { FastlyMetricReader } from '../../src/opentelemetry-sdk-metrics-fastly/index.js';
 
 const address = 'localhost:1501';
 

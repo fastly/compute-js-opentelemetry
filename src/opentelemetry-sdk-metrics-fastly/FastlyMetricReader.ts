@@ -3,10 +3,10 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { diag } from "@opentelemetry/api";
+import { diag } from '@opentelemetry/api';
 import { MetricReader, PushMetricExporter } from '@opentelemetry/sdk-metrics';
-import { internal, globalErrorHandler, ExportResultCode, } from "@opentelemetry/core";
-import { FastlyMetricReaderOptions } from "./types";
+import { internal, globalErrorHandler, ExportResultCode, } from '@opentelemetry/core';
+import { FastlyMetricReaderOptions } from './types.js';
 
 /**
  * {@link MetricReader} which collects metrics based on a user-configurable time interval, and passes the metrics to
@@ -30,7 +30,7 @@ export class FastlyMetricReader extends MetricReader {
     try {
       await this._doRun();
     } catch (err) {
-      globalErrorHandler(err);
+      globalErrorHandler(err instanceof Error ? err : String(err));
     }
   }
 

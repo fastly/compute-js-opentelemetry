@@ -5,9 +5,8 @@
 
 import { Context, ROOT_CONTEXT } from '@opentelemetry/api';
 
-// We are specifically ONLY bringing in StackContextManager from sdk-trace-web.
-import { StackContextManager } from '@opentelemetry/sdk-trace-web/build/src/StackContextManager';
-import { onShutdown } from "../core";
+import { StackContextManager } from '@opentelemetry/sdk-trace-web';
+import { onShutdown } from '../core/index.js';
 
 let _eventContext: Context | null = null;
 

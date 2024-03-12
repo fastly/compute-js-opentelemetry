@@ -6,20 +6,20 @@
 declare function setFetchFunc(fn: (resource: RequestInfo, init?: RequestInit) => Promise<Response>): void;
 
 import * as assert from 'assert';
-import zlib from "zlib";
+import zlib from 'zlib';
 
 import * as sinon from 'sinon';
 import { diag } from '@opentelemetry/api';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
-import { ExportResult, ExportResultCode } from "@opentelemetry/core";
-import { CompressionAlgorithm, OTLPExporterError } from "@opentelemetry/otlp-exporter-base";
-import { IExportTraceServiceRequest } from "@opentelemetry/otlp-transformer";
+import { ExportResult, ExportResultCode } from '@opentelemetry/core';
+import { CompressionAlgorithm, OTLPExporterError } from '@opentelemetry/otlp-exporter-base';
+import { IExportTraceServiceRequest } from '@opentelemetry/otlp-transformer';
 
-import { OTLPTraceExporter } from '../../src/exporter-trace-otlp-fastly-backend';
-import { OTLPExporterFastlyBackendConfigBase } from "../../src/otlp-exporter-fastly-base";
-import { ensureExportTraceServiceRequestIsSet, ensureSpanIsCorrect, mockedReadableSpan } from "../traceHelpers";
-import { newNopDiagLogger } from "../commonHelpers";
-import { MockedResponse } from "../computeHelpers";
+import { OTLPTraceExporter } from '../../src/exporter-trace-otlp-fastly-backend/index.js';
+import { OTLPExporterFastlyBackendConfigBase } from '../../src/otlp-exporter-fastly-base/index.js';
+import { ensureExportTraceServiceRequestIsSet, ensureSpanIsCorrect, mockedReadableSpan } from '../traceHelpers.js';
+import { newNopDiagLogger } from '../commonHelpers.js';
+import { MockedResponse } from '../computeHelpers.js';
 
 const address = 'localhost:1501';
 

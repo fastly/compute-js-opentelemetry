@@ -3,15 +3,15 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { diag, trace, context, propagation, SpanKind, SpanStatusCode, } from "@opentelemetry/api";
+import { diag, trace, context, propagation, SpanKind, SpanStatusCode, } from '@opentelemetry/api';
 
 import { InstrumentationBase, safeExecuteInTheMiddle } from '@opentelemetry/instrumentation';
-import { SemanticAttributes } from "@opentelemetry/semantic-conventions";
+import { SemanticAttributes } from '@opentelemetry/semantic-conventions';
 
-import { headersToObject, patchRuntime, setPatchTarget, unPatchRuntime } from "./util";
-import { AttributeNames } from "./enums/AttributeNames";
-import { FastlyBackendFetchInstrumentationConfig } from "./types";
-import { onInit, onShutdown } from "../core";
+import { headersToObject, patchRuntime, setPatchTarget, unPatchRuntime } from './util.js';
+import { AttributeNames } from './enums/AttributeNames.js';
+import { FastlyBackendFetchInstrumentationConfig } from './types.js';
+import { onInit, onShutdown } from '../core/index.js';
 
 onInit(() => {
   patchRuntime();
@@ -55,10 +55,10 @@ export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unkno
 
   // This event wraps the lifetime of a single backend fetch, or `fetch()` made to a backend, from the time it is called
   // to the time it returns.
-  async onBackendFetch(resource: RequestInfo, init: RequestInit | undefined, fn: (resource: RequestInfo, init: RequestInit | undefined) => Promise<Response>): Promise<Response> {
+  async onBackendFetch(resource: RequestInfo | URL, init: RequestInit | undefined, fn: (resource: RequestInfo | URL, init: RequestInit | undefined) => Promise<Response>): Promise<Response> {
     try {
       diag.debug('onBackendFetch start');
-      const url = typeof resource === 'object' && 'url' in resource ? resource.url : resource;
+      const url = resource instanceof Request ? resource.url : String(resource);
       const backendFetchSpan = this.tracer.startSpan('Backend Fetch', {
         kind: SpanKind.CLIENT,
         attributes: {
@@ -104,7 +104,7 @@ export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unkno
 
           } catch(ex) {
 
-            backendFetchSpan.recordException(ex);
+            backendFetchSpan.recordException(ex instanceof Error ? ex : String(ex));
             backendFetchSpan.setStatus({
               code: SpanStatusCode.ERROR,
             });

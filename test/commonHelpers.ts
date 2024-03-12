@@ -4,7 +4,7 @@
  */
 
 import * as sinon from 'sinon';
-import { DiagLogger } from "@opentelemetry/api";
+import { DiagLogger } from '@opentelemetry/api';
 
 export function newNopDiagLogger() {
   const nop = () => {

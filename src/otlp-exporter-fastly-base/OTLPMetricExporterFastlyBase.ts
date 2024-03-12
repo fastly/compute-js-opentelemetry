@@ -3,11 +3,11 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { ExportResult } from "@opentelemetry/core";
-import { AggregationTemporality, PushMetricExporter, ResourceMetrics } from "@opentelemetry/sdk-metrics";
+import { ExportResult } from '@opentelemetry/core';
+import { AggregationTemporality, PushMetricExporter, ResourceMetrics } from '@opentelemetry/sdk-metrics';
 import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
 
-import { OTLPExporterFastlyBase } from "./OTLPExporterFastlyBase";
+import { OTLPExporterFastlyBase } from './OTLPExporterFastlyBase.js';
 
 export class OTLPMetricExporterFastlyBase<
   T extends OTLPExporterFastlyBase<OTLPMetricExporterOptions, ExportItem, ServiceRequest>,
