@@ -6,13 +6,14 @@
 import { CacheOverride } from 'fastly:cache-override';
 import { Logger } from 'fastly:logger';
 
-import * as zlib from 'zlib';
 import { diag } from '@opentelemetry/api';
 import { getEnv } from '@opentelemetry/core';
 import { OTLPExporterError } from '@opentelemetry/otlp-exporter-base';
 import { OTLPExporterFastlyBackendBase } from './OTLPExporterFastlyBackendBase.js';
 import { OTLPExporterFastlyLoggerBase } from './OTLPExporterFastlyLoggerBase.js';
 import { CompressionAlgorithm } from './types.js';
+
+const compression = new CompressionStream('gzip');
 
 /**
  * Sends data using fetch
@@ -36,7 +37,9 @@ export async function sendWithFetch<ExportItem, ServiceRequest>(
   switch (collector.compression) {
     case CompressionAlgorithm.GZIP: {
       headers['Content-Encoding'] = 'gzip';
-      body = zlib.gzipSync(data);
+      body = new Response(data).body!.pipeThrough(compression);
+      // body = new Response()
+      // body = zlib.gzipSync(data);
       break;
     }
     default:

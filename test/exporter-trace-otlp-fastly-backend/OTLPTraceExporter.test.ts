@@ -6,7 +6,6 @@
 declare function setFetchFunc(fn: (resource: RequestInfo, init?: RequestInit) => Promise<Response>): void;
 
 import * as assert from 'assert';
-import zlib from 'zlib';
 
 import * as sinon from 'sinon';
 import { diag } from '@opentelemetry/api';
@@ -227,11 +226,14 @@ describe('OTLPTraceExporter - Compute with json over Fastly backend', function()
 
       collectorExporter.export(spans, () => {});
 
-      setTimeout(() => {
+      setTimeout(async () => {
         const args = fakeFetch.args[0];
         const init = args[1];
-        const requestBody = init?.body as Buffer;
-        const requestBodyUnzipped = zlib.gunzipSync(requestBody).toString();
+
+        const decompression = new DecompressionStream('gzip');
+        assert.ok(init?.body instanceof ReadableStream);
+        const responseBodyUnzippedStream = init?.body.pipeThrough(decompression);
+        const requestBodyUnzipped = await (new Response(responseBodyUnzippedStream)).text();
 
         const json = JSON.parse(requestBodyUnzipped) as IExportTraceServiceRequest;
         const span1 = json.resourceSpans?.[0].scopeSpans?.[0].spans?.[0];
