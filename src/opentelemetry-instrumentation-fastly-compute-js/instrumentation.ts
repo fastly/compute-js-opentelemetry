@@ -28,9 +28,8 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
   readonly version: string = '1';
   
   readonly moduleName = this.component;
-  
-  _eventsInstalled?: boolean;
-  _eventsEnabled?: boolean;
+  declare _eventsInstalled: boolean;
+  declare _eventsEnabled: boolean;
 
   _fetchEventSpan?: Span;
   _fetchEventContext?: Context;

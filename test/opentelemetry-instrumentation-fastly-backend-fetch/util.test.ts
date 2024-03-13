@@ -29,7 +29,7 @@ describe('utils', () => {
     });
 
     it('returns new object with the same keys and values as passed-in array', () => {
-      const arr = [
+      const arr: [string, string][] = [
         [ 'foo', 'bar' ],
         [ 'hoge', 'piyo' ],
       ];

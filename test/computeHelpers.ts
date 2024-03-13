@@ -32,8 +32,9 @@ export class MockedHeaders implements Headers {
   entries!: () => IterableIterator<[string, string]>;
   forEach!: (callback: (value: string, name: string, parent: Headers) => void, thisArg?: any) => void;
   keys!: () => IterableIterator<string>;
-  values!: () => IterableIterator<[string]>;
-  [Symbol.iterator]!: () => Iterator<[string, string]>;
+  values!: () => IterableIterator<string>;
+  getSetCookie!: () => string[];
+  [Symbol.iterator]!: () => IterableIterator<[string, string]>;
 }
 
 export class MockedClientInfo implements ClientInfo {
@@ -54,9 +55,21 @@ export class MockedRequest implements Request {
   readonly body!: ReadableStream<any>;
   bodyUsed!: boolean;
   method!: string;
+  cache!: RequestCache;
+  credentials!: RequestCredentials;
+  destination!: RequestDestination;
+  integrity!: string;
+  keepalive!: boolean;
+  mode!: RequestMode;
+  redirect!: RequestRedirect;
+  referrer!: string;
+  referrerPolicy!: ReferrerPolicy;
+  signal!: AbortSignal;
 
   arrayBuffer!: () => Promise<ArrayBuffer>;
   json!: () => Promise<any>;
+  blob!: () => Promise<Blob>;
+  formData!: () => Promise<FormData>;
   setCacheOverride!: (override: CacheOverride) => void;
   setCacheKey!: (key: string) => void;
   text!: () => Promise<string>;
@@ -105,9 +118,14 @@ export class MockedResponse implements Response {
   url!: string;
   body!: ReadableStream;
   bodyUsed!: boolean;
+  type!: ResponseType;
+
   arrayBuffer!: () => Promise<ArrayBuffer>;
   json!: () => Promise<any>;
+  blob!: () => Promise<Blob>;
+  formData!: () => Promise<FormData>;
   setManualFramingHeaders!: (manual: boolean) => void;
+  clone!: () => Response;
 }
 
 // fastly:logger
@@ -227,6 +245,7 @@ export function resetRegisteredFetchEventListeners() {
 function addEventListenerMock(type: 'fetch', listener: FetchEventListener): void {
   registerFetchEventListener(listener);
 }
+// @ts-ignore
 globalThis.addEventListener = addEventListenerMock;
 
 let _requestFetchEvent: FetchEvent | null = null;

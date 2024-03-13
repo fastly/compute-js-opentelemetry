@@ -27,9 +27,8 @@ export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unkno
   readonly version: string = '1';
   
   readonly moduleName = this.component;
-  
-  _eventsInstalled?: boolean;
-  _eventsEnabled?: boolean;
+  declare _eventsInstalled: boolean;
+  declare _eventsEnabled: boolean;
 
   constructor(config: FastlyBackendFetchInstrumentationConfig = {}) {
     super('@fastly/compute-js-opentelemetry/instrumentation-fastly-backend-fetch', '0.1.0', config);
