@@ -10,7 +10,8 @@ import * as sinon from 'sinon';
 
 import { diag, DiagLogLevel } from '@opentelemetry/api';
 import { DiagFastlyLogger } from '../../src/diag-fastly-logger/index.js';
-import { buildFakeFetchEvent, LoggerMockInstance, runRegisteredFetchEventListeners } from '../computeHelpers.js';
+import { buildFakeFetchEvent, runRegisteredFetchEventListeners } from '../computeHelpers.js';
+import { LoggerMockInstance } from '../fastly-mocks/logger.js';
 
 describe('DiagFastlyLogger', function() {
   describe('instance', function() {

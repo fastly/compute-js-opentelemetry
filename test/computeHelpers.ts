@@ -3,12 +3,12 @@
  * Licensed under the MIT license. See LICENSE file for details.
  */
 
-import { CacheOverride } from 'fastly:cache-override';
-import { Geolocation } from 'fastly:geolocation';
-import { Logger } from 'fastly:logger';
+import type { CacheOverride } from 'fastly:cache-override';
+import type { Geolocation } from 'fastly:geolocation';
 
 import * as sinon from 'sinon';
 import { addFetchEventAction, onInit } from '../src/core/index.js';
+import { FastlyLoggerMock } from './fastly-mocks/logger.js';
 
 declare function setRequireFunc(fn: (id: string) => any | undefined): void;
 
@@ -126,90 +126,6 @@ export class MockedResponse implements Response {
   formData!: () => Promise<FormData>;
   setManualFramingHeaders!: (manual: boolean) => void;
   clone!: () => Response;
-}
-
-// fastly:logger
-export class LoggerMockInstance implements Logger {
-  public endpoint: string;
-  public called: boolean;
-  public loggedContent?: string;
-  constructor(endpoint: string) {
-    this.called = false;
-    this.endpoint = endpoint;
-  }
-  log(message: any): void {
-    this.called = true;
-    this.loggedContent = String(message);
-  }
-  reset() {
-    this.called = false;
-    this.loggedContent = undefined;
-  }
-}
-
-export class FastlyLoggerMock {
-  static _loggers: {[endpoint: string]: Logger} = {};
-  static _requireFetchEvent: boolean = true;
-  static getLogger(endpoint: string) {
-    if(this._requireFetchEvent) {
-      const fetchEvent = getRequestFetchEvent();
-      if(fetchEvent == null) {
-        throw new Error('no fetch event');
-      }
-    }
-    if(endpoint in this._loggers) {
-      return this._loggers[endpoint];
-    }
-    const logger = new LoggerMockInstance(endpoint);
-    this._loggers[endpoint] = logger;
-    return logger;
-  };
-  static clearLoggers() {
-    this._loggers = {};
-  }
-  static mockLoggersRequireFetchEvent(require: boolean = true) {
-    this._requireFetchEvent = require;
-  }
-}
-
-function LoggerMock(name: string) {
-  if (!new.target) {
-    throw new Error('Must be called as constructor');
-  }
-  return FastlyLoggerMock.getLogger(name);
-}
-
-const fastlyLoggerMockModule = {
-  Logger: LoggerMock,
-};
-
-// fastly:cache-override
-type CacheOverrideMode = ConstructorParameters<typeof CacheOverride>[0];
-type CacheOverrideInit = NonNullable<ConstructorParameters<typeof CacheOverride>[1]>;
-
-export class CacheOverrideMock {
-  mode: ConstructorParameters<typeof CacheOverride>[0];
-  init: CacheOverrideInit | undefined;
-  constructor(mode: CacheOverrideMode, init?: CacheOverrideInit) {
-    this.mode = mode;
-    this.init = init;
-  }
-}
-
-const fastlyCacheOverrideMockModule = {
-  CacheOverride: CacheOverrideMock,
-};
-
-export function registerFastlyNamespacedMocks() {
-  setRequireFunc((id:string) => {
-    if (id === 'fastly:logger') {
-      return fastlyLoggerMockModule;
-    }
-    if (id === 'fastly:cache-override') {
-      return fastlyCacheOverrideMockModule;
-    }
-    return undefined;
-  });
 }
 
 type FetchEventListener = (event: FetchEvent) => void;

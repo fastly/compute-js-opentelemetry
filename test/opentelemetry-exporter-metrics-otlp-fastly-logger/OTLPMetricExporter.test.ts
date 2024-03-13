@@ -16,7 +16,7 @@ import { OTLPExporterFastlyLoggerConfigBase } from '../../src/otlp-exporter-fast
 import { OTLPMetricExporter } from '../../src/opentelemetry-exporter-metrics-otlp-fastly-logger/index.js';
 import { newNopDiagLogger } from '../commonHelpers.js';
 import { mockResourceMetrics } from '../metricsHelpers.js';
-import { FastlyLoggerMock, LoggerMockInstance } from '../computeHelpers.js';
+import { FastlyLoggerMock, LoggerMockInstance } from '../fastly-mocks/logger.js';
 
 describe('OTLPMetricExporter - Compute with json over Fastly logger', function() {
   let metricExporter: OTLPMetricExporter;

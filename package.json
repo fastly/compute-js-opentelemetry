@@ -4,7 +4,7 @@
   "license": "MIT",
   "description": "OpenTelemetry SDK for Fastly Compute",
   "engines": {
-    "node": "^18"
+    "node": "^18.19"
   },
   "type": "module",
   "main": "./build/index.js",
@@ -30,7 +30,7 @@
     "build": "npm run clean && npm run test && npm run compile",
     "clean": "tsc --build --clean tsconfig.build.json",
     "compile": "tsc --build tsconfig.build.json",
-    "test": "nyc ts-mocha -p tsconfig.json --require test/mocha_bootstrap.js test/testHelpers.ts test/**/*.test.ts"
+    "test": "NODE_OPTIONS=\"--import=tsx --import=./test/fastly-mocks/register.js\" c8 mocha --require test/mocha_bootstrap.js test/testHelpers.ts test/**/*.test.ts"
   },
   "dependencies": {
     "@opentelemetry/api": "^1.4.1",
