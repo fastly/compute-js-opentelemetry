@@ -12,11 +12,11 @@ import * as sinon from 'sinon';
 import { diag } from '@opentelemetry/api';
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
 import { ExportResult, ExportResultCode } from '@opentelemetry/core';
-import { CompressionAlgorithm, OTLPExporterError } from '@opentelemetry/otlp-exporter-base';
+import { OTLPExporterError } from '@opentelemetry/otlp-exporter-base';
 import { IExportTraceServiceRequest } from '@opentelemetry/otlp-transformer';
 
 import { OTLPTraceExporter } from '../../src/exporter-trace-otlp-fastly-backend/index.js';
-import { OTLPExporterFastlyBackendConfigBase } from '../../src/otlp-exporter-fastly-base/index.js';
+import { CompressionAlgorithm, OTLPExporterFastlyBackendConfigBase } from '../../src/otlp-exporter-fastly-base/index.js';
 import { ensureExportTraceServiceRequestIsSet, ensureSpanIsCorrect, mockedReadableSpan } from '../traceHelpers.js';
 import { newNopDiagLogger } from '../commonHelpers.js';
 import { MockedResponse } from '../computeHelpers.js';

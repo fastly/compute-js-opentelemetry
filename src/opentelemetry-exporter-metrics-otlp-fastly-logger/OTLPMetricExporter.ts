@@ -4,7 +4,7 @@
  */
 
 import { ResourceMetrics } from '@opentelemetry/sdk-metrics';
-import { OTLPExporterNodeConfigBase } from '@opentelemetry/otlp-exporter-base';
+import { OTLPExporterConfigBase } from '@opentelemetry/otlp-exporter-base';
 import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
 import { createExportMetricsServiceRequest, IExportMetricsServiceRequest } from '@opentelemetry/otlp-transformer';
 
@@ -29,7 +29,7 @@ class OTLPExporterFastlyLoggerProxy extends OTLPExporterFastlyLoggerBase<
     super(config, new Converter());
   }
 
-  getDefaultUrl(config: OTLPExporterNodeConfigBase): string {
+  getDefaultUrl(_config: OTLPExporterConfigBase): string {
     // Named log provider does not use a URL.
     return '';
   }

@@ -4,11 +4,11 @@
  */
 
 import { baggageUtils, getEnv } from '@opentelemetry/core';
-import { parseHeaders, configureCompression, CompressionAlgorithm } from '@opentelemetry/otlp-exporter-base';
+import { parseHeaders } from '@opentelemetry/otlp-exporter-base';
 
 import { OTLPExporterFastlyBase, ExportItemConverter } from './OTLPExporterFastlyBase.js';
-import { OTLPExporterFastlyBackendConfigBase } from './types.js';
-import { sendWithFetch } from './util.js';
+import { CompressionAlgorithm, OTLPExporterFastlyBackendConfigBase } from './types.js';
+import { configureCompression, sendWithFetch } from './util.js';
 
 /**
  * Collector Metric Exporter abstract base class for Fastly backend

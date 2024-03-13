@@ -8,9 +8,11 @@ import { Logger } from 'fastly:logger';
 
 import * as zlib from 'zlib';
 import { diag } from '@opentelemetry/api';
-import { CompressionAlgorithm, OTLPExporterError } from '@opentelemetry/otlp-exporter-base';
+import { getEnv } from '@opentelemetry/core';
+import { OTLPExporterError } from '@opentelemetry/otlp-exporter-base';
 import { OTLPExporterFastlyBackendBase } from './OTLPExporterFastlyBackendBase.js';
 import { OTLPExporterFastlyLoggerBase } from './OTLPExporterFastlyLoggerBase.js';
+import { CompressionAlgorithm } from './types.js';
 
 /**
  * Sends data using fetch
@@ -85,4 +87,19 @@ export function sendWithFastlyLogger<ExportItem, ServiceRequest>(
     diag.debug('Data sent to log');
     resolve();
   });
+}
+
+export function configureCompression(
+  compression: CompressionAlgorithm | undefined
+): CompressionAlgorithm {
+  if (compression) {
+    return compression;
+  } else {
+    const definedCompression =
+      getEnv().OTEL_EXPORTER_OTLP_TRACES_COMPRESSION ||
+      getEnv().OTEL_EXPORTER_OTLP_COMPRESSION;
+    return definedCompression === CompressionAlgorithm.GZIP
+      ? CompressionAlgorithm.GZIP
+      : CompressionAlgorithm.NONE;
+  }
 }

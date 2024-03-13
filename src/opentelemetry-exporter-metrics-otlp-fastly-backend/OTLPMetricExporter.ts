@@ -5,7 +5,7 @@
 
 import { baggageUtils, getEnv } from '@opentelemetry/core';
 import { ResourceMetrics } from '@opentelemetry/sdk-metrics';
-import { OTLPExporterNodeConfigBase } from '@opentelemetry/otlp-exporter-base';
+import { OTLPExporterConfigBase } from '@opentelemetry/otlp-exporter-base';
 import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
 import { createExportMetricsServiceRequest, IExportMetricsServiceRequest } from '@opentelemetry/otlp-transformer';
 
@@ -39,7 +39,7 @@ class OTLPExporterFastlyBackendProxy extends OTLPExporterFastlyBackendBase<
     );
   }
 
-  getDefaultUrl(config: OTLPExporterNodeConfigBase): string {
+  getDefaultUrl(config: OTLPExporterConfigBase): string {
     return typeof config.url === 'string' ? config.url : DEFAULT_COLLECTOR_URL;
   }
 }
