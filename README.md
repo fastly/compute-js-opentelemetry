@@ -77,7 +77,6 @@ The table below lists the modules included in this package.
 | [Metrics Exporter for Fastly named log provider](./src/opentelemetry-exporter-metrics-otlp-fastly-logger)    | `@fastly/compute-js-opentelemetry/exporter-metrics-otlp-fastly-logger`                | A Metric Exporter implementation that exports metrics using the OTLP/HTTP JSON format over a Fastly named log provider.                                                                                                                                                                                                                                                                                            |
 | [Exporter Base Classes](./src/otlp-exporter-fastly-base)                                                     | `@fastly/compute-js-opentelemetry/otlp-exporter-fastly-base`                          | Base classes for exporters, containing common code used by the exporter classes listed above.                                                                                                                                                                                                                                                                                                                      |
 | [Diagnostic Logger for Fastly named log provider](./src/diag-fastly-logger)                                  | `@fastly/compute-js-opentelemetry/diag-fastly-logger`                                 | A [DiagLogger](https://opentelemetry.io/blog/2022/troubleshooting-nodejs/#enable-logging) implementation that logs to a Fastly named log provider.                                                                                                                                                                                                                                                                 |
-| [Webpack helpers](./src/webpack-helpers)                                                                     | `@fastly/compute-js-opentelemetry/webpack-helpers`                                    | Provides settings needed for use by [Webpack](https://webpack.js.org) as used by the build process of the Compute JavaScript application. Provides the shims and polyfills needed by the OpenTelemetry libraries.                                                                                                                                                                                                  |
 | [Core Utilities](./src/core) (Internal Use)                                                                  | (Not exported)                                                                        | Utilities intended to be used internally by the library and not from user code.                                                                                                                                                                                                                                                                                                                                    |
 
 ## Examples
@@ -94,86 +93,10 @@ See the examples in the [`/examples`](./examples) directory.
 | [otel-demo](./examples/otel-demo)                               | Example that demonstrates OpenTelemetry traces that start at the Edge and nest into an operation at the backend.                           |
 | [otel-http-proxy](./examples/otel-http-proxy)                   | A sample application designed to collect traces as an HTTPS log endpoint for a Fastly service, sending them to an OpenTelemetry collector. |
 
-## Webpack
-
-Fastly Compute JavaScript applications can be
-[compiled as a web worker using Webpack](https://developer.fastly.com/learning/compute/javascript/#module-bundling) as
-part of their build process, which is useful for applying techniques such as using polyfills and shims.
-
-In order to use the OpenTelemetry packages that we rely on, additions need to be made to the `webpack.config.js`
-configuration file. These changes are included in a helper module, `@fastly/compute-js-opentelemetry/webpack-helpers`,
-so that they may be applied as such:
-
-```javascript
-const webpackHelpers = require("@fastly/compute-js-opentelemetry/webpack-helpers");
-
-module.exports = {
-  entry: "./src/index.js",
-  /* ... other configuration */
-};
-
-// Add this line
-module.exports = webpackHelpers.apply(module.exports);
-```
-
-The use of this module is technically optional, but if you do choose not to use it, you will have to
-make the appropriate modifications yourself. See [webpack-helpers](./src/webpack-helpers) for
-details.
-
 ## Use with TypeScript
 
 This library is designed to work with both JavaScript and [TypeScript](https://www.typescriptlang.org) applications written for
 Fastly Compute.
-
-If your Compute application is written in TypeScript, your `tsconfig.json` file will need to include
-at least the following (feel free to add any other compiler options you need):
-
-  ```json
-  {
-    "compilerOptions": {
-      "sourceMap": true,
-      "target": "es2022",
-      "module": "nodenext",
-      "moduleResolution": "nodenext"
-    }
-  }
-  ```
-
-You will need to install `ts-loader`:
-
-```
-npm install --save-dev ts-loader
-```
-
-Make the following configurations in your Webpack configuration:
-
-* Add `.ts` to `resolve.extensions` and `resolve.extensionAlias`:
-
-  ```
-  resolve: {
-    // Add `.ts` and `.tsx` as resolvable extensions.
-    extensions: ['.ts', '.tsx', '.js'],
-    // Add support for TypeScripts fully qualified ESM imports.
-    extensionAlias: {
-      '.js': ['.js', '.ts'],
-      '.cjs': ['.cjs', '.cts'],
-      '.mjs': ['.mjs', '.mts'],
-    },
-  },
-  ```
-
-* Add the `ts-loader` to your loader rules:
-
-  ```
-  module: {
-    rules: [
-      {
-        test: /\.([cm]?ts|tsx)$/,
-        loader: 'ts-loader',
-      }
-    ],
-  },
-  ```
 
 Check out [readme-demo-ts](./examples/readme-demo-ts) and [basic-tracing-example-ts](./examples/basic-tracing-example-ts)
 in the `examples` directory for working sample programs using TypeScript. 

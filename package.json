@@ -22,8 +22,7 @@
     "./otlp-exporter-fastly-base": "./build/otlp-exporter-fastly-base/index.js",
     "./sdk-fastly": "./build/opentelemetry-sdk-fastly/index.js",
     "./sdk-metrics-fastly": "./build/opentelemetry-sdk-metrics-fastly/index.js",
-    "./sdk-trace-fastly": "./build/opentelemetry-sdk-trace-fastly/index.js",
-    "./webpack-helpers": "./build/webpack-helpers/index.js"
+    "./sdk-trace-fastly": "./build/opentelemetry-sdk-trace-fastly/index.js"
   },
   "scripts": {
     "prepack": "npm run build",
@@ -46,16 +45,7 @@
     "@opentelemetry/sdk-trace-base": "~1.14.0",
     "@opentelemetry/sdk-trace-web": "~1.14.0",
     "@opentelemetry/semantic-conventions": "~1.14.0",
-    "assert": "^2.0.0",
-    "browserify-zlib": "^0.2.0",
-    "buffer": "^6.0.3",
-    "core-js": "^3.19.1",
-    "file-replace-loader": "^1.4.0",
-    "node-inspect-extracted": "^3.0.1",
-    "stream-browserify": "^3.0.0",
-    "timers-browserify": "^2.0.12",
-    "util": "^0.12.4",
-    "webpack": "^5.72.0"
+    "node-inspect-extracted": "^3.0.1"
   },
   "devDependencies": {
     "@fastly/js-compute": "^3.11.0",
@@ -65,9 +55,7 @@
     "@types/sinon": "10.0.6",
     "c8": "^9.1.0",
     "mocha": "10.2.0",
-    "nock": "13.0.11",
     "sinon": "12.0.1",
-    "ts-loader": "8.3.0",
     "tsx": "^4.7.1",
     "typescript": "^5.4.2"
   },
