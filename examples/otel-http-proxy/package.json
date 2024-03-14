@@ -1,17 +1,15 @@
 {
   "name": "otel-http-proxy",
   "private": true,
+  "type": "module",
   "version": "1.0.0",
-  "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js"
   },
-  "type": "module",
   "dependencies": {
     "body-parser": "^1.18.3",
     "dotenv": "^16.0.1",
-    "express": "^4.16.4",
-    "node-fetch": "^3.2.10"
+    "express": "^4.16.4"
   },
   "engines": {
     "node": "^18"

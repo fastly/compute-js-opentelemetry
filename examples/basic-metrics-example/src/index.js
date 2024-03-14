@@ -5,7 +5,7 @@
 
 /// <reference types="@fastly/js-compute" />
 
-import './telemetry';
+import './telemetry.js';
 import { metrics } from '@opentelemetry/api';
 
 // Standard Compute JavaScript entry point

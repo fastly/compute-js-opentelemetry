@@ -1,8 +1,19 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "target": "es2022",
+    "esModuleInterop": true,
+    "target": "esnext",
     "module": "nodenext",
-    "moduleResolution": "nodenext"
-  }
+    "moduleResolution": "nodenext",
+    "rootDir": "src",
+    "outDir": "bin",
+    "skipLibCheck": true
+  },
+  "include": [
+    "./src/**/*.js",
+    "./src/**/*.ts",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -7,7 +7,6 @@ import 'dotenv/config';
 import './tracing.js';
 
 import express from 'express';
-import fetch from 'node-fetch';
 import { URL } from 'url';
 
 import { trace, context, propagation } from "@opentelemetry/api";
