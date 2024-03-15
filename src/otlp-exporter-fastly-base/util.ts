@@ -38,8 +38,6 @@ export async function sendWithFetch<ExportItem, ServiceRequest>(
     case CompressionAlgorithm.GZIP: {
       headers['Content-Encoding'] = 'gzip';
       body = new Response(data).body!.pipeThrough(compression);
-      // body = new Response()
-      // body = zlib.gzipSync(data);
       break;
     }
     default:
