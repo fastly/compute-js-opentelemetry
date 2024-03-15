@@ -4,7 +4,9 @@
  */
 
 import { Resource } from "@opentelemetry/resources";
-import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
+import {
+  SEMRESATTRS_SERVICE_NAME,
+} from "@opentelemetry/semantic-conventions";
 
 import { FastlySDK } from "@fastly/compute-js-opentelemetry/sdk-fastly";
 import { OTLPTraceExporter } from "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend";
@@ -13,6 +15,6 @@ import { getComputeJsAutoInstrumentations } from "@fastly/compute-js-opentelemet
 const sdk = new FastlySDK({
   traceExporter: new OTLPTraceExporter({ backend: 'otlp-collector' }),
   instrumentations: [ getComputeJsAutoInstrumentations(), ],
-  resource: new Resource({ [SemanticResourceAttributes.SERVICE_NAME]: 'readme-demo', }),
+  resource: new Resource({ [SEMRESATTRS_SERVICE_NAME]: 'readme-demo', }),
 });
 await sdk.start();

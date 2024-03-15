@@ -11,9 +11,8 @@
   "dependencies": {
     "@fastly/compute-js-opentelemetry": "file:../../",
     "@fastly/js-compute": "^3.11.0",
-    "@opentelemetry/api": "^1.4.1",
-    "@opentelemetry/resources": "~1.14.0",
-    "@opentelemetry/semantic-conventions": "~1.14.0"
+    "@opentelemetry/resources": "~1.22.0",
+    "@opentelemetry/semantic-conventions": "~1.22.0"
   },
   "scripts": {
     "build": "js-compute-runtime --enable-experimental-top-level-await src/index.js bin/main.wasm",

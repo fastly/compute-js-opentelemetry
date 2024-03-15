@@ -6,7 +6,9 @@
 import { diag, DiagLogLevel, DiagConsoleLogger } from "@opentelemetry/api";
 
 import { Resource } from "@opentelemetry/resources";
-import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
+import {
+  SEMRESATTRS_SERVICE_NAME,
+} from "@opentelemetry/semantic-conventions";
 
 import { FastlySDK } from "@fastly/compute-js-opentelemetry/sdk-fastly";
 import { OTLPTraceExporter } from "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-backend";
@@ -31,7 +33,7 @@ const instrumentations = [
 // Identify our service
 // It will be named "basic-tracing-example-ts" in traces.
 const resource = new Resource({
-  [SemanticResourceAttributes.SERVICE_NAME]: 'basic-tracing-example-ts',
+  [SEMRESATTRS_SERVICE_NAME]: 'basic-tracing-example-ts',
 });
 
 // FastlySDK simplifies the procedure of wiring up the trace exporter, span processor,

@@ -4,7 +4,9 @@
  */
 
 import { Resource } from '@opentelemetry/resources';
-import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+import {
+  SEMRESATTRS_SERVICE_NAME,
+} from '@opentelemetry/semantic-conventions';
 
 import { FastlySDK } from '@fastly/compute-js-opentelemetry/sdk-fastly';
 import { getComputeJsAutoInstrumentations } from '@fastly/compute-js-opentelemetry/auto-instrumentations-compute-js';
@@ -13,6 +15,6 @@ import { OTLPTraceExporter } from "@fastly/compute-js-opentelemetry/exporter-tra
 const sdk = new FastlySDK({
   traceExporter: new OTLPTraceExporter({ endpoint: 'my-fastly-otlp'}),
   instrumentations: [ getComputeJsAutoInstrumentations(), ],
-  resource: new Resource({ [SemanticResourceAttributes.SERVICE_NAME]: 'named-logging-example' }),
+  resource: new Resource({ [SEMRESATTRS_SERVICE_NAME]: 'named-logging-example' }),
 });
 await sdk.start();

@@ -6,7 +6,9 @@
 import { diag, DiagLogLevel, DiagConsoleLogger } from "@opentelemetry/api";
 
 import { Resource } from "@opentelemetry/resources";
-import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
+import {
+  SEMRESATTRS_SERVICE_NAME,
+} from "@opentelemetry/semantic-conventions";
 
 import { FastlySDK } from "@fastly/compute-js-opentelemetry/sdk-fastly";
 import { OTLPMetricExporter } from "@fastly/compute-js-opentelemetry/exporter-metrics-otlp-fastly-backend";
@@ -34,7 +36,7 @@ const metricReader = new FastlyMetricReader({
 // Identify our service.
 // It will be named "basic-metrics-example" in traces.
 const resource = new Resource({
-  [SemanticResourceAttributes.SERVICE_NAME]: 'basic-metrics-example',
+  [SEMRESATTRS_SERVICE_NAME]: 'basic-metrics-example',
 });
 
 // FastlySDK simplifies the procedure of wiring up the trace exporter, span processor,

@@ -6,7 +6,13 @@
 import { env } from "fastly:env";
 
 import { Resource } from "@opentelemetry/resources";
-import { SemanticResourceAttributes } from "@opentelemetry/semantic-conventions";
+import {
+  SEMRESATTRS_HOST_NAME,
+  SEMRESATTRS_SERVICE_NAME,
+  SEMRESATTRS_TELEMETRY_SDK_LANGUAGE,
+  SEMRESATTRS_TELEMETRY_SDK_NAME,
+  SEMRESATTRS_TELEMETRY_SDK_VERSION,
+} from "@opentelemetry/semantic-conventions";
 
 import { FastlySDK } from "@fastly/compute-js-opentelemetry/sdk-fastly";
 import { OTLPTraceExporter as OTLPTraceExporterLogger } from "@fastly/compute-js-opentelemetry/exporter-trace-otlp-fastly-logger";
@@ -25,11 +31,11 @@ const instrumentations = [
 
 // Identify our service
 const resource = new Resource({
-  [SemanticResourceAttributes.SERVICE_NAME]: 'otel-demo-edge',
-  [SemanticResourceAttributes.TELEMETRY_SDK_LANGUAGE]: 'JavaScript',
-  [SemanticResourceAttributes.TELEMETRY_SDK_NAME]: 'opentelemetry',
-  [SemanticResourceAttributes.TELEMETRY_SDK_VERSION]: '1.2.0',
-  [SemanticResourceAttributes.HOST_NAME]: env('FASTLY_HOSTNAME'),
+  [SEMRESATTRS_SERVICE_NAME]: 'otel-demo-edge',
+  [SEMRESATTRS_TELEMETRY_SDK_LANGUAGE]: 'JavaScript',
+  [SEMRESATTRS_TELEMETRY_SDK_NAME]: 'opentelemetry',
+  [SEMRESATTRS_TELEMETRY_SDK_VERSION]: '1.2.0',
+  [SEMRESATTRS_HOST_NAME]: env('FASTLY_HOSTNAME'),
 });
 
 // Start OpenTelemetry
