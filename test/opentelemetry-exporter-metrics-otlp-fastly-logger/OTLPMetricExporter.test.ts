@@ -9,7 +9,7 @@ import * as assert from 'assert';
 import * as sinon from 'sinon';
 
 import { diag } from '@opentelemetry/api';
-import { AggregationTemporality, ResourceMetrics } from '@opentelemetry/sdk-metrics';
+import { AggregationTemporality, InstrumentType, ResourceMetrics } from '@opentelemetry/sdk-metrics';
 import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
 
 import { OTLPExporterFastlyLoggerConfigBase } from '../../src/otlp-exporter-fastly-base/index.js';
@@ -71,7 +71,7 @@ describe('OTLPMetricExporter - Compute with json over Fastly logger', function()
         endpoint: 'test-logger',
         temporalityPreference: AggregationTemporality.CUMULATIVE,
       });
-      assert.strictEqual(metricExporter.selectAggregationTemporality(), AggregationTemporality.CUMULATIVE);
+      assert.strictEqual(metricExporter.selectAggregationTemporality(InstrumentType.COUNTER), AggregationTemporality.CUMULATIVE);
     });
 
   });

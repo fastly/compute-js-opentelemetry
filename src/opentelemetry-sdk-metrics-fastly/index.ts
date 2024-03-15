@@ -6,4 +6,3 @@
 import '../core/index.js';
 export * from './ConsoleMetricExporter.js';
 export * from './FastlyMetricReader.js';
-export * from './types.js';

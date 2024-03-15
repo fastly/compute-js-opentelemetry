@@ -4,9 +4,22 @@
  */
 
 import { diag } from '@opentelemetry/api';
-import { MetricReader, PushMetricExporter } from '@opentelemetry/sdk-metrics';
+import { MetricReader, PushMetricExporter, MetricProducer } from '@opentelemetry/sdk-metrics';
 import { internal, globalErrorHandler, ExportResultCode, } from '@opentelemetry/core';
-import { FastlyMetricReaderOptions } from './types.js';
+
+export type FastlyMetricReaderOptions = {
+  /**
+   * The backing exporter for the metric reader.
+   */
+  exporter: PushMetricExporter,
+  /**
+   * **Note, this option is experimental**. Additional MetricProducers to use as a source of
+   * aggregated metric data in addition to the SDK's metric data. The resource returned by
+   * these MetricProducers is ignored; the SDK's resource will be used instead.
+   * @experimental
+   */
+  metricProducers?: MetricProducer[];
+};
 
 /**
  * {@link MetricReader} which collects metrics based on a user-configurable time interval, and passes the metrics to
@@ -22,6 +35,7 @@ export class FastlyMetricReader extends MetricReader {
       ),
       aggregationTemporalitySelector:
         options.exporter.selectAggregationTemporality?.bind(options.exporter),
+      metricProducers: options.metricProducers,
     });
     this._exporter = options.exporter;
   }

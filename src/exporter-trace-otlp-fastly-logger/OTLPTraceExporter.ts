@@ -7,16 +7,9 @@ import { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base';
 import { createExportTraceServiceRequest, IExportTraceServiceRequest } from '@opentelemetry/otlp-transformer';
 
 import {
-  ExportItemConverter,
   OTLPExporterFastlyLoggerBase,
-  OTLPExporterFastlyLoggerConfigBase
+  OTLPExporterFastlyLoggerConfigBase,
 } from '../otlp-exporter-fastly-base/index.js';
-
-class Converter implements ExportItemConverter<ReadableSpan, IExportTraceServiceRequest> {
-  convert(spans: ReadableSpan[]): IExportTraceServiceRequest {
-    return createExportTraceServiceRequest(spans, true);
-  }
-}
 
 /**
  * Collector Trace Exporter for Fastly named log providers
@@ -26,11 +19,12 @@ export class OTLPTraceExporter extends OTLPExporterFastlyLoggerBase<
   IExportTraceServiceRequest
 > implements SpanExporter {
   constructor(config: OTLPExporterFastlyLoggerConfigBase) {
-    super(config, new Converter());
+    super(config);
   }
-
-  getDefaultUrl(config: OTLPExporterFastlyLoggerConfigBase): string {
-    // Named log provider does not use a URL.
-    return '';
+  override convert(spans: ReadableSpan[]): IExportTraceServiceRequest {
+    return createExportTraceServiceRequest(spans, {
+      useHex: true,
+      useLongBits: false,
+    });
   }
 }

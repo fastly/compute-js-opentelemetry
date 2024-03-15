@@ -6,7 +6,7 @@
 import { baggageUtils, getEnv } from '@opentelemetry/core';
 import { parseHeaders } from '@opentelemetry/otlp-exporter-base';
 
-import { OTLPExporterFastlyBase, ExportItemConverter } from './OTLPExporterFastlyBase.js';
+import { OTLPExporterFastlyBase } from './OTLPExporterFastlyBase.js';
 import { CompressionAlgorithm, OTLPExporterFastlyBackendConfigBase } from './types.js';
 import { configureCompression, sendWithFetch } from './util.js';
 
@@ -27,8 +27,8 @@ export abstract class OTLPExporterFastlyBackendBase<
   backend: string;
   compression: CompressionAlgorithm;
 
-  protected constructor(config: OTLPExporterFastlyBackendConfigBase, converter: ExportItemConverter<ExportItem, ServiceRequest>) {
-    super(config, converter);
+  protected constructor(config: OTLPExporterFastlyBackendConfigBase) {
+    super(config);
 
     this.headers = Object.assign(
       this.DEFAULT_HEADERS,
@@ -42,11 +42,11 @@ export abstract class OTLPExporterFastlyBackendBase<
   }
 
   override _send(
-    serviceRequest: ServiceRequest,
+    body: string,
   ): Promise<void> {
     return sendWithFetch(
       this,
-      JSON.stringify(serviceRequest),
+      body,
       'application/json'
     );
   }

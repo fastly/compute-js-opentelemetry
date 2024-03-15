@@ -5,7 +5,13 @@
 
 import { diag, trace, context, propagation, Context, Span, SpanKind, SpanStatusCode, } from '@opentelemetry/api';
 
-import { SemanticAttributes } from '@opentelemetry/semantic-conventions';
+import {
+  SEMATTRS_HTTP_HOST,
+  SEMATTRS_HTTP_METHOD,
+  SEMATTRS_HTTP_SCHEME,
+  SEMATTRS_HTTP_STATUS_CODE,
+  SEMATTRS_HTTP_URL,
+} from '@opentelemetry/semantic-conventions';
 import {
   InstrumentationBase,
   InstrumentationConfig,
@@ -76,16 +82,16 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
         kind: SpanKind.SERVER,
         attributes: {
           [AttributeNames.COMPONENT]: this.moduleName,
-          [SemanticAttributes.HTTP_METHOD]: event.request.method,
-          [SemanticAttributes.HTTP_URL]: event.request.url,
+          [SEMATTRS_HTTP_METHOD]: event.request.method,
+          [SEMATTRS_HTTP_URL]: event.request.url,
         },
       }, parentContext);
 
       try {
         const url = new URL(event.request.url);
-        this._fetchEventSpan.setAttribute(SemanticAttributes.HTTP_HOST, url.host);
+        this._fetchEventSpan.setAttribute(SEMATTRS_HTTP_HOST, url.host);
         this._fetchEventSpan.setAttribute(
-          SemanticAttributes.HTTP_SCHEME,
+          SEMATTRS_HTTP_SCHEME,
           url.protocol.replace(':', '')
         );
       } catch(ex) {
@@ -122,7 +128,7 @@ export class FastlyComputeJsInstrumentation extends InstrumentationBase<unknown>
               code: SpanStatusCode.ERROR,
             });
           } else {
-            this._fetchEventSpan.setAttribute(SemanticAttributes.HTTP_STATUS_CODE, response!.status);
+            this._fetchEventSpan.setAttribute(SEMATTRS_HTTP_STATUS_CODE, response!.status);
             this._fetchEventSpan.setStatus({
               code: SpanStatusCode.OK,
             });

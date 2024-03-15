@@ -9,7 +9,12 @@ import * as sinon from 'sinon';
 import { SpanStatusCode, SpanKind, Span } from '@opentelemetry/api';
 import { ExportResult, ExportResultCode, parseTraceParent } from '@opentelemetry/core';
 import { Resource } from '@opentelemetry/resources';
-import { SemanticAttributes, SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+import {
+  SEMATTRS_HTTP_METHOD,
+  SEMATTRS_HTTP_STATUS_CODE,
+  SEMATTRS_HTTP_URL,
+  SEMRESATTRS_SERVICE_NAME,
+} from '@opentelemetry/semantic-conventions';
 import { ReadableSpan, SimpleSpanProcessor, SpanExporter } from '@opentelemetry/sdk-trace-base';
 
 import { MockedResponse } from '../computeHelpers.js';
@@ -159,13 +164,13 @@ describe('FastlyBackendFetchInstrumentation', function() {
 
       const readableSpan = readableSpans[0];
 
-      assert.strictEqual(readableSpan.resource.attributes[SemanticResourceAttributes.SERVICE_NAME], 'test-resource');
+      assert.strictEqual(readableSpan.resource.attributes[SEMRESATTRS_SERVICE_NAME], 'test-resource');
       assert.strictEqual(readableSpan.status.code, SpanStatusCode.OK);
       assert.strictEqual(readableSpan.kind, SpanKind.CLIENT);
       assert.strictEqual(readableSpan.attributes['component'], '@fastly/compute-js-opentelemetry/instrumentation-fastly-backend-fetch');
-      assert.strictEqual(readableSpan.attributes[SemanticAttributes.HTTP_METHOD], 'GET');
-      assert.strictEqual(readableSpan.attributes[SemanticAttributes.HTTP_URL], 'http://www.example.com/');
-      assert.strictEqual(readableSpan.attributes[SemanticAttributes.HTTP_STATUS_CODE], 200);
+      assert.strictEqual(readableSpan.attributes[SEMATTRS_HTTP_METHOD], 'GET');
+      assert.strictEqual(readableSpan.attributes[SEMATTRS_HTTP_URL], 'http://www.example.com/');
+      assert.strictEqual(readableSpan.attributes[SEMATTRS_HTTP_STATUS_CODE], 200);
     });
 
     it('apply custom attributes', async function() {

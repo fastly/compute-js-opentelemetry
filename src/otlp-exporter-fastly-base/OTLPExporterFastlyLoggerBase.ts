@@ -4,8 +4,9 @@
  */
 
 import { diag } from '@opentelemetry/api';
+import { OTLPExporterConfigBase } from '@opentelemetry/otlp-exporter-base';
 
-import { OTLPExporterFastlyBase, ExportItemConverter } from './OTLPExporterFastlyBase.js';
+import { OTLPExporterFastlyBase } from './OTLPExporterFastlyBase.js';
 import { OTLPExporterFastlyLoggerConfigBase } from './types.js';
 import { sendWithFastlyLogger } from './util.js';
 
@@ -22,8 +23,8 @@ export abstract class OTLPExporterFastlyLoggerBase<
 > {
   loggerEndpoint: string;
 
-  protected constructor(config: OTLPExporterFastlyLoggerConfigBase, converter: ExportItemConverter<ExportItem, ServiceRequest>) {
-    super(config, converter);
+  protected constructor(config: OTLPExporterFastlyLoggerConfigBase) {
+    super(config);
 
     if (config.url) {
       diag.warn('config.url is ignored when using named logger');
@@ -35,12 +36,17 @@ export abstract class OTLPExporterFastlyLoggerBase<
     this.loggerEndpoint = config.endpoint;
   }
 
+  getDefaultUrl(_config: OTLPExporterConfigBase): string {
+    // Named log provider does not use a URL.
+    return '';
+  }
+
   override _send(
-    serviceRequest: ServiceRequest,
+    body: string,
   ): Promise<void> {
     return sendWithFastlyLogger(
       this,
-      JSON.stringify(serviceRequest),
+      body,
     );
   }
 }

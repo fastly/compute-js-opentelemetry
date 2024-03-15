@@ -90,49 +90,49 @@ export function ensureEventsAreCorrect(
     events,
     [
       {
-        timeUnixNano: 1574120165429803000,
+        timeUnixNano: '1574120165429803070',
         name: 'fetchStart',
         attributes: [],
         droppedAttributesCount: 0,
       },
       {
-        timeUnixNano: 1574120165429803000,
+        timeUnixNano: '1574120165429803070',
         name: 'domainLookupStart',
         attributes: [],
         droppedAttributesCount: 0,
       },
       {
-        timeUnixNano: 1574120165429803000,
+        timeUnixNano: '1574120165429803070',
         name: 'domainLookupEnd',
         attributes: [],
         droppedAttributesCount: 0,
       },
       {
-        timeUnixNano: 1574120165429803000,
+        timeUnixNano: '1574120165429803070',
         name: 'connectStart',
         attributes: [],
         droppedAttributesCount: 0,
       },
       {
-        timeUnixNano: 1574120165429803000,
+        timeUnixNano: '1574120165429803070',
         name: 'connectEnd',
         attributes: [],
         droppedAttributesCount: 0,
       },
       {
-        timeUnixNano: 1574120165435513000,
+        timeUnixNano: '1574120165435513070',
         name: 'requestStart',
         attributes: [],
         droppedAttributesCount: 0,
       },
       {
-        timeUnixNano: 1574120165436923100,
+        timeUnixNano: '1574120165436923070',
         name: 'responseStart',
         attributes: [],
         droppedAttributesCount: 0,
       },
       {
-        timeUnixNano: 1574120165438688000,
+        timeUnixNano: '1574120165438688070',
         name: 'responseEnd',
         attributes: [],
         droppedAttributesCount: 0,
@@ -220,12 +220,12 @@ export function ensureSpanIsCorrect(
   );
   assert.strictEqual(
     span.startTimeUnixNano,
-    1574120165429803008,
+    '1574120165429803070',
     'startTimeUnixNano is wrong'
   );
   assert.strictEqual(
     span.endTimeUnixNano,
-    1574120165438688000,
+    '1574120165438688070',
     'endTimeUnixNano is wrong'
   );
   assert.strictEqual(

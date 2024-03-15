@@ -6,7 +6,11 @@
 import { diag, trace, context, propagation, SpanKind, SpanStatusCode, } from '@opentelemetry/api';
 
 import { InstrumentationBase, safeExecuteInTheMiddle } from '@opentelemetry/instrumentation';
-import { SemanticAttributes } from '@opentelemetry/semantic-conventions';
+import {
+  SEMATTRS_HTTP_METHOD,
+  SEMATTRS_HTTP_STATUS_CODE,
+  SEMATTRS_HTTP_URL,
+} from '@opentelemetry/semantic-conventions';
 
 import { headersToObject, patchRuntime, setPatchTarget, unPatchRuntime } from './util.js';
 import { AttributeNames } from './enums/AttributeNames.js';
@@ -62,8 +66,8 @@ export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unkno
         kind: SpanKind.CLIENT,
         attributes: {
           [AttributeNames.COMPONENT]: this.moduleName,
-          [SemanticAttributes.HTTP_METHOD]: init?.method ?? 'GET',
-          [SemanticAttributes.HTTP_URL]: url,
+          [SEMATTRS_HTTP_METHOD]: init?.method ?? 'GET',
+          [SEMATTRS_HTTP_URL]: url,
         },
       });
       const backendFetchContext = trace.setSpan(context.active(), backendFetchSpan);
@@ -96,7 +100,7 @@ export class FastlyBackendFetchInstrumentation extends InstrumentationBase<unkno
               );
             }
 
-            backendFetchSpan.setAttribute(SemanticAttributes.HTTP_STATUS_CODE, result.status);
+            backendFetchSpan.setAttribute(SEMATTRS_HTTP_STATUS_CODE, result.status);
             backendFetchSpan.setStatus({
               code: SpanStatusCode.OK,
             });

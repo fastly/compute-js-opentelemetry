@@ -4,45 +4,32 @@
  */
 
 import { ResourceMetrics } from '@opentelemetry/sdk-metrics';
-import { OTLPExporterConfigBase } from '@opentelemetry/otlp-exporter-base';
 import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
 import { createExportMetricsServiceRequest, IExportMetricsServiceRequest } from '@opentelemetry/otlp-transformer';
 
 import {
-  ExportItemConverter,
   OTLPExporterFastlyLoggerBase,
   OTLPExporterFastlyLoggerConfigBase,
   OTLPMetricExporterFastlyBase
 } from '../otlp-exporter-fastly-base/index.js';
-
-class Converter implements ExportItemConverter<ResourceMetrics, IExportMetricsServiceRequest> {
-  convert(metrics: ResourceMetrics[]): IExportMetricsServiceRequest {
-    return createExportMetricsServiceRequest(metrics);
-  }
-}
 
 class OTLPExporterFastlyLoggerProxy extends OTLPExporterFastlyLoggerBase<
   ResourceMetrics,
   IExportMetricsServiceRequest
 > {
   constructor(config: OTLPExporterFastlyLoggerConfigBase & OTLPMetricExporterOptions) {
-    super(config, new Converter());
+    super(config);
   }
 
-  getDefaultUrl(_config: OTLPExporterConfigBase): string {
-    // Named log provider does not use a URL.
-    return '';
+  override convert(metrics: ResourceMetrics[]): IExportMetricsServiceRequest {
+    return createExportMetricsServiceRequest(metrics, { useLongBits: false });
   }
 }
 
 /**
  * Collector Metric Exporter for Fastly named log provider
  */
-export class OTLPMetricExporter extends OTLPMetricExporterFastlyBase<
-  OTLPExporterFastlyLoggerProxy,
-  ResourceMetrics,
-  IExportMetricsServiceRequest
-> {
+export class OTLPMetricExporter extends OTLPMetricExporterFastlyBase<OTLPExporterFastlyLoggerProxy> {
   constructor(config: OTLPExporterFastlyLoggerConfigBase & OTLPMetricExporterOptions) {
     super(new OTLPExporterFastlyLoggerProxy(config), config);
   }

@@ -24,7 +24,7 @@ import { getComputeJsAutoInstrumentations } from "@fastly/compute-js-opentelemet
 // Identify our service.
 // It will be named 'test-service'.
 const resource = new Resource({
-  [SemanticResourceAttributes.SERVICE_NAME]: 'test-service',
+  [SEMRESATTRS_SERVICE_NAME]: 'test-service',
 });
 
 // Instantiate a trace exporter.
@@ -116,7 +116,7 @@ const sdk = new FastlySDK({
     url: 'https://otelcollector.your.app/v1/traces',
   }),
   instrumentations: [ new FastlyComputeJsInstrumentation(), new FastlyBackendFetchInstrumentation(), ],
-  resource: new Resource({ [SemanticResourceAttributes.SERVICE_NAME]: 'example-service', }),
+  resource: new Resource({ [SEMRESATTRS_SERVICE_NAME]: 'example-service', }),
 });
 await sdk.start();
 
@@ -156,7 +156,7 @@ of an `OTLPTraceExporter` instance:
 ```javascript
 const sdk = new FastlySDK({
   instrumentations: [ new FastlyComputeJsInstrumentation(), new FastlyBackendFetchInstrumentation(), ],
-  resource: new Resource({ [SemanticResourceAttributes.SERVICE_NAME]: 'example-service', }),
+  resource: new Resource({ [SEMRESATTRS_SERVICE_NAME]: 'example-service', }),
 });
 
 await sdk.start((config, event) => {

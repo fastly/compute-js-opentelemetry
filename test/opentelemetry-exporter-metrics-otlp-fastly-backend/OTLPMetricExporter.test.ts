@@ -9,9 +9,8 @@ import * as assert from 'assert';
 import * as sinon from 'sinon';
 
 import { diag } from '@opentelemetry/api';
-import { AggregationTemporality, CollectionResult, InstrumentType, ResourceMetrics } from '@opentelemetry/sdk-metrics';
+import { AggregationTemporality, CollectionResult, InstrumentType, ResourceMetrics, MetricProducer } from '@opentelemetry/sdk-metrics';
 import { Resource } from '@opentelemetry/resources';
-import { MetricProducer } from '@opentelemetry/sdk-metrics/build/src/export/MetricProducer.js';
 import { OTLPMetricExporterOptions } from '@opentelemetry/exporter-metrics-otlp-http';
 
 import { MockedResponse } from '../computeHelpers.js';
@@ -60,7 +59,7 @@ describe('OTLPMetricExporter - Compute with json over Fastly backend', function(
         backend: 'test-backend',
         temporalityPreference: AggregationTemporality.CUMULATIVE,
       });
-      assert.strictEqual(metricExporter.selectAggregationTemporality(), AggregationTemporality.CUMULATIVE);
+      assert.strictEqual(metricExporter.selectAggregationTemporality(InstrumentType.COUNTER), AggregationTemporality.CUMULATIVE);
     });
   });
 

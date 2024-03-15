@@ -13,8 +13,8 @@ import {
   MetricReader,
   PushMetricExporter,
   ResourceMetrics,
+  MetricProducer,
 } from '@opentelemetry/sdk-metrics';
-import { MetricProducer } from '@opentelemetry/sdk-metrics/build/src/export/MetricProducer.js';
 
 import { setGlobalErrorHandler, ExportResult, ExportResultCode } from '@opentelemetry/core';
 import { Resource } from '@opentelemetry/resources';
@@ -105,7 +105,8 @@ describe('FastlyMetricReader', function() {
       await metricReader.shutdown();
 
       assert.ok(exportSpy.called);
-      assert.strictEqual(exportSpy.args[0][0], metrics);
+      assert.strictEqual(exportSpy.args[0][0].resource, metrics.resource);
+      assert.deepStrictEqual(exportSpy.args[0][0].scopeMetrics, metrics.scopeMetrics);
 
     });
 
@@ -168,7 +169,8 @@ describe('FastlyMetricReader', function() {
       await metricReader.forceFlush();
 
       assert.ok(exportSpy.called);
-      assert.strictEqual(exportSpy.args[0][0], metrics);
+      assert.strictEqual(exportSpy.args[0][0].resource, metrics.resource);
+      assert.deepStrictEqual(exportSpy.args[0][0].scopeMetrics, metrics.scopeMetrics);
 
     });
   });
