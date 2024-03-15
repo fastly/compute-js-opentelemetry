@@ -56,16 +56,21 @@ This implementation extends the standard interfaces and objects provided by the
 OpenTelemetry [JavaScript API](https://github.com/open-telemetry/opentelemetry-js/tree/main/api) and
 [SDK](https://github.com/open-telemetry/opentelemetry-js), adapting them for use on the Fastly Compute platform.
 
-Whereas `opentelemetry-js` would separate each concern into its own `npm` package,
-we provide our components as a single package with multiple exports.
-
-## Updates for v0.3
+## New!
 
 As of `v0.3.0`, `@fastly/compute-js-opentelemetry` no longer requires Webpack.
 
+Additionally, if you're using the `FastlySDK` module, you will need `@fastly/js-compute`
+v3.11.0 or newer and enable Top Level Await. Find where you call the binary `js-compute-runtime` and
+add the flag like so `js-compute-runtime --experimental-enable-top-level-await`
+(This is usually in either `package.json` or `fastly.toml`).
+
+Look at the demos included in this package for working examples.
+
 ## Modules
 
-The table below lists the modules included in this package.
+Whereas `opentelemetry-js` would separate each concern into its own `npm` package,
+we provide our components as a single package with multiple exports.
 
 | **Module** (links to documentation)                                                                          | **Export Name**                                                                       | Description                                                                                                                                                                                                                                                                                                                                                                                                        |
 |--------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

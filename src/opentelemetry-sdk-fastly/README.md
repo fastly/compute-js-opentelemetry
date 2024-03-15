@@ -103,7 +103,9 @@ provider.
 can be sent before the worker shuts down.
 
 **NOTE**: It is necessary to call this function asynchronously _before_ you call `addEventListener()` to define your
-entry point.
+entry point. To do this, you will need `@fastly/js-compute` v3.11.0 or newer and enable Top Level Await.
+Find where you call the binary `js-compute-runtime` and add the flag like so `js-compute-runtime --experimental-enable-top-level-await`
+(This is usually in either `package.json` or `fastly.toml`).
 
 **Example**. The following code shows the use of `start()` to initialize the SDK:
 
