@@ -59,6 +59,10 @@ OpenTelemetry [JavaScript API](https://github.com/open-telemetry/opentelemetry-j
 Whereas `opentelemetry-js` would separate each concern into its own `npm` package,
 we provide our components as a single package with multiple exports.
 
+## Updates for v0.3
+
+As of `v0.3.0`, `@fastly/compute-js-opentelemetry` no longer requires Webpack.
+
 ## Modules
 
 The table below lists the modules included in this package.

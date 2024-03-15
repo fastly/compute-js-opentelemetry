@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.3.0] - 2024-03-15
+
+### Updated
+
+- Updated package type to "module"
+- Updated to `@fastly/js-compute@3.11.0`
+- Updated several dependency versions including TypeScript and `node-inspect-extracted`
+- Switched tests to use import hooks instead of require hook 
+- Switched to c8 from nyc/istanbul
+- Switched to tsx from ts-node
+- Switched to CompressionStream from zlib
+- No longer depend on Node.js versions of `@opentelemetry/exporter-trace-otlp-http` and `@opentelemetry/otlp-exporter-base`
+- Removed Webpack requirement as well as webpack-helpers project
+- Demos also updated to package type "module" and removing Webpack
+- Updated component compatibility table in README
+
 ## [0.2.3] - 2024-01-23
 
 ### Fixed
@@ -83,7 +99,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[unreleased]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.2.3...HEAD
+[unreleased]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.2.3...v0.3.0
 [0.2.3]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.2.0...v0.2.1
