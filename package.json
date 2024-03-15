@@ -6,6 +6,10 @@
   "engines": {
     "node": "^18.19"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fastly/compute-js-opentelemetry.git"
+  },
   "type": "module",
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
