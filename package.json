@@ -1,6 +1,6 @@
 {
   "name": "@fastly/compute-js-opentelemetry",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "license": "MIT",
   "description": "OpenTelemetry SDK for Fastly Compute",
   "engines": {
