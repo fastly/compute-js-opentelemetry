@@ -3,9 +3,6 @@
   "version": "0.4.1",
   "license": "MIT",
   "description": "OpenTelemetry SDK for Fastly Compute",
-  "engines": {
-    "node": "^18.19"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/fastly/compute-js-opentelemetry.git"
