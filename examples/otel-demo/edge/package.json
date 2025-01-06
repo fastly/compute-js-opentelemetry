@@ -5,12 +5,9 @@
     "author": "oss@fastly.com",
     "dependencies": {
         "@fastly/compute-js-opentelemetry": "file:../../../",
-        "@fastly/js-compute": "^3.11.0",
+        "@fastly/js-compute": "^3.14.0",
         "@opentelemetry/resources": "~1.22.0",
         "@opentelemetry/semantic-conventions": "~1.22.0"
-    },
-    "engines": {
-        "node": "^18"
     },
     "license": "MIT",
     "scripts": {
