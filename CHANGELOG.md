@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 
+## [0.4.4] - 2026-02-12
+
 ### Added
 
 - Release to npmjs using updated CI workflow and trusted publishing
@@ -143,8 +145,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[unreleased]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.4.3...HEAD
-[0.4.2]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.4.2...v0.4.3
+[unreleased]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.4.4...HEAD
+[0.4.4]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.4.3...v0.4.4
+[0.4.3]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.4.2...v0.4.3
 [0.4.2]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/fastly/compute-js-opentelemetry/compare/v0.3.1...v0.4.0
